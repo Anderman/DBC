@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="nl" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="nl" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="nl">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    <title>@ViewBag.Title - Medella DBC</title>
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.2/css/bootstrap.min.css"
+          asp-fallback-href-exclude="~/fallback/css/css/bootstrap.min.css"
+          asp-fallback-test-class="hidden" asp-fallback-test-property="visibility" asp-fallback-test-value="hidden" asp-copy-src-to-fallback="development" asp-warn-if-test-is-invalid="development" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          asp-fallback-href="~/fallback/css/css/font-awesome.min.css"
+          asp-fallback-test-class="fa" asp-fallback-test-property="display" asp-fallback-test-value="inline-block" asp-copy-src-to-fallback="development" asp-warn-if-test-is-invalid="development" />
+    <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/simple-line-icons.css" />
+    <link href="~/lib/jquery-uniform/css/uniform.default.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/uniform.default.css" />
+    <link href="~/lib/css/components-rounded.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/components-rounded.css" />
+    <link href="~/lib/css/themes/default.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/default.css" />
+    <link href="~/lib/css/layout.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/layout.css" />
+    <link href="~/lib/css/plugins.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/plugins.css" />
+    <link href="~/lib/css/login.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/login.css" />
+</head>
+<body class="login">
+    @RenderBody()
+    <div class="copyright">
+        2015 © Medella DBC.
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.11.2.min.js" asp-fallback-src="~/fallback/js/jquery.js" asp-fallback-test="window.jQuery"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.migrate/jquery-migrate-1.2.1.min.js" asp-fallback-src="~/fallback/js/jquery-migrate.min.js" asp-fallback-test="window.jQuery.migrateWarnings">    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.4/bootstrap.min.js" asp-fallback-src="~/fallback/js/bootstrap.min.js" asp-fallback-test="window.jQuery().modal"></script>
+    <script src="~/lib/jquery-blockui/jquery.blockui.js"></script>
+    <script src="~/lib/jquery-cookie/jquery.cookie.js"></script>
+
+    <script src="~/lib/jquery-uniform/jquery.uniform.min.js"></script>
+    <script src="~/lib/metronic/metronic.js"></script>
+    <script src="~/lib/metronic-layout/layout.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

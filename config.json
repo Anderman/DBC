@@ -1,0 +1,10 @@
+{
+    "AppSettings": {
+        "SiteTitle": "DBC"
+    },
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=GGZDBC;Trusted_Connection=True;MultipleActiveResultSets=true"
+        }
+    }
+}

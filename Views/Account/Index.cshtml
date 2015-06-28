@@ -1,0 +1,67 @@
+﻿@model ApplicationUser
+@using DBC.Models.DB
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<p><br /><br /><br /></p>
+<table id="example1" class="datatables display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th asp-for="Email"></th>
+            <th asp-for="EmailConfirmed"></th>
+            <th asp-for="Roles"></th>
+            <th asp-for="TwoFactorEnabled"></th>
+            <th asp-for="UserName"></th>
+        </tr>
+    </thead>
+</table>
+<p>Content</p>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var getColumns = function (datatable) {
+                var columns = [];
+                $($(datatable).find("thead > tr > th[column-data]")).each(function () {
+                    columns.push({ data: $(this).attr("column-data") });
+                });
+                return columns;
+            }
+            $('table.datatables').each(function () {
+                $(this).dataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "/Account/GetAll",
+                        "type": "POST",
+                    },
+                    "columns": getColumns(this),
+                    "language": {
+                        "sProcessing": "Bezig...",
+                        "sLengthMenu": "",
+                        "sZeroRecords": "Geen resultaten gevonden",
+                        "sInfo": "_START_ tot _END_ van _TOTAL_ resultaten",
+                        "sInfoEmpty": "Geen resultaten om weer te geven",
+                        "sInfoFiltered": " (gefilterd uit _MAX_ resultaten)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Zoeken:",
+                        "sEmptyTable": "Geen resultaten aanwezig in de tabel",
+                        "sInfoThousands": ".",
+                        "sLoadingRecords": "Een moment geduld aub - bezig met laden...",
+                        "oPaginate": {
+                            "sFirst": "Eerste",
+                            "sLast": "Laatste",
+                            "sNext": "Volgende",
+                            "sPrevious": "Vorige"
+                        }
+                    },
+                    "lengthMenu": [
+                        [25, 50, 100, -1],
+                        [25, 50, 100, "Alles"] // change per page values here
+                    ],
+                })
+            });
+        });
+    </script>
+}

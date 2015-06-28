@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Medella</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <style type="text/css">
+        /* CLIENT-SPECIFIC STYLES */
+        #outlook a {
+            padding: 0;
+        }
+        /* Force Outlook to provide a "view in browser" message */
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+            /* Force Hotmail to display emails at full width */
+            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                line-height: 100%;
+            }
+        /* Force Hotmail to display normal line spacing */
+        body, table, td, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        /* Prevent WebKit and Windows mobile changing default text sizes */
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        /* Remove spacing between tables in Outlook 2007 and up */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+        /* Allow smoother rendering of resized image in Internet Explorer */
+        /* RESET STYLES */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        body {
+            height: 100% !important;
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+        }
+        /* iOS BLUE LINKS */
+        .appleBody a {
+            color: #68440a;
+            text-decoration: none;
+        }
+
+        .appleFooter a {
+            color: #999999;
+            text-decoration: none;
+        }
+        /* MOBILE STYLES */
+        @@media screen and (max-width: 480px) {
+            .table_shrink {
+                width: 95% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#FFFFFF" class="table_shrink" align="center">
+        <tr>
+            <td>
+                <!-- start body module -->
+
+                <table width="520px" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" class="table_shrink" align="center">
+                    <!-- start headline -->
+
+                    <tr>
+                        <td valign="top" style="padding-top: 30px; font-family:Helvetica neue, Helvetica, Arial, Verdana, sans-serif; color: #205081; font-size: 20px; line-height: 32px; text-align:left; font-weight:bold;" align="left">Medella DBC!</td>
+                    </tr><!-- end headline -->
+
+                    <tr>
+                        <td style="color:#cccccc; padding-top:10px;" valign="top" width="100%">
+                            <hr color="#CCCCCC" size="1">
+                        </td>
+                    </tr><!-- start headline -->
+                    <!-- end headline -->
+                    <!-- start copy -->
+
+                    <tr>
+                        <td valign="top" style="padding-top: 20px; font-family: Helvetica, Helvetica neue, Arial, Verdana, sans-serif; color: #333333; font-size: 14px; line-height: 20px; text-align:left; font-weight:none;" align="left"> Hallo,</td>
+                    </tr>
+                    @RenderBody()
+
+
+
+                    <tr>
+                        <td valign="top" style="padding-top: 0px; font-family: Helvetica, Helvetica neue, Arial, Verdana, sans-serif; color: #333333; font-size: 14px; line-height: 20px; text-align:left; font-weight:none;" align="left">
+                            Met vriendelijk groet,<br><br />
+                            Het Medella DBC team
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td valign="top" style="padding-top: 10px; padding-bottom:20px; font-family: Helvetica, Helvetica neue, Arial, Verdana, sans-serif; color: #333333; font-size: 14px; line-height: 20px; text-align:left; font-weight:none;" align="left">Dit is een automatisch e-mailbericht. Reacties op dit bericht worden niet gelezen of beantwoord. Negeer deze e-mail indien u uw account niet wilt activeren. </td>
+                    </tr><!-- end copy -->
+                </table><!-- end body module -->
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
