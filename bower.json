@@ -11,7 +11,8 @@
         "jquery.cookie-min": "1.4.1",
         "jquery.uniform": "2.1.2",
         "simple-line-icons": "1.0.0",
-        "font-awesome": "4.3.0"
-        ,"angular-datatables": "0.4.3" 
+        "font-awesome": "4.3.0",
+        "angular-datatables": "0.4.3",
+        "grunt": "^0.4.5"
     }
 }
