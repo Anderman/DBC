@@ -33,7 +33,7 @@ namespace DBC.Services
             };
             using (var sw = new StringWriter())
             {
-                var viewContext = new ViewContext(actionContext, viewEngineResult.View, viewData, null, sw,null);
+                var viewContext = new ViewContext(actionContext, viewEngineResult.View, viewData, null, sw,new HtmlHelperOptions());
                 await viewEngineResult.View.RenderAsync(viewContext);
                 sw.Flush();
                 return sw.ToString();

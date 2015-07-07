@@ -11,7 +11,7 @@
         <tr>
             <th asp-for="Email"></th>
             <th asp-for="EmailConfirmed"></th>
-            <th asp-for="Roles"></th>
+            <th asp-for="LockoutEnd"></th>
             <th asp-for="TwoFactorEnabled"></th>
             <th asp-for="UserName"></th>
         </tr>
@@ -35,6 +35,11 @@
                     "ajax": {
                         "url": "/Account/GetAll",
                         "type": "POST",
+                        "contentType": "application/json; charset=utf-8",
+                        "dataType": "json",
+                        "data": function (d) {
+                            return  JSON.stringify(d) ;
+                        }
                     },
                     "columns": getColumns(this),
                     "language": {

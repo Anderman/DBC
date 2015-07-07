@@ -6,7 +6,7 @@ using DBC.Models.DB;
 
 namespace DBC.Migrations
 {
-    [ContextType(typeof(ApplicationDbContext))]
+    [ContextType(typeof(ApplicationContext))]
     partial class init
     {
         public override string Id
@@ -16,7 +16,7 @@ namespace DBC.Migrations
 
         public override string ProductVersion
         {
-            get { return "7.0.0-beta6-13586"; }
+            get { return "7.0.0-beta5"; }
         }
 
         public override void BuildTargetModel(ModelBuilder builder)

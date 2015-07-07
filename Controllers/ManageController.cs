@@ -60,20 +60,26 @@ namespace DBC.Controllers
             var user = await GetCurrentUserAsync();
             var linkedAccounts = await UserManager.GetLoginsAsync(user);
             ViewBag.ShowRemoveButton = await UserManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
+            
             return View(linkedAccounts);
         }
 
         //
         // POST: /Manage/RemoveLogin
+        public class Account
+        {
+            public string loginProvider { get; set; }
+            public string providerKey { get; set; }
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveLogin(string loginProvider, string providerKey)
+        public async Task<IActionResult> RemoveLogin(Account account)
         {
             ManageMessageId? message = ManageMessageId.Error;
             var user = await GetCurrentUserAsync();
             if (user != null)
             {
-                var result = await UserManager.RemoveLoginAsync(user, loginProvider, providerKey);
+                var result = await UserManager.RemoveLoginAsync(user, account.loginProvider, account.providerKey);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false);

@@ -6,7 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc.TagHelpers;
+//using Microsoft.AspNet.Mvc.TagHelpers;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.Framework.OptionsModel;
 using static System.IO.Path;
@@ -58,13 +58,15 @@ namespace DBC.Helpers
         [HtmlAttributeName("asp-warn-if-test-is-invalid")]
         public string WarnIfTestIsInvalid { get; set; }
 
-        //[Activate]
         protected internal IHostingEnvironment HostingEnvironment { get; set; }
-        //[Activate]
         protected internal IHttpContextAccessor Context { get; set; }
-        //[Activate]
         protected internal IOptions<AppSettings> AppSettings { get; set; }
-
+        public LinkTagHelper(IHostingEnvironment hostingEnvironment ,IHttpContextAccessor context ,IOptions<AppSettings> appSettings)
+        {
+            HostingEnvironment = hostingEnvironment;
+            Context = context;
+            AppSettings = appSettings;
+        }
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (WarnIfTestIsInvalid?.Contains(HostingEnvironment.EnvironmentName, StringComparison.OrdinalIgnoreCase) ==
@@ -108,7 +110,7 @@ namespace DBC.Helpers
                 {
                     throw new FileNotFoundException($"The remote file:{RemotePath} cannot be found.", ex);
                 }
-                output.CopyHtmlAttribute("href", context);
+               // output.CopyHtmlAttribute("href", context);
             }
         }
 

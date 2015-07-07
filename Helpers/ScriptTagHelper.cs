@@ -17,8 +17,11 @@ namespace DBC.Helpers
         [HtmlAttributeName("src")]
         public string Src { get; set; }
 
-        //[Activate]
         protected internal IHostingEnvironment HostingEnvironment { get; set; }
+        public ScriptTagHelper(IHostingEnvironment hostingEnvironment, IHttpContextAccessor context)
+        {
+            HostingEnvironment = hostingEnvironment;
+        }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {

@@ -3,24 +3,22 @@ using DBC.Services;
 using Microsoft.AspNet.Authentication.Facebook;
 using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.MicrosoftAccount;
+using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Configuration.EnvironmentVariables;
-using Microsoft.Framework.Configuration.UserSecrets;
-using Microsoft.Data.Entity.SqlServer;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.Runtime;
 
 namespace DBC
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env)//, Microsoft.Framework.Runtime.IApplicationEnvironment appEnv
         {
             // Setup configuration sources.
             var configuration = new ConfigurationBuilder(System.IO.Path.GetFullPath(System.IO.Path.Combine(env.WebRootPath, "..")))
@@ -47,8 +45,8 @@ namespace DBC
             // Add EF services to the services container.
             services.AddEntityFramework()
                 .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(
-                option => option.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"])
+                .AddDbContext<ApplicationContext>(
+                     option => option.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"])
                 );
 
             // Add Identity services to the services container.
@@ -62,7 +60,7 @@ namespace DBC
                 options.SignIn.RequireConfirmedEmail = true;
                 options.User.RequireUniqueEmail = true;
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
 
             // Configure the options for the authentication middleware.
@@ -85,11 +83,11 @@ namespace DBC
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 options.Caption = "googleplus";
             });
-            //services.Configure<OAuthAuthenticationOptions>(options =>
-            //{
-            //    options.ClientId = Configuration["Authentication:Google:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            //});
+            services.Configure<OAuthAuthenticationOptions>(options =>
+            {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
 
             // Add MVC services to the services container.
             services.AddMvc();
@@ -125,10 +123,12 @@ namespace DBC
                 // sends the request to the following path or controller action.
                 app.UseErrorHandler("/Home/Error");
             }
-            Configure2(app);
+            app.EnsureMigrationsApplied();
+            app.EnsureSampleData();
+            SetupRequestPipeline(app);
         }
 
-        public void Configure2(IApplicationBuilder app)
+        public void SetupRequestPipeline(IApplicationBuilder app)
         {
             // Add static files to the request pipeline.
             app.UseStaticFiles();

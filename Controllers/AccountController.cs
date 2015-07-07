@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,91 +12,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.OptionsModel;
+using Mvc.JQuery.Datatables;
 
 namespace DBC.Controllers
 {
-    public class DTRequest
-    {
-        public int Start { get; set; }
-        public int Length { get; set; }
-        public string Draw { get; set; }
-        public RequestTypes RequestType;
 
-        /// <summary>
-        /// Request type values
-        /// </summary>
-        public enum RequestTypes
-        {
-            /// <summary>
-            /// DataTables standard get for client-side processing
-            /// </summary>
-            DataTablesGet,
-
-            /// <summary>
-            /// DataTables server-side processing request
-            /// </summary>
-            DataTablesSsp,
-
-            /// <summary>
-            /// Editor create request
-            /// </summary>
-            EditorCreate,
-
-            /// <summary>
-            /// Editor edit request
-            /// </summary>
-            EditorEdit,
-
-            /// <summary>
-            /// Editor remove request
-            /// </summary>
-            EditorRemove,
-
-            /// <summary>
-            /// Editor file upload request
-            /// </summary>
-            EditorUpload
-        };
-
-
-
-        //public SearchT Search { get; set; }
-
-        //public List<OrderT> Order { get; set; }
-
-        public ColumnT[] Columns { get; set; }
-
-
-        ///** Editor parameters **/
-
-        //public string Action;
-
-        //public Dictionary<string, object> Data;
-
-        //public List<string> Ids = new List<string>();
-
-        //public string UploadField;
-        public class SearchT
-        {
-            public string Value;
-            public Boolean Regex;
-        }
-
-        public class OrderT
-        {
-            public int Column;
-            public string Dir;
-        }
-
-        public class ColumnT
-        {
-            public string Data;
-            public string Name;
-            public Boolean Searchable;
-            public Boolean Orderable;
-            public SearchT Search;
-        }
-    }
     [Authorize]
     public class AccountController : Controller
     {
@@ -107,7 +28,6 @@ namespace DBC.Controllers
             MessageServices = messageServices;
             EmailTemplate = emailTemplate;
         }
-
         public IEmailTemplate EmailTemplate { get; set; }
 
         public MessageServices MessageServices { get; private set; }
@@ -128,21 +48,69 @@ namespace DBC.Controllers
         }
         static readonly List<ApplicationUser> _items = new List<ApplicationUser>()
         {
-            new ApplicationUser { Id = "1", Email= "First Item" }
+            {new ApplicationUser { Id = "1", Email= "Jerome@kuifje.be",LockoutEnd=new DateTimeOffset(2016,1,1,22,21,20,new TimeSpan(10,0,0)),UserName="Jerome",TwoFactorEnabled=false} },
+            {new ApplicationUser { Id = "2", Email= "Barabas@kuifje.be",LockoutEnd=new DateTimeOffset(2016,1,1,22,21,20,new TimeSpan(11,0,0)),UserName="Barabas",TwoFactorEnabled=true} },
         };
         [HttpPost]
         [AllowAnonymous]
 
-        public JsonResult GetAll(DTRequest dtReq)
+        public JsonResult GetAll([FromBody]DataTablesParam dTRequest)
         {
-            //var a = from i in _items select new string[] { i };
-            return new JsonResult(new
-            {
-                draw = dtReq.Draw,
-                recordsTotal = _items.Count(),
-                recordsFiltered = _items.Count(),
-                data = _items
-            });
+            //return new JsonResult(new
+            //{
+            //    draw = dTRequest.Draw,
+            //    recordsTotal = _items.Count(),
+            //    recordsFiltered = _items.Count(),
+            //    data = _items
+            //}); 
+            var db = new ApplicationContext();
+            //foreach(ApplicationUser user in db.Users)
+            //{
+            //    UserManager.SetLockoutEnabledAsync(user, true);
+            //    UserManager.SetLockoutEndDateAsync(user, new DateTimeOffset(2016, 01, 01, 23, 0, 0, new TimeSpan(-2, 0, 0)));
+            //}
+            IQueryable<ApplicationUser> a = _items.AsQueryable<ApplicationUser>(); 
+            return new JsonResult(DataTablesResult.Create(UserManager.Users
+                .Select(user => new UserView()
+                {
+                    EmailConfirmed = user.EmailConfirmed,
+                    LockoutEnd = user.LockoutEnd,
+                    Email = user.Email,
+                    TwoFactorEnabled = user.TwoFactorEnabled,
+                    UserName = user.UserName,
+                })
+            , dTRequest).Data);  
+            //return new JsonResult(DataTablesResult.Create(a.Select(user => new UserView()
+            //{
+            //    EmailConfirmed = user.EmailConfirmed.ToString(),
+            //    LockoutEnd = user.LockoutEnd,
+            //    Email = user.Email,
+            //    TwoFactorEnabled = user.Email,
+            //    UserName = user.UserName,
+            //}),
+            //dTRequest).Data);
+        }
+        public class UserView2
+        {
+
+        }
+        public class UserView
+        {
+            //[DataTables(DisplayName = "E-mail")]
+            public string Email { get; set; }
+
+            //[DataTables(SortDirection = SortDirection.Ascending, Order = 0)]
+            public bool EmailConfirmed { get; set; }
+
+            //[DataTables(DisplayName = "E-Mail", Searchable = true)]
+            [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+            public DateTimeOffset? LockoutEnd { get; set; }
+
+            //[DataTables(Sortable = false, Width = "70px")]
+            public bool TwoFactorEnabled { get; set; }
+
+            //[DataTables(Visible = false)]
+            public string UserName { get; set; }
         }
         [HttpGet]
         [AllowAnonymous]
@@ -266,11 +234,16 @@ namespace DBC.Controllers
         // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string error = null)
         {
             var info = await SignInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
+                if (error != null)
+                {
+                    ModelState.AddModelError("", $"Het automatisch inloggen met external account geeft een error. {error}");
+                    return View("Login");
+                }
                 return RedirectToAction("Login");
             }
 
@@ -376,7 +349,7 @@ namespace DBC.Controllers
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation",model);
+                    return View("ForgotPasswordConfirmation", model);
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
@@ -385,7 +358,7 @@ namespace DBC.Controllers
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
                 var body = await EmailTemplate.RenderViewToString("Email", "ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                 await MessageServices.SendEmailAsync(model.Email, "Herstel wachtwoord", body);
-                return View("ForgotPasswordConfirmation",model);
+                return View("ForgotPasswordConfirmation", model);
             }
 
             // If we got this far, something failed, redisplay form
