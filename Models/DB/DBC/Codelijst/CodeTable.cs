@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,5 +15,16 @@ namespace GGZDBC.Models.DBCModel.Codelijst
         public DateTime einddatum { get; set; }
         [Column(TypeName = "varchar"), StringLength(20)]
         public String Code { get; set; }
+        public static void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<CodeTable>(b =>
+            {
+                b.Property(c => c.Code).ColumnType("varchar").MaxLength(20);
+              
+
+
+                b.Index(p => p.Code).Unique(true);
+            });
+        }
     }
 }
