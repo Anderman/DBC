@@ -18,9 +18,10 @@ namespace DBC
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)//, Microsoft.Framework.Runtime.IApplicationEnvironment appEnv
+        public Startup(IHostingEnvironment env)//, IApplicationEnvironment appEnv
         {
             // Setup configuration sources.
+            env.EnvironmentName = "Development";
             var configuration = new ConfigurationBuilder(System.IO.Path.GetFullPath(System.IO.Path.Combine(env.WebRootPath, "..")))
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", true);
@@ -112,9 +113,9 @@ namespace DBC
             loggerfactory.AddConsole(minLevel: LogLevel.Warning);
 
             // Add the following to the request pipeline only in development environment.
+                app.UseErrorPage();
             if (env.IsEnvironment("Development"))
             {
-                app.UseErrorPage();
                 //app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
             else

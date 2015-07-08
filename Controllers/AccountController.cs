@@ -20,17 +20,20 @@ namespace DBC.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<MessageServicesOptions> settingsAccessor, MessageServices messageServices, IEmailTemplate emailTemplate)
+        public AccountController(ApplicationContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<MessageServicesOptions> settingsAccessor, MessageServices messageServices, IEmailTemplate emailTemplate)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             MessageServiceOptions = settingsAccessor.Options;
             MessageServices = messageServices;
             EmailTemplate = emailTemplate;
+            Ctx = context;
         }
         public IEmailTemplate EmailTemplate { get; set; }
 
         public MessageServices MessageServices { get; private set; }
+
+        public ApplicationContext Ctx { get; private set; }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
@@ -63,23 +66,23 @@ namespace DBC.Controllers
             //    recordsFiltered = _items.Count(),
             //    data = _items
             //}); 
-            var db = new ApplicationContext();
+            var db = Ctx;
             //foreach(ApplicationUser user in db.Users)
             //{
             //    UserManager.SetLockoutEnabledAsync(user, true);
             //    UserManager.SetLockoutEndDateAsync(user, new DateTimeOffset(2016, 01, 01, 23, 0, 0, new TimeSpan(-2, 0, 0)));
             //}
-            IQueryable<ApplicationUser> a = _items.AsQueryable<ApplicationUser>(); 
-            return new JsonResult(DataTablesResult.Create(UserManager.Users
+            var data = DataTablesResult.Create(db.Users
                 .Select(user => new UserView()
                 {
                     EmailConfirmed = user.EmailConfirmed,
-                    LockoutEnd = user.LockoutEnd,
+                    LockoutEnd = new DateTimeOffset(2016, 01, 01, 23, 0, 0, new TimeSpan(-2, 0, 0)),// user.LockoutEnd,
                     Email = user.Email,
                     TwoFactorEnabled = user.TwoFactorEnabled,
                     UserName = user.UserName,
                 })
-            , dTRequest).Data);  
+            , dTRequest).Data;
+            return new JsonResult(data);  
             //return new JsonResult(DataTablesResult.Create(a.Select(user => new UserView()
             //{
             //    EmailConfirmed = user.EmailConfirmed.ToString(),
@@ -103,7 +106,7 @@ namespace DBC.Controllers
             public bool EmailConfirmed { get; set; }
 
             //[DataTables(DisplayName = "E-Mail", Searchable = true)]
-            [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+            [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
             public DateTimeOffset? LockoutEnd { get; set; }
 
             //[DataTables(Sortable = false, Width = "70px")]

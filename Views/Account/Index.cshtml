@@ -9,9 +9,9 @@
 <table id="example1" class="datatables display" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <th asp-for="Email"></th>
-            <th asp-for="EmailConfirmed"></th>
-            <th asp-for="LockoutEnd"></th>
+            <th asp-for="Email" column-renderFunction="render('<a href=mailto:' + data + '>'+data+'</a>')"></th>
+            <th asp-for="EmailConfirmed"  ></th>
+            <th asp-for="LockoutEnd" column-renderFunction="formatDate(data,'YYYY-DD-mm hh:mm:ss')"></th>
             <th asp-for="TwoFactorEnabled"></th>
             <th asp-for="UserName"></th>
         </tr>
@@ -20,11 +20,28 @@
 <p>Content</p>
 @section Scripts {
     <script>
+        function createMailToLink(data) {
+            return '<a href=mailto:' + data + '>'+data+'</a>';
+        }
+        function render(data) {
+            return data;
+        }
+        function formatDate(data, format) {
+            return moment(data).format(format);
+        }
+</script>
+    <script>
         $(document).ready(function () {
             var getColumns = function (datatable) {
                 var columns = [];
                 $($(datatable).find("thead > tr > th[column-data]")).each(function () {
-                    columns.push({ data: $(this).attr("column-data") });
+                    var renderFunction = $(this).attr("column-renderFunction");
+                    if (renderFunction) {
+                        var sRender = new Function("data", "type", "full", "meta", "return " + renderFunction);
+                        columns.push({ data: $(this).attr("column-data"), render: sRender });
+                    }
+                    else
+                        columns.push({ data: $(this).attr("column-data")});
                 });
                 return columns;
             }
@@ -38,7 +55,7 @@
                         "contentType": "application/json; charset=utf-8",
                         "dataType": "json",
                         "data": function (d) {
-                            return  JSON.stringify(d) ;
+                            return JSON.stringify(d);
                         }
                     },
                     "columns": getColumns(this),

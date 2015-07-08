@@ -12,7 +12,7 @@ namespace DBC.Models.DB
         public static void EnsureMigrationsApplied(this IApplicationBuilder app)
         {
             ApplicationContext context = app.ApplicationServices.GetService<ApplicationContext>();
-            context.Database.AsRelational().ApplyMigrations();
+            //context.Database.AsRelational().ApplyMigrations();
         }
 
         public async static void EnsureSampleData(this IApplicationBuilder app)

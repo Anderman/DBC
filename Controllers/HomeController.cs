@@ -15,7 +15,7 @@ namespace DBC.Controllers
 
         public IActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Your1 application description page.";
 
             return View();
         }

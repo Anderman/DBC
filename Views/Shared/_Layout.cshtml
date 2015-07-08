@@ -15,10 +15,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
           asp-fallback-href="~/fallback/css/css/font-awesome.min.css"
           asp-fallback-test-class="fa" asp-fallback-test-property="display" asp-fallback-test-value="inline-block" asp-copy-src-to-fallback="development" asp-warn-if-test-is-invalid="development" />
-    <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" asp1-copy-src-to-fallback="development" />
+    <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
     <link href="~/lib/jquery-uniform/css/uniform.default.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
     <link href="~/lib/css/components-rounded.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
     @*<link href="~/lib/css/themes/default.css" rel="stylesheet" asp-copy-src-to-fallback="development" />*@
+    
     <link href="~/lib/css/layout.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
     <link href="~/lib/css/plugins.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
     <link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
@@ -53,11 +54,12 @@
     </div>
 
     <environment names="Staging,Production,Development">
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.11.2.min.js" asp-fallback-src="~/lib/jquery/index.js" asp-fallback-test="window.jQuery">    </script>
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery.migrate/jquery-migrate-1.2.1.min.js" asp-fallback-src="~/lib/jquery-migrate/jquery-migrate.min.js" asp-fallback-test="window.jQuery.migrateWarnings">    </script>
-        <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.4/bootstrap.min.js" asp-fallback-src="~/lib/bootstrap/js/bootstrap.min.js" asp-fallback-test="window.jQuery().modal"></script>
-        <script src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.js" asp-fallback-src="~/lib/jquery-datatable/jquery.datatables.min.js" asp-fallback-test="window.jQuery().dataTable">        </script>
-        <script src="http://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js" asp-fallback-src="~/lib/jquery-datatable/jquery.datatables.min.js" asp-fallback-test="window.jQuery().dataTable">        </script>
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.11.2.min.js" asp-copy-src-to-fallback="development"  asp-fallback-test="window.jQuery" asp-warn-if-test-is-invalid="development"></script>
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.migrate/jquery-migrate-1.2.1.min.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery.migrateWarnings" asp-warn-if-test-is-invalid="development"></script>
+        <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.4/bootstrap.min.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery().modal" asp-warn-if-test-is-invalid="development"></script>
+        <script src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery().dataTable" asp-warn-if-test-is-invalid="development"></script>
+        <script src="http://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js" asp-copy-src-to-fallback="development"  asp-fallback-test="window.jQuery().dataTable.ext.renderer.pageButton.bootstrap" asp-warn-if-test-is-invalid="development"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"  asp-copy-src-to-fallback="development" asp-fallback-test="window.moment" asp-warn-if-test-is-invalid="development"></script>
         <script src="~/lib/jquery-blockui/jquery.blockui.js"></script>
         <script src="~/lib/jquery-cookie/jquery.cookie.js"></script>
         <script src="~/lib/jquery-uniform/jquery.uniform.min.js"></script>

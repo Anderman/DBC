@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Mvc.TagHelpers;
 //using Microsoft.AspNet.Mvc.TagHelpers;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.Framework.OptionsModel;
@@ -72,10 +73,11 @@ namespace DBC.Helpers
             if (WarnIfTestIsInvalid?.Contains(HostingEnvironment.EnvironmentName, StringComparison.OrdinalIgnoreCase) ==
                 true)
             {
-                output.PreContent.Append(string.Format(preTest, FallbackTestClass, FallbackTestProperty, "===",
-                    FallbackTestValue, $"Style `{RemotePath}` already loaded. Did you create the correct test"));
-                output.PostContent.Append(string.Format(preTest, FallbackTestClass, FallbackTestProperty, "!==",
-                    FallbackTestValue, $"Style `{RemotePath}` still not loaded. Did you create the correct test"));
+                //await context.GetChildContentAsync();
+                output.PreContent.AppendFormat(preTest, FallbackTestClass, FallbackTestProperty, "===",
+                    FallbackTestValue, $"Style `{RemotePath}` already loaded. Did you create the correct test");
+                output.PostContent.AppendFormat(preTest, FallbackTestClass, FallbackTestProperty, "!==",
+                    FallbackTestValue, $"Style `{RemotePath}` still not loaded. Did you create the correct test");
             }
 
             if (CopySrcToFallback?.Contains(HostingEnvironment.EnvironmentName, StringComparison.OrdinalIgnoreCase) ==
@@ -110,7 +112,7 @@ namespace DBC.Helpers
                 {
                     throw new FileNotFoundException($"The remote file:{RemotePath} cannot be found.", ex);
                 }
-               // output.CopyHtmlAttribute("href", context);
+               output.CopyHtmlAttribute("href", context);
             }
         }
 
