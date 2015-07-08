@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
 using System.Globalization;
+using Microsoft.Data.Entity;
 
 namespace GGZDBC.Models.DBCModel.Registraties
 {
@@ -29,6 +30,17 @@ namespace GGZDBC.Models.DBCModel.Registraties
         [Column(TypeName = "varchar"), StringLength(6)]
         public String cl_productgroep_code { get; set; }
         public int? mutatie { get; set; }
+        public static void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Prestatiecode>(b =>
+            {
+                b.Property(c => c.agb_code).ColumnType("char").MaxLength(4);
+                b.Property(c => c.cl_zorgtype_prestatiecodedeel).ColumnType("char").MaxLength(3);
+                b.Property(c => c.cl_diagnose_prestatiecodedeel).ColumnType("varchar").MaxLength(3);
+                b.Property(c => c.cl_productgroep_code).ColumnType("varchar").MaxLength(6);
+                b.Index(p => p.Code).Unique(true);
+            });
+        }
     }
     public sealed class PrestatiecodeMap : CsvClassMap<Prestatiecode>
     {
