@@ -90,12 +90,7 @@ namespace GGZDBC.Models.DBCModel.Afleiding
             {
                 b.Property(c => c.Code).ColumnType("varchar").MaxLength(20);
                 b.Property(c => c.groepcode).ColumnType("varchar").MaxLength(20);
-                b.Property(c => c.element).ColumnType("varchar").MaxLength(20);
-                b.Property(c => c.beschrijving).ColumnType("varchar").MaxLength(20);
                 b.Property(c => c.aanspraak_type).ColumnType("char").MaxLength(1);
-                b.Property(c => c.hierarchieniveau).ColumnType("char").MaxLength(1);
-                b.Property(c => c.selecteerbaar).ColumnType("char").MaxLength(1);
-                b.Property(c => c.sorteervolgorde).ColumnType("char").MaxLength(1);
                 b.Property(c => c.soort).ColumnType("varchar").MaxLength(20);
                 b.Property(c => c.mag_direct).ColumnType("char").MaxLength(1);
                 b.Property(c => c.mag_indirect).ColumnType("char").MaxLength(1);
