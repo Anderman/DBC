@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Globalization;
 using DBC.Models.DB;
+using Microsoft.Data.Entity;
 
 namespace GGZDBC.Models.DBCModel.Afleiding
 {
@@ -83,6 +84,28 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         //    return from a in context.Activiteit where a.soort == "Dagbesteding" && SqlMethods.Like(a.Code, "Act_9%") select a.Code;
         //}
 
+        public static void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Activiteit>(b =>
+            {
+                b.Property(c => c.Code).ColumnType("varchar").MaxLength(20);
+                b.Property(c => c.groepcode).ColumnType("varchar").MaxLength(20);
+                b.Property(c => c.element).ColumnType("varchar").MaxLength(20);
+                b.Property(c => c.beschrijving).ColumnType("varchar").MaxLength(20);
+                b.Property(c => c.aanspraak_type).ColumnType("char").MaxLength(1);
+                b.Property(c => c.hierarchieniveau).ColumnType("char").MaxLength(1);
+                b.Property(c => c.selecteerbaar).ColumnType("char").MaxLength(1);
+                b.Property(c => c.sorteervolgorde).ColumnType("char").MaxLength(1);
+                b.Property(c => c.soort).ColumnType("char").MaxLength(20);
+                b.Property(c => c.mag_direct).ColumnType("char").MaxLength(1);
+                b.Property(c => c.mag_indirect).ColumnType("varchar").MaxLength(1);
+                b.Property(c => c.mag_reistijd).ColumnType("varchar").MaxLength(1);
+                b.Property(c => c.mag_groep).ColumnType("varchar").MaxLength(1);
+                
+
+                b.Index(p => p.Code).Unique(true);
+            });
+        }
     }
     public sealed class ActiviteitMap : CsvClassMap<Activiteit>
     {
