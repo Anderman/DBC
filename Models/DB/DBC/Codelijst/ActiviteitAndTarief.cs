@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,17 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         public int tarief_max { get; set; }
         public int tarief_nhc { get; set; }
         public int? mutatie { get; set; }
+        public static void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<ActiviteitAndTarief>(b =>
+            {
+                b.Property(c => c.declaratiecode).ColumnType("char").MaxLength(6);
+                b.Property(c => c.declaratiecode_kleur).ColumnType("char").MaxLength(5);
+
+
+                b.Index(p => p.Code).Unique(true);
+            });
+        }
     }
     public sealed class ActiviteitAndTariefMap : CsvClassMap<ActiviteitAndTarief>
     {
