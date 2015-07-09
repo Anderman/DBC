@@ -27,7 +27,8 @@
         "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta5",
         "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta5",
         "Microsoft.AspNet.Authentication.Twitter": "1.0.0-beta5",
-        "CsvHelper": "2.11.0"
+        "CsvHelper": "2.11.0",
+        "TagHelpers": "1.0.0-*"
     },
     "commands": {
         "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
@@ -61,6 +62,6 @@
         ],
         "prepare": [
             "gulp copy"
-        ] 
+        ]
     }
 }
