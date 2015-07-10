@@ -30,15 +30,17 @@ namespace GGZDBC.Models.DBCModel.Registraties
         [Column(TypeName = "varchar"), StringLength(6)]
         public String cl_productgroep_code { get; set; }
         public int? mutatie { get; set; }
-        public static void OnModelCreating(ModelBuilder builder)
+        public new static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Prestatiecode>(b =>
             {
+                b.Property(c => c.Code).ColumnType("varchar").MaxLength(12);
+                b.Property(c => c.cl_declaratiecode).ColumnType("varchar").MaxLength(6);
                 b.Property(c => c.agb_code).ColumnType("char").MaxLength(4);
                 b.Property(c => c.cl_zorgtype_prestatiecodedeel).ColumnType("char").MaxLength(3);
                 b.Property(c => c.cl_diagnose_prestatiecodedeel).ColumnType("varchar").MaxLength(3);
                 b.Property(c => c.cl_productgroep_code).ColumnType("varchar").MaxLength(6);
-                b.Index(p => p.Code).Unique(true);
+                b.Index(p => new { p.Code, p.cl_declaratiecode }).Unique(true);
             });
         }
     }

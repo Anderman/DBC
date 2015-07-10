@@ -24,7 +24,7 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         public int tarief_max { get; set; }
         public int tarief_nhc { get; set; }
         public int? mutatie { get; set; }
-        public static void OnModelCreating(ModelBuilder builder)
+        public new static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ActiviteitAndTarief>(b =>
             {

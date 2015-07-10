@@ -27,15 +27,13 @@ namespace GGZDBC.Models.DBCModel.Registraties
         public int? mutatie { get; set; }
         //[Index("IX_Updatekey", 2, IsUnique = true)]
         public int branche_indicatie { get; set; }
-        public static void OnModelCreating(ModelBuilder builder)
+        public new static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Beroep>(b =>
             {
                 b.Property(c => c.Code).ColumnType("varchar").MaxLength(20);
                 b.Property(c => c.groepcode).ColumnType("varchar").MaxLength(10);
-
-
-                b.Index(p => p.Code).Unique(true);
+                b.Index(p => new { p.Code, p.branche_indicatie }).Unique(true);
             });
         }
     }

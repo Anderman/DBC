@@ -14,11 +14,11 @@ namespace GGZDBC.Models.DBCModel.Registraties
         //[Index("IX_Updatekey", 1, IsUnique = true)]
         [StringLength(3)]
         [Column(TypeName = "char")]
-        new public String Code { get; set; }
-        public String omschrijving { get; set; }
-        public String aanvullende_informatie { get; set; }
+        new public string Code { get; set; }
+        public string omschrijving { get; set; }
+        public string aanvullende_informatie { get; set; }
         public int? mutatie { get; set; }
-        public static void OnModelCreating(ModelBuilder builder)
+        public new static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Aanspraakbeperking>(b =>
             {

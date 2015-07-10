@@ -6,10 +6,10 @@
 
 }
 <p><br /><br /><br /></p>
-<table id="example1" class="datatables display" cellspacing="0" width="100%">
+<table id="example1" class="datatables display"  stateSave="true" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <th asp-for="Email" column-renderFunction="render('<a href=mailto:' + data + '>'+data+'</a>')"></th>
+            <th asp-for="Email" column-renderFunction="createMailToLink(data)"></th>
             <th asp-for="EmailConfirmed"  ></th>
             <th asp-for="LockoutEnd" column-renderFunction="formatDate(data,'YYYY-DD-mm hh:mm:ss')"></th>
             <th asp-for="TwoFactorEnabled"></th>

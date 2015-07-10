@@ -1,5 +1,5 @@
 {
-    "projects": [ "src", "test", "../../../git", "../../TagHelpers/src" ],
+    "projects": [ "src", "test", "../../../git", "../../TagHelpers/src", "../../Mvc.JQuery.Datatables/src" ],
     "sdk": {
         "version": "1.0.0-beta5"
     }

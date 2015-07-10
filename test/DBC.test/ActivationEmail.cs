@@ -13,19 +13,20 @@ namespace DBC.test
 {
     public class ActivationEmail
     {
+        public const string relPath = "../../src/DBC/";
 
         [Fact]
         public async void ActivateEmailTest()
         {
-            // Arrange
-            //       var a = TestServer.Create(new DBC.Startup().Configure, _configureServices);
-            var applicationWebSiteName = nameof(DBC);
-            var server = TestHelper.SetupServer(applicationWebSiteName, TestMiddlewareFunc);
+        // Arrange
+        //       var a = TestServer.Create(new DBC.Startup().Configure, _configureServices);
+        var applicationWebSiteName = nameof(DBC);
+            var server = TestHelper.SetupServer(applicationWebSiteName,relPath, TestMiddlewareFunc);
             
             var client = server.CreateClient();
 
             // Act
-            var wwwroot = Path.Combine(Directory.GetCurrentDirectory(),"../src/DBC/wwwroot/");
+            var wwwroot = Path.Combine(Directory.GetCurrentDirectory(),relPath,"wwwroot/");
             var response = await client.GetAsync("http://localhost/Account/Empty");
             var responseBody = await response.Content.ReadAsStringAsync();
 #if(DEBUG)

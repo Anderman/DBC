@@ -84,7 +84,7 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         //    return from a in context.Activiteit where a.soort == "Dagbesteding" && SqlMethods.Like(a.Code, "Act_9%") select a.Code;
         //}
 
-        public static void OnModelCreating(ModelBuilder builder)
+        public new static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Activiteit>(b =>
             {
@@ -96,9 +96,7 @@ namespace GGZDBC.Models.DBCModel.Afleiding
                 b.Property(c => c.mag_indirect).ColumnType("char").MaxLength(1);
                 b.Property(c => c.mag_reistijd).ColumnType("char").MaxLength(1);
                 b.Property(c => c.mag_groep).ColumnType("char").MaxLength(1);
-                
-
-                b.Index(p => p.Code).Unique(true);
+                b.Index(p => new { p.Code, p.branche_indicatie }).Unique(true);
             });
         }
     }

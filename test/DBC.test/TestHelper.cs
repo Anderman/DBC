@@ -19,55 +19,55 @@ namespace DBC.test
 {
     public static class TestHelper
     {
+
         // Path from Mvc\\test\\Microsoft.AspNet.Mvc.FunctionalTests
 
-        public static TestServer SetupServer(string applicationWebSiteName, Func<Func<Task>, HttpContext, Task> testMiddlewareFunc)
+        public static TestServer SetupServer(string applicationWebSiteName, string relPath, Func<Func<Task>, HttpContext, Task> testMiddlewareFunc)
         {
-            var currentHostingEnvironment = GetCurrentHostingEnvironment(applicationWebSiteName);
+            var appPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, relPath));
+
+            var currentHostingEnvironment = GetCurrentHostingEnvironment(appPath);
             Action<IApplicationBuilder> appBuilder = new Startup(currentHostingEnvironment).SetupRequestPipeline;
             Action<IServiceCollection> configureServices = new Startup(currentHostingEnvironment).ConfigureServices;
-            return TestHelper.CreateServer(app =>
+            return CreateServer(app =>
                 AddTestUses(app, appBuilder, testMiddlewareFunc),
-                applicationWebSiteName, "../src", configureServices);
+                applicationWebSiteName, relPath, configureServices);
         }
 
-        public static HostingEnvironment GetCurrentHostingEnvironment(string applicationWebSiteName)
+        public static HostingEnvironment GetCurrentHostingEnvironment(string appPath)
         {
             //var hostingEnvironment = new HostingEnvironment(GetCurrentApplicationEnvironment(applicationWebSiteName));
-            var env = GetCurrentApplicationEnvironment(applicationWebSiteName);
+            var env = GetCurrentApplicationEnvironment(appPath);
             var hostingEnvironment = new HostingEnvironment();
             hostingEnvironment.Initialize(env.ApplicationBasePath, environmentName: null);
             return hostingEnvironment;
         }
 
-        public static TestApplicationEnvironment GetCurrentApplicationEnvironment(string applicationWebSiteName)
+        public static TestApplicationEnvironment GetCurrentApplicationEnvironment(string appPath)
         {
-            var curPath = Environment.CurrentDirectory;
-            var path = Path.GetFullPath(Path.Combine(curPath, "..", "src", applicationWebSiteName));
-            return new TestApplicationEnvironment(path, "DBC", "1.0.0", "DEBUG",
-                new FrameworkName("DNX,Version=v4.5.1"));
+            return new TestApplicationEnvironment(appPath, "DBC", "1.0.0", "DEBUG", new FrameworkName("DNX,Version=v4.5.1"));
         }
 
         public static TestServer CreateServer(Action<IApplicationBuilder> builder, string applicationWebSiteName,
             string applicationPath)
         {
-            return CreateServer(builder, applicationWebSiteName, applicationPath, (Action<IServiceCollection>) null);
+            return CreateServer(builder, applicationWebSiteName, applicationPath, (Action<IServiceCollection>)null);
         }
 
         public static TestServer CreateServer(Action<IApplicationBuilder> builder, string applicationWebSiteName,
-            string applicationPath, Action<IServiceCollection> configureServices)
+            string relPath, Action<IServiceCollection> configureServices)
         {
             return TestServer.Create(builder,
-                services => AddTestServices(services, applicationWebSiteName, applicationPath, configureServices));
+                services => AddTestServices(services, applicationWebSiteName, relPath, configureServices));
         }
 
         public static TestServer CreateServer(Action<IApplicationBuilder> builder, string applicationWebSiteName,
-            string applicationPath, Func<IServiceCollection, IServiceProvider> configureServices)
+            string relPath, Func<IServiceCollection, IServiceProvider> configureServices)
         {
             return TestServer.Create(CallContextServiceLocator.Locator.ServiceProvider, builder,
                 services =>
                 {
-                    AddTestServices(services, applicationWebSiteName, applicationPath, null);
+                    AddTestServices(services, applicationWebSiteName, relPath, null);
                     return (configureServices != null) ? configureServices(services) : services.BuildServiceProvider();
                 });
         }
@@ -81,7 +81,7 @@ namespace DBC.test
             builder?.Invoke(app);
         }
         private static void AddTestServices(IServiceCollection services, string applicationWebSiteName,
-            string applicationPath, Action<IServiceCollection> configureServices)
+            string relPath, Action<IServiceCollection> configureServices)
         {
             // Get current IApplicationEnvironment; likely added by the host.
             var provider = services.BuildServiceProvider();
@@ -94,8 +94,7 @@ namespace DBC.test
             // To compensate for this, we need to calculate the original path and override the application
             // environment value so that components like the view engine work properly in the context of the
             // test.
-            var applicationBasePath = CalculateApplicationBasePath(originalEnvironment, applicationWebSiteName,
-                applicationPath);
+            var applicationBasePath = CalculateApplicationBasePath(originalEnvironment, relPath);
             var environment = new TestApplicationEnvironment(originalEnvironment, applicationBasePath,
                 applicationWebSiteName);
             services.AddInstance<IApplicationEnvironment>(environment);
@@ -115,12 +114,10 @@ namespace DBC.test
         // Calculate the path relative to the application base path.
         private static string CalculateApplicationBasePath(
             IApplicationEnvironment appEnvironment,
-            string applicationWebSiteName,
-            string websitePath)
+            string relPath)
         {
             // Mvc/test/WebSites/applicationWebSiteName
-            return Path.GetFullPath(
-                Path.Combine(appEnvironment.ApplicationBasePath, websitePath, applicationWebSiteName));
+            return Path.GetFullPath(Path.Combine(appEnvironment.ApplicationBasePath, relPath));
         }
 
         public static IAssemblyProvider CreateAssemblyProvider(string siteName)

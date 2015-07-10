@@ -57,7 +57,7 @@ namespace DBC.Controllers
         [HttpPost]
         [AllowAnonymous]
 
-        public JsonResult GetAll([FromBody]DataTablesParam dTRequest)
+        public JsonResult GetAll([FromBody]DataTablesRequest dTRequest)
         {
             //return new JsonResult(new
             //{
@@ -67,12 +67,7 @@ namespace DBC.Controllers
             //    data = _items
             //}); 
             var db = Ctx;
-            //foreach(ApplicationUser user in db.Users)
-            //{
-            //    UserManager.SetLockoutEnabledAsync(user, true);
-            //    UserManager.SetLockoutEndDateAsync(user, new DateTimeOffset(2016, 01, 01, 23, 0, 0, new TimeSpan(-2, 0, 0)));
-            //}
-            var data = DataTablesResult.Create(db.Users
+            var data = new DataTables().GetRepsonse(db.Users
                 .Select(user => new UserView()
                 {
                     EmailConfirmed = user.EmailConfirmed,
@@ -81,17 +76,8 @@ namespace DBC.Controllers
                     TwoFactorEnabled = user.TwoFactorEnabled,
                     UserName = user.UserName,
                 })
-            , dTRequest).Data;
+            , dTRequest);
             return new JsonResult(data);  
-            //return new JsonResult(DataTablesResult.Create(a.Select(user => new UserView()
-            //{
-            //    EmailConfirmed = user.EmailConfirmed.ToString(),
-            //    LockoutEnd = user.LockoutEnd,
-            //    Email = user.Email,
-            //    TwoFactorEnabled = user.Email,
-            //    UserName = user.UserName,
-            //}),
-            //dTRequest).Data);
         }
         public class UserView2
         {
