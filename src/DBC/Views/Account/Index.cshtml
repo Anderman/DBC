@@ -1,0 +1,89 @@
+﻿@model ApplicationUser
+@using DBC.Models.DB
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<p><br /><br /><br /></p>
+<table id="example1" class="datatables display"  stateSave="true" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th asp-for="Email" column-renderFunction="createMailToLink(data)"></th>
+            <th asp-for="EmailConfirmed"  ></th>
+            <th asp-for="LockoutEnd" column-renderFunction="formatDate(data,'YYYY-DD-mm hh:mm:ss')"></th>
+            <th asp-for="TwoFactorEnabled"></th>
+            <th asp-for="UserName"></th>
+        </tr>
+    </thead>
+</table>
+<p>Content</p>
+@section Scripts {
+    <script>
+        function createMailToLink(data) {
+            return '<a href=mailto:' + data + '>'+data+'</a>';
+        }
+        function render(data) {
+            return data;
+        }
+        function formatDate(data, format) {
+            return moment(data).format(format);
+        }
+</script>
+    <script>
+        $(document).ready(function () {
+            var getColumns = function (datatable) {
+                var columns = [];
+                $($(datatable).find("thead > tr > th[column-data]")).each(function () {
+                    var renderFunction = $(this).attr("column-renderFunction");
+                    if (renderFunction) {
+                        var sRender = new Function("data", "type", "full", "meta", "return " + renderFunction);
+                        columns.push({ data: $(this).attr("column-data"), render: sRender });
+                    }
+                    else
+                        columns.push({ data: $(this).attr("column-data")});
+                });
+                return columns;
+            }
+            $('table.datatables').each(function () {
+                $(this).dataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "/Account/GetAll",
+                        "type": "POST",
+                        "contentType": "application/json; charset=utf-8",
+                        "dataType": "json",
+                        "data": function (d) {
+                            return JSON.stringify(d);
+                        }
+                    },
+                    "columns": getColumns(this),
+                    "language": {
+                        "sProcessing": "Bezig...",
+                        "sLengthMenu": "",
+                        "sZeroRecords": "Geen resultaten gevonden",
+                        "sInfo": "_START_ tot _END_ van _TOTAL_ resultaten",
+                        "sInfoEmpty": "Geen resultaten om weer te geven",
+                        "sInfoFiltered": " (gefilterd uit _MAX_ resultaten)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Zoeken:",
+                        "sEmptyTable": "Geen resultaten aanwezig in de tabel",
+                        "sInfoThousands": ".",
+                        "sLoadingRecords": "Een moment geduld aub - bezig met laden...",
+                        "oPaginate": {
+                            "sFirst": "Eerste",
+                            "sLast": "Laatste",
+                            "sNext": "Volgende",
+                            "sPrevious": "Vorige"
+                        }
+                    },
+                    "lengthMenu": [
+                        [25, 50, 100, -1],
+                        [25, 50, 100, "Alles"] // change per page values here
+                    ],
+                })
+            });
+        });
+    </script>
+}
