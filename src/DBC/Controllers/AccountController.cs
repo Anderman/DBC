@@ -49,11 +49,6 @@ namespace DBC.Controllers
         {
             return "";
         }
-        static readonly List<ApplicationUser> _items = new List<ApplicationUser>()
-        {
-            {new ApplicationUser { Id = "1", Email= "Jerome@kuifje.be",LockoutEnd=new DateTimeOffset(2016,1,1,22,21,20,new TimeSpan(10,0,0)),UserName="Jerome",TwoFactorEnabled=false} },
-            {new ApplicationUser { Id = "2", Email= "Barabas@kuifje.be",LockoutEnd=new DateTimeOffset(2016,1,1,22,21,20,new TimeSpan(11,0,0)),UserName="Barabas",TwoFactorEnabled=true} },
-        };
         [HttpPost]
         [AllowAnonymous]
 

@@ -29,7 +29,7 @@ namespace GGZDBC.Models.DBCModel.Registraties
         public DateTime Begindate { get; set; }
         public DateTime Enddate { get; set; }
 
-        public new static void OnModelCreating(ModelBuilder builder)
+        public  static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Beslisboom>(b =>
             {
