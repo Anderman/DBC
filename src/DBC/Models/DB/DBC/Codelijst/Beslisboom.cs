@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
 using System.Globalization;
+using Microsoft.Data.Entity;
 
 namespace GGZDBC.Models.DBCModel.Registraties
 {
@@ -28,6 +29,13 @@ namespace GGZDBC.Models.DBCModel.Registraties
         public DateTime Begindate { get; set; }
         public DateTime Enddate { get; set; }
 
+        public new static void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Beslisboom>(b =>
+            {
+                b.Key(p => new { p.knoopNummer, p.Begindate });
+            });
+        }
     }
     //knoop_nummer|kenmerkende_factor_code|parameter_1|parameter_2|operator|waarde_1|waarde_2|knoop_doel_true|onthouden_doel_true|knoop_doel_false|onthouden_doel_false
     public sealed class BeslisboomMap : CsvClassMap<Beslisboom>
