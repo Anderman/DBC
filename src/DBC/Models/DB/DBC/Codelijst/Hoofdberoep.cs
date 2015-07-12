@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
 using System.Globalization;
+using Microsoft.Data.Entity;
 
 namespace GGZDBC.Models.DBCModel.Registraties
 {
@@ -18,6 +19,14 @@ namespace GGZDBC.Models.DBCModel.Registraties
         public String beschrijving { get; set; }
         //[Index("IX_Updatekey", 2, IsUnique = true)]
         public int branche_indicatie { get; set; }
+        public new static void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Hoofdberoep>(b =>
+            {
+                b.Property(c => c.Code).ColumnType("varchar").MaxLength(20);
+                b.Index(p => new { p.Code, p.branche_indicatie}).Unique(true);
+            });
+        }
     }
     public sealed class HoofdberoepMap : CsvClassMap<Hoofdberoep>
     {
