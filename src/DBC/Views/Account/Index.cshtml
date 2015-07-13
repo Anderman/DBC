@@ -45,6 +45,17 @@
                 });
                 return columns;
             }
+            var getLanguage = function (datatable) {
+                var v = $(datatable).attr("datatables-lang")
+                var language = JSON.parse(v);
+                return language
+            }
+            var getLengthMenu = function (datatable) {
+                var lengthMenu = [];
+                var v = $(datatable).attr("datatables-lengthMenu")
+                lengthMenu = JSON.parse(v);
+                return lengthMenu;
+            }
             $('table.datatables').each(function () {
                 $(this).dataTable({
                     "processing": true,
