@@ -1,0 +1,564 @@
+Microsoft .NET Development Utility CLR-x86-1.0.0-beta5-12103
+
+
+Building DBC.test for DNX,Version=v4.5.1
+  Using Project dependency DBC.test 1.0.0
+    Source: C:\git\t2\DBC\test\DBC.test\project.json
+
+  Using Project dependency DBC 1.0.0
+    Source: C:\git\t2\DBC\src\DBC\project.json
+
+  Using Project dependency Mvc6.JQuery.Datatables 1.0.0-beta5
+    Source: C:\git\Mvc.JQuery.Datatables\src\Mvc6.JQuery.Datatables\project.json
+
+  Using Project dependency TagHelpers 1.0.0
+    Source: C:\git\TagHelpers\src\TagHelpers\project.json
+
+  Using Package dependency xunit.runner.aspnet 2.0.0-aspnet-beta5-10570
+    Source: C:\Users\Thom\.dnx\packages\xunit.runner.aspnet\2.0.0-aspnet-beta5-10570
+    File: lib\dnx451\xunit.runner.aspnet.dll
+
+  Using Package dependency Microsoft.AspNet.TestHost 1.0.0-beta5-12012
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.TestHost\1.0.0-beta5-12012
+    File: lib\dnx451\Microsoft.AspNet.TestHost.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.Json 1.0.0-beta5-11504
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.Json\1.0.0-beta5-11504
+    File: lib\dnx451\Microsoft.Framework.Configuration.Json.dll
+
+  Using Package dependency Moq 4.2.1312.1622
+    Source: C:\Users\Thom\.dnx\packages\Moq\4.2.1312.1622
+    File: lib\net40\Moq.dll
+
+  Using Package dependency Newtonsoft.Json 6.0.6
+    Source: C:\Users\Thom\.dnx\packages\Newtonsoft.Json\6.0.6
+    File: lib\net45\Newtonsoft.Json.dll
+
+  Using Package dependency Microsoft.Framework.Runtime.Abstractions 1.0.0-beta5-12103
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime.Abstractions\1.0.0-beta5-12103
+    File: lib\dnx451\Microsoft.Framework.Runtime.Abstractions.dll
+
+  Using Package dependency Microsoft.Framework.TestHost 1.0.0-beta5-11654
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.TestHost\1.0.0-beta5-11654
+    File: lib\dnx451\Microsoft.Framework.TestHost.dll
+
+  Using Package dependency xunit.assert 2.0.0-rc3-build2880
+    Source: C:\Users\Thom\.dnx\packages\xunit.assert\2.0.0-rc3-build2880
+    File: lib\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.assert.dll
+
+  Using Package dependency xunit.execution.AspNet 2.0.0-aspnet-beta5-10332
+    Source: C:\Users\Thom\.dnx\packages\xunit.execution.AspNet\2.0.0-aspnet-beta5-10332
+    File: lib\dnx451\xunit.execution.AspNet.dll
+
+  Using Package dependency xunit.runner.utility.AspNet 2.0.0-aspnet-beta5-10332
+    Source: C:\Users\Thom\.dnx\packages\xunit.runner.utility.AspNet\2.0.0-aspnet-beta5-10332
+    File: lib\dnx451\xunit.runner.utility.AspNet.dll
+
+  Using Package dependency Microsoft.AspNet.Hosting 1.0.0-beta5-12012
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Hosting\1.0.0-beta5-12012
+    File: lib\dnx451\Microsoft.AspNet.Hosting.dll
+
+  Using Package dependency Microsoft.Framework.Configuration 1.0.0-beta5-11504
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration\1.0.0-beta5-11504
+    File: lib\dnx451\Microsoft.Framework.Configuration.dll
+
+  Using Package dependency EntityFramework.Commands 7.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\EntityFramework.Commands\7.0.0-beta5
+    File: lib\dnx451\EntityFramework.Commands.dll
+
+  Using Package dependency EntityFramework.SqlServer 7.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\EntityFramework.SqlServer\7.0.0-beta5
+    File: lib\net45\EntityFramework.SqlServer.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication.Google 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication.Google\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.Google.dll
+
+  Using Package dependency Microsoft.AspNet.Diagnostics 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Diagnostics\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Diagnostics.dll
+
+  Using Package dependency Microsoft.AspNet.Diagnostics.Entity 7.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Diagnostics.Entity\7.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Diagnostics.Entity.dll
+
+  Using Package dependency Microsoft.AspNet.Identity.EntityFramework 3.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Identity.EntityFramework\3.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Identity.EntityFramework.dll
+
+  Using Package dependency Microsoft.AspNet.Server.IIS 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Server.IIS\1.0.0-beta5
+
+  Using Package dependency Microsoft.AspNet.Server.WebListener 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Server.WebListener\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Server.WebListener.dll
+
+  Using Package dependency Microsoft.AspNet.StaticFiles 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.StaticFiles\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.StaticFiles.dll
+
+  Using Package dependency Microsoft.AspNet.Tooling.Razor 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Tooling.Razor\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Tooling.Razor.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.UserSecrets 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.UserSecrets\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Configuration.UserSecrets.dll
+
+  Using Package dependency Microsoft.Framework.Logging 1.0.0-beta5-11498
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Logging\1.0.0-beta5-11498
+    File: lib\dnx451\Microsoft.Framework.Logging.dll
+
+  Using Package dependency Microsoft.Framework.Logging.Console 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Logging.Console\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Logging.Console.dll
+
+  Using Package dependency npm 1.4.15.2
+    Source: C:\Users\Thom\.dnx\packages\npm\1.4.15.2
+
+  Using Package dependency Microsoft.AspNet.Mvc 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.dll
+
+  Using Package dependency Microsoft.AspNet.Mvc.TagHelpers 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc.TagHelpers\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.TagHelpers.dll
+
+  Using Package dependency Microsoft.AspNet.Http.Features 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Http.Features\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.AspNet.Http.Features.dll
+
+  Using Package dependency Microsoft.AspNet.Http 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Http\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.AspNet.Http.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication.Facebook 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication.Facebook\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.Facebook.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication.MicrosoftAccount 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication.MicrosoftAccount\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.MicrosoftAccount.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication.Twitter 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication.Twitter\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.Twitter.dll
+
+  Using Package dependency CsvHelper 2.11.0
+    Source: C:\Users\Thom\.dnx\packages\CsvHelper\2.11.0
+    File: lib\net40-client\CsvHelper.dll
+
+  Using Package dependency Microsoft.Framework.TestAdapter 1.0.0-beta5-11654
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.TestAdapter\1.0.0-beta5-11654
+    File: lib\dnx451\Microsoft.Framework.TestAdapter.dll
+
+  Using Package dependency Microsoft.Framework.ApplicationHost 1.0.0-beta5-12103
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.ApplicationHost\1.0.0-beta5-12103
+    File: lib\dnx451\Microsoft.Framework.ApplicationHost.dll
+
+  Using Package dependency Microsoft.Framework.CommandLineUtils.Sources 1.0.0-beta5-12103
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.CommandLineUtils.Sources\1.0.0-beta5-12103
+    File: lib\dnx451\Microsoft.Framework.CommandLineUtils.Sources.dll
+
+  Using Package dependency Microsoft.Framework.Runtime 1.0.0-beta5-12103
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime\1.0.0-beta5-12103
+    File: lib\dnx451\Microsoft.Framework.Runtime.dll
+
+  Using Package dependency xunit.abstractions 2.0.0-rc3-build2880
+    Source: C:\Users\Thom\.dnx\packages\xunit.abstractions\2.0.0-rc3-build2880
+    File: lib\net35\xunit.abstractions.dll
+
+  Using Package dependency xunit.extensibility.core 2.0.0-rc3-build2880
+    Source: C:\Users\Thom\.dnx\packages\xunit.extensibility.core\2.0.0-rc3-build2880
+    File: lib\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.dll
+
+  Using Package dependency Microsoft.AspNet.FileProviders.Physical 1.0.0-beta5-11529
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.FileProviders.Physical\1.0.0-beta5-11529
+    File: lib\dnx451\Microsoft.AspNet.FileProviders.Physical.dll
+
+  Using Package dependency Microsoft.AspNet.Hosting.Abstractions 1.0.0-beta5-12012
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Hosting.Abstractions\1.0.0-beta5-12012
+    File: lib\dnx451\Microsoft.AspNet.Hosting.Abstractions.dll
+
+  Using Package dependency Microsoft.AspNet.Hosting.Server.Abstractions 1.0.0-beta5-12012
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Hosting.Server.Abstractions\1.0.0-beta5-12012
+    File: lib\dnx451\Microsoft.AspNet.Hosting.Server.Abstractions.dll
+
+  Using Package dependency Microsoft.AspNet.Http.Extensions 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Http.Extensions\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.AspNet.Http.Extensions.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.CommandLine 1.0.0-beta5-11504
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.CommandLine\1.0.0-beta5-11504
+    File: lib\dnx451\Microsoft.Framework.Configuration.CommandLine.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.EnvironmentVariables 1.0.0-beta5-11504
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.EnvironmentVariables\1.0.0-beta5-11504
+    File: lib\dnx451\Microsoft.Framework.Configuration.EnvironmentVariables.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.Ini 1.0.0-beta5-11504
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.Ini\1.0.0-beta5-11504
+    File: lib\dnx451\Microsoft.Framework.Configuration.Ini.dll
+
+  Using Package dependency Microsoft.Framework.DependencyInjection 1.0.0-beta5-11508
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.DependencyInjection\1.0.0-beta5-11508
+    File: lib\dnx451\Microsoft.Framework.DependencyInjection.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.Abstractions 1.0.0-beta5-11504
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.Abstractions\1.0.0-beta5-11504
+    File: lib\dnx451\Microsoft.Framework.Configuration.Abstractions.dll
+
+  Using Package dependency EntityFramework.Relational.Design 7.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\EntityFramework.Relational.Design\7.0.0-beta5
+    File: lib\dnx451\EntityFramework.Relational.Design.dll
+
+  Using Package dependency EntityFramework.Relational 7.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\EntityFramework.Relational\7.0.0-beta5
+    File: lib\net45\EntityFramework.Relational.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication.OAuth 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication.OAuth\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.OAuth.dll
+
+  Using Package dependency Microsoft.AspNet.Diagnostics.Abstractions 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Diagnostics.Abstractions\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Diagnostics.Abstractions.dll
+
+  Using Package dependency Microsoft.AspNet.WebUtilities 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.WebUtilities\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.AspNet.WebUtilities.dll
+
+  Using Package dependency Microsoft.Framework.OptionsModel 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.OptionsModel\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.OptionsModel.dll
+
+  Using Package dependency Microsoft.Framework.WebEncoders.Core 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.WebEncoders.Core\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.Framework.WebEncoders.Core.dll
+
+  Using Package dependency Microsoft.Framework.Logging.Abstractions 1.0.0-beta5-11498
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Logging.Abstractions\1.0.0-beta5-11498
+    File: lib\dnx451\Microsoft.Framework.Logging.Abstractions.dll
+
+  Using Package dependency EntityFramework.Core 7.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\EntityFramework.Core\7.0.0-beta5
+    File: lib\dnx451\EntityFramework.Core.dll
+
+  Using Package dependency Microsoft.AspNet.Identity 3.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Identity\3.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Identity.dll
+
+  Using Package dependency Microsoft.AspNet.Loader.IIS.Interop 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Loader.IIS.Interop\1.0.0-beta5
+
+  Using Package dependency Microsoft.AspNet.Loader.IIS 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Loader.IIS\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Loader.IIS.dll
+
+  Using Package dependency Microsoft.Net.Http.Server 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Net.Http.Server\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Net.Http.Server.dll
+
+  Using Package dependency Microsoft.AspNet.FileProviders.Abstractions 1.0.0-beta5-11529
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.FileProviders.Abstractions\1.0.0-beta5-11529
+    File: lib\dnx451\Microsoft.AspNet.FileProviders.Abstractions.dll
+
+  Using Package dependency Microsoft.Framework.WebEncoders 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.WebEncoders\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.WebEncoders.dll
+
+  Using Package dependency Microsoft.AspNet.Razor.Runtime 4.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Razor.Runtime\4.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Razor.Runtime.dll
+
+  Using Package dependency Microsoft.Framework.DependencyInjection.Abstractions 1.0.0-beta5-11508
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.DependencyInjection.Abstractions\1.0.0-beta5-11508
+    File: lib\dnx451\Microsoft.Framework.DependencyInjection.Abstractions.dll
+
+  Using Package dependency Node.js 0.10.26.1
+    Source: C:\Users\Thom\.dnx\packages\Node.js\0.10.26.1
+
+  Using Package dependency NoGit 0.0.8
+    Source: C:\Users\Thom\.dnx\packages\NoGit\0.0.8
+
+  Using Package dependency Microsoft.AspNet.Authorization 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authorization\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authorization.dll
+
+  Using Package dependency Microsoft.AspNet.Cors 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Cors\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Cors.dll
+
+  Using Package dependency Microsoft.AspNet.Mvc.ApiExplorer 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc.ApiExplorer\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.ApiExplorer.dll
+
+  Using Package dependency Microsoft.AspNet.Mvc.Razor 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc.Razor\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.Razor.dll
+
+  Using Package dependency Microsoft.Framework.Caching.Memory 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Caching.Memory\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Caching.Memory.dll
+
+  Using Package dependency Microsoft.Framework.FileSystemGlobbing 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.FileSystemGlobbing\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.FileSystemGlobbing.dll
+
+  Using Package dependency Microsoft.AspNet.FeatureModel 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.FeatureModel\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.AspNet.FeatureModel.dll
+
+  Using Package dependency Microsoft.AspNet.Http.Abstractions 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Http.Abstractions\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.AspNet.Http.Abstractions.dll
+
+  Using Package dependency Microsoft.Net.Http.Headers 1.0.0-beta5-11638
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Net.Http.Headers\1.0.0-beta5-11638
+    File: lib\dnx451\Microsoft.Net.Http.Headers.dll
+
+  Using Package dependency Microsoft.AspNet.Mvc.Core 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc.Core\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.Core.dll
+
+  Using Package dependency System.Linq.Dynamic 1.0.4
+    Source: C:\Users\Thom\.dnx\packages\System.Linq.Dynamic\1.0.4
+    File: lib\net40\System.Linq.Dynamic.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.dll
+
+  Using Package dependency Microsoft.AspNet.Mvc.Abstractions 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc.Abstractions\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.Abstractions.dll
+
+  Using Package dependency Microsoft.Net.Http 2.2.29
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Net.Http\2.2.29
+    File: lib\net45\System.Net.Http.Extensions.dll
+    File: lib\net45\System.Net.Http.Primitives.dll
+
+  Using Package dependency Microsoft.Framework.Runtime.Loader 1.0.0-beta5-12103
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime.Loader\1.0.0-beta5-12103
+    File: lib\dnx451\Microsoft.Framework.Runtime.Loader.dll
+
+  Using Package dependency Microsoft.Framework.Runtime.Caching 1.0.0-beta5-12103
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime.Caching\1.0.0-beta5-12103
+    File: lib\dnx451\Microsoft.Framework.Runtime.Caching.dll
+
+  Using Package dependency Microsoft.AspNet.Razor 4.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Razor\4.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Razor.dll
+
+  Using Package dependency Microsoft.CodeAnalysis.CSharp 1.0.0-rc3
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.CodeAnalysis.CSharp\1.0.0-rc3
+    File: lib\net45\Microsoft.CodeAnalysis.CSharp.dll
+
+  Using Package dependency Microsoft.Framework.Runtime.Roslyn 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime.Roslyn\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Runtime.Roslyn.dll
+
+  Using Package dependency Microsoft.Framework.Configuration.Binder 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Configuration.Binder\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Configuration.Binder.dll
+
+  Using Package dependency Ix-Async 1.2.3
+    Source: C:\Users\Thom\.dnx\packages\Ix-Async\1.2.3
+    File: lib\net45\System.Interactive.Async.dll
+
+  Using Package dependency Microsoft.Framework.Caching.Abstractions 1.0.0-beta5-11514
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Caching.Abstractions\1.0.0-beta5-11514
+    File: lib\dnx451\Microsoft.Framework.Caching.Abstractions.dll
+
+  Using Package dependency Remotion.Linq 2.0.0-alpha-002
+    Source: C:\Users\Thom\.dnx\packages\Remotion.Linq\2.0.0-alpha-002
+    File: lib\portable-net45+win+wpa81+wp80\Remotion.Linq.dll
+
+  Using Package dependency System.Collections.Immutable 1.1.36
+    Source: C:\Users\Thom\.dnx\packages\System.Collections.Immutable\1.1.36
+    File: lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll
+
+  Using Package dependency Microsoft.AspNet.Authentication.Cookies 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Authentication.Cookies\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Authentication.Cookies.dll
+
+  Using Package dependency Microsoft.AspNet.Cryptography.KeyDerivation 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Cryptography.KeyDerivation\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Cryptography.KeyDerivation.dll
+
+  Using Package dependency Microsoft.AspNet.DataProtection 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.DataProtection\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.DataProtection.dll
+
+  Using Package dependency Microsoft.AspNet.DataProtection.Abstractions 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.DataProtection.Abstractions\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.DataProtection.Abstractions.dll
+
+  Using Package dependency Microsoft.Net.WebSockets 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Net.WebSockets\1.0.0-beta5
+    File: lib\net45\Microsoft.Net.WebSockets.dll
+
+  Using Package dependency Microsoft.AspNet.Cors.Core 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Cors.Core\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Cors.Core.dll
+
+  Using Package dependency Microsoft.AspNet.Mvc.Razor.Host 6.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Mvc.Razor.Host\6.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Mvc.Razor.Host.dll
+
+  Using Package dependency Microsoft.AspNet.PageExecutionInstrumentation.Interfaces 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.PageExecutionInstrumentation.Interfaces\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.PageExecutionInstrumentation.Interfaces.dll
+
+  Using Package dependency Microsoft.Framework.Runtime.Roslyn.Common 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime.Roslyn.Common\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Runtime.Roslyn.Common.dll
+
+  Using Package dependency Microsoft.Framework.Runtime.Roslyn.Abstractions 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Framework.Runtime.Roslyn.Abstractions\1.0.0-beta5
+    File: lib\dnx451\Microsoft.Framework.Runtime.Roslyn.Abstractions.dll
+
+  Using Package dependency Microsoft.AspNet.JsonPatch 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.JsonPatch\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.JsonPatch.dll
+
+  Using Package dependency Microsoft.AspNet.Routing 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Routing\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Routing.dll
+
+  Using Package dependency Microsoft.Bcl 1.1.10
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Bcl\1.1.10
+
+  Using Package dependency Microsoft.Bcl.Build 1.0.14
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.Bcl.Build\1.0.14
+
+  Using Package dependency Microsoft.CodeAnalysis.Common 1.0.0-rc3
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.CodeAnalysis.Common\1.0.0-rc3
+    File: lib\net45\Microsoft.CodeAnalysis.dll
+
+  Using Package dependency Microsoft.AspNet.Cryptography.Internal 1.0.0-beta5
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.AspNet.Cryptography.Internal\1.0.0-beta5
+    File: lib\dnx451\Microsoft.AspNet.Cryptography.Internal.dll
+
+  Using Package dependency System.Reflection.Metadata 1.0.21
+    Source: C:\Users\Thom\.dnx\packages\System.Reflection.Metadata\1.0.21
+    File: lib\portable-net45+win8\System.Reflection.Metadata.dll
+
+  Using Package dependency Microsoft.CodeAnalysis.Analyzers 1.0.0-rc3
+    Source: C:\Users\Thom\.dnx\packages\Microsoft.CodeAnalysis.Analyzers\1.0.0-rc3
+
+  Using Assembly dependency framework/fx/mscorlib 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
+
+  Using Assembly dependency framework/fx/System 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
+
+  Using Assembly dependency framework/fx/System.Core 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
+
+  Using Assembly dependency framework/fx/Microsoft.CSharp 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
+
+  Using Assembly dependency framework/fx/System.ObjectModel 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.ObjectModel.dll
+
+  Using Assembly dependency framework/fx/System.Text.RegularExpressions 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.RegularExpressions.dll
+
+  Using Assembly dependency framework/fx/System.Xml 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.dll
+
+  Using Assembly dependency framework/fx/System.Xml.Linq 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
+
+  Using Assembly dependency framework/fx/System.Net.Http 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.Http.dll
+
+  Using Assembly dependency framework/fx/System.Collections 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
+
+  Using Assembly dependency framework/fx/System.Diagnostics.Debug 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
+
+  Using Assembly dependency framework/fx/System.Globalization 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Globalization.dll
+
+  Using Assembly dependency framework/fx/System.Linq 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.dll
+
+  Using Assembly dependency framework/fx/System.Reflection 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.dll
+
+  Using Assembly dependency framework/fx/System.Reflection.Extensions 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Extensions.dll
+
+  Using Assembly dependency framework/fx/System.Runtime 4.0.10.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
+
+  Using Assembly dependency framework/fx/System.Runtime.Extensions 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
+
+  Using Assembly dependency framework/fx/System.Threading.Tasks 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Tasks.dll
+
+  Using Assembly dependency framework/fx/System.Configuration 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Configuration.dll
+
+  Using Assembly dependency framework/fx/System.Collections.Concurrent 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
+
+  Using Assembly dependency framework/fx/System.Net.Http.WebRequest 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.Http.WebRequest.dll
+
+  Using Assembly dependency framework/fx/System.Text.Encoding 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
+
+  Using Assembly dependency framework/fx/System.IO 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.IO.dll
+
+  Using Assembly dependency framework/fx/System.IO.Compression 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.IO.Compression.dll
+
+  Using Assembly dependency framework/fx/System.IO.Compression.FileSystem 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.IO.Compression.FileSystem.dll
+
+  Using Assembly dependency framework/fx/System.Data 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Data.dll
+
+  Using Assembly dependency framework/fx/System.Transactions 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Transactions.dll
+
+  Using Assembly dependency framework/fx/System.Diagnostics.Tools 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tools.dll
+
+  Using Assembly dependency framework/fx/System.Linq.Expressions 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.Expressions.dll
+
+  Using Assembly dependency framework/fx/System.Linq.Queryable 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.Queryable.dll
+
+  Using Assembly dependency framework/fx/System.Resources.ResourceManager 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Resources.ResourceManager.dll
+
+  Using Assembly dependency framework/fx/System.Threading 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.dll
+
+  Using Assembly dependency framework/fx/System.ComponentModel.DataAnnotations 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.ComponentModel.DataAnnotations.dll
+
+  Using Assembly dependency framework/fx/System.Runtime.Serialization 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Runtime.Serialization.dll
+
+  Using Assembly dependency framework/fx/System.Security 4.0.0.0
+    Source: C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll
+
+C:\git\t2\DBC\test\DBC.test\project.json(10,32): warning: Dependency specified was xunit.runner.aspnet >= 2.0.0-aspnet-beta5* but ended up with xunit.runner.aspnet 2.0.0-aspnet-beta5-10570.
+C:\git\t2\DBC\src\DBC\project.json(19,40): warning: Dependency specified was Microsoft.Framework.Logging >= 1.0.0-beta5 but ended up with Microsoft.Framework.Logging 1.0.0-beta5-11498.
+C:\git\t2\DBC\src\DBC\project.json(24,43): warning: Dependency specified was Microsoft.AspNet.Http.Features >= 1.0.0-beta5 but ended up with Microsoft.AspNet.Http.Features 1.0.0-beta5-11638.
+C:\git\t2\DBC\src\DBC\project.json(25,34): warning: Dependency specified was Microsoft.AspNet.Http >= 1.0.0-beta5 but ended up with Microsoft.AspNet.Http 1.0.0-beta5-11638.
+
+Build succeeded.
+    4 Warning(s)
+    0 Error(s)
+
+Time elapsed 00:00:03.2904212

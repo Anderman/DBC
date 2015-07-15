@@ -52,28 +52,8 @@ namespace DBC.Controllers
         [HttpPost]
         [AllowAnonymous]
 
-        public JsonResult GetAll([FromBody]DataTablesRequest dTRequest)
-        {
-            //return new JsonResult(new
-            //{
-            //    draw = dTRequest.Draw,
-            //    recordsTotal = _items.Count(),
-            //    recordsFiltered = _items.Count(),
-            //    data = _items
-            //}); 
-            var db = Ctx;
-            var data = new DataTables().GetRepsonse(db.Users
-                .Select(user => new UserView()
-                {
-                    EmailConfirmed = user.EmailConfirmed,
-                    LockoutEnd = new DateTimeOffset(2016, 01, 01, 23, 0, 0, new TimeSpan(-2, 0, 0)),// user.LockoutEnd,
-                    Email = user.Email,
-                    TwoFactorEnabled = user.TwoFactorEnabled,
-                    UserName = user.UserName,
-                })
-            , dTRequest);
-            return new JsonResult(data);  
-        }
+        public JsonResult GetAll([FromBody]DataTablesRequest dTRequest)=>
+            new DataTables().GetJSonResult(Ctx.Users, dTRequest);
         public class UserView2
         {
 

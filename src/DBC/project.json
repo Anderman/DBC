@@ -23,7 +23,7 @@
         "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta5",
         "Microsoft.AspNet.Http.Features": "1.0.0-beta5",
         "Microsoft.AspNet.Http": "1.0.0-beta5",
-        "Mvc.JQuery.Datatables": "1.0.0-*",
+        "Mvc6.JQuery.Datatables": "1.0.0-*",
         "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta5",
         "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta5",
         "Microsoft.AspNet.Authentication.Twitter": "1.0.0-beta5",
