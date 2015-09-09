@@ -12,6 +12,8 @@ namespace DBC.Models.DB
         public override bool TwoFactorEnabled { get; set; } = true;
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public override DateTimeOffset? LockoutEnd { get; set; }
+        [Display(Description = "Email adress is used for login")]
+        public override string Email { get; set; }
 
     }
     public enum Roles

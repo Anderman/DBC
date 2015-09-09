@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Mvc.Rendering;
 
@@ -68,7 +69,7 @@ namespace DBC.Models.View
     public class LoginViewModel
     {
         [Required]
-        [Display(ResourceType = typeof(loc), Name = "Email")]
+        [Display(ResourceType = typeof(loc), Name = "Email", Prompt = "Email")]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -79,6 +80,9 @@ namespace DBC.Models.View
 
         [Display(ResourceType = typeof(loc), Name = "RememberMe")]
         public bool RememberMe { get; set; }
+
+        //[EmailAddress( ErrorMessage = "date is not datetime")]
+        public int lockout { get; set; }
     }
 
     public class RegisterViewModel

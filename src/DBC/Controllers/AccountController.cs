@@ -40,20 +40,13 @@ namespace DBC.Controllers
         public SignInManager<ApplicationUser> SignInManager { get; private set; }
         public MessageServicesOptions MessageServiceOptions { get; private set; }
 
-
         //
         // GET: /Account/Empty //only for test todo remove me
-        [HttpGet]
-        [AllowAnonymous]
-        public string Empty()
-        {
-            return "";
-        }
         [HttpPost]
         [AllowAnonymous]
 
-        public JsonResult GetAll([FromBody]DataTablesRequest dTRequest)=>
-            new DataTables().GetJSonResult(Ctx.Users, dTRequest);
+        public JsonResult GetAll([FromBody]DataTablesRequest dTRequest) =>
+            new Mvc.JQuery.Datatables.DataTables().GetJSonResult(Ctx.Users, dTRequest);
         public class UserView2
         {
 
@@ -75,12 +68,6 @@ namespace DBC.Controllers
 
             //[DataTables(Visible = false)]
             public string UserName { get; set; }
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        public ViewResult Index()
-        {
-            return View();
         }
 
         //

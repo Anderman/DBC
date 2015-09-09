@@ -25,6 +25,12 @@
             <input asp-for="Password" class="form-control form-control-solid placeholder-no-fix" autocomplete="off" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
+        <div class="form-group">
+            <label asp-for="lockout" class="control-label visible-ie8 visible-ie9"></label>
+            <input asp-for="lockout" type="number" data-msg-number="jajaj" class="form-control form-control-solid placeholder-no-fix" autocomplete="off" />
+            <span asp-validation-for="lockout" class="text-danger"></span>
+        </div>
+
         <div class="form-actions">
             <button type="submit" class="btn btn-success uppercase">Login</button>
             <div class="checker"><span class=""><input asp-for="RememberMe" /></span></div>

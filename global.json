@@ -1,6 +1,12 @@
 {
-    "projects": [ "src", "test",  "../TagHelpers/src", "../Mvc.JQuery.Datatables/src" ],
-    "sdk": {
-        "version": "1.0.0-beta5"
-    }
+  "projects": [
+    "src",
+    "test",
+    "../TagHelpers/src",
+    "../Mvc.JQuery.Datatables/src"
+    
+  ],
+  "sdk": {
+    "version": "1.0.0-beta7"
+  }
 }

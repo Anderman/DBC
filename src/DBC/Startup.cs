@@ -7,10 +7,12 @@ using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Anderman.TagHelpers;
 
 namespace DBC
 {
@@ -89,7 +91,10 @@ namespace DBC
             });
 
             // Add MVC services to the services container.
-            services.AddMvc();
+            services.AddMvc().Configure<MvcOptions>(m =>
+            {
+                m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
+            });
             //Own DBC service
             services.AddSingleton<MessageServices, MessageServices>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
@@ -111,7 +116,7 @@ namespace DBC
             loggerfactory.AddConsole(minLevel: LogLevel.Warning);
 
             // Add the following to the request pipeline only in development environment.
-                app.UseErrorPage();
+            app.UseErrorPage();
             if (env.IsEnvironment("Development"))
             {
                 //app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);

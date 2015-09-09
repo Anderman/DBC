@@ -39,7 +39,7 @@ namespace GGZDBC.Models.DBCModel.Registraties
         public String diagnose_blinderen { get; set; }
         public int? mutatie { get; set; }
         public int branche_indicatie { get; set; }
-        public static void OnModelCreating(ModelBuilder builder)
+        public new static void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Productgroep>(b =>
             {
