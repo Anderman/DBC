@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
 using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Metadata;
 
 namespace GGZDBC.Models.DBCModel.Registraties
 {
@@ -22,12 +21,12 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Aanspraakbeperking>(b =>
             {
-                b.Property(c => c.Code).ColumnType("char").MaxLength(3);
+                b.Property(c => c.Code).HasColumnType("char").MaxLength(3);
                 b.Index(p => p.Code).Unique(true);
             });
         }
     }
-    public sealed class AanspraakbeperkingMap : CsvClassMap<Aanspraakbeperking>
+    public sealed class AanspraakbeperkingMap : CsvHelper.Configuration.CsvClassMap<Aanspraakbeperking>
     {
         public AanspraakbeperkingMap()
         {

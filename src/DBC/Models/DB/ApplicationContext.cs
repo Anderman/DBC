@@ -1,11 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GGZDBC.Models.DBCModel.Afleiding;
 using GGZDBC.Models.DBCModel.Registraties;
 using GGZDBC.Models.DBCModel.Testset;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Relational.Migrations;
+using Microsoft.Data.Entity.Migrations;
+using UserManagement.Models;
+
 namespace DBC.Models.DB
 {
     public class ApplicationContext : IdentityDbContext<ApplicationUser>
@@ -39,7 +42,7 @@ namespace DBC.Models.DB
             GGZDBC.Models.DBCModel.Registraties.Aanspraakbeperking.OnModelCreating(builder);
             builder.Entity<Activiteit>().Index(p => new { p.Code, p.branche_indicatie });
             builder.Entity<ActiviteitAndTarief>().Index(p => p.declaratiecode);
-            builder.Entity<Cirquit>().Index(p => new { p.Code,p.branche_indicatie });
+            builder.Entity<Cirquit>().Index(p => new { p.Code, p.branche_indicatie });
             builder.Entity<Beroep>().Index(p => new { p.Code, p.branche_indicatie });
             builder.Entity<Beslisboom>().Key(p => new { p.knoopNummer, p.Begindate });
             builder.Entity<DBCs>().Key(p => p.DBCID);
@@ -51,9 +54,8 @@ namespace DBC.Models.DB
             // Add your customizations after calling base.OnModelCreating(builder);
         }
         public bool AllMigrationsApplied()
-        {
-            return !((IAccessor<IMigrator>)Database.AsRelational()).Service.GetUnappliedMigrations().Any();
-        }
+            => !((IAccessor<IServiceProvider>)this).GetService<IHistoryRepository>()
+               .GetAppliedMigrations().Any();
 
     }
 }

@@ -28,15 +28,15 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         {
             builder.Entity<ActiviteitAndTarief>(b =>
             {
-                b.Property(c => c.declaratiecode).ColumnType("char").MaxLength(6);
-                b.Property(c => c.declaratiecode_kleur).ColumnType("char").MaxLength(5);
+                b.Property(c => c.declaratiecode).HasColumnType("char").MaxLength(6);
+                b.Property(c => c.declaratiecode_kleur).HasColumnType("char").MaxLength(5);
 
 
                 b.Index(p => p.Code).Unique(true);
             });
         }
     }
-    public sealed class ActiviteitAndTariefMap : CsvClassMap<ActiviteitAndTarief>
+    public sealed class ActiviteitAndTariefMap : CsvHelper.Configuration.CsvClassMap<ActiviteitAndTarief>
     {
         public ActiviteitAndTariefMap()
         {

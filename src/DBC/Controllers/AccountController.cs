@@ -13,6 +13,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.OptionsModel;
 using Mvc.JQuery.Datatables;
+using UserManagement.Models;
 
 namespace DBC.Controllers
 {
@@ -164,8 +165,8 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult LogOff()
         {
-            SignInManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            SignInManager.SignOutAsync().Wait();
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         //

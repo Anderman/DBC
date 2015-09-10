@@ -1,4 +1,4 @@
-﻿using GGZDBC.Models.DBCModel.Registraties;
+﻿//using GGZDBC.Models.DBCModel.Registraties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,50 +37,50 @@ namespace GGZDBC.ModelsLogic.DIS
     Create a form for http://www.cloudmailin.com/plans
     * receive email and check if succesfull and set last senddate for agbcode and location
     */
-    public class DIS
-    {
-        public List<DBCs> DBCs;
-        public void Export()
-        {
-            try
-            {
-                foreach (DBCs DBC in SelectDBCforExport())
-                {
-                    CopyDBCFieldToDIS();
-                }
-                CreateDISZipfile();
-                SendDISZipFIle();
-            }
-            catch (Exception ex)
-            {
-                //Log.ErrorFormat("Error creating ZIPFile:{0}", ex.ToString());
-                throw;
-            }
-        }
+    //public class DIS
+    //{
+    //    public List<DBCs> DBCs;
+    //    public void Export()
+    //    {
+    //        try
+    //        {
+    //            foreach (DBCs DBC in SelectDBCforExport())
+    //            {
+    //                CopyDBCFieldToDIS();
+    //            }
+    //            CreateDISZipfile();
+    //            SendDISZipFIle();
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            //Log.ErrorFormat("Error creating ZIPFile:{0}", ex.ToString());
+    //            throw;
+    //        }
+    //    }
 
-        private void CreateDISZipfile()
-        {
-            throw new NotImplementedException();
-        }
+    //    private void CreateDISZipfile()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        private void SendDISZipFIle()
-        {
-            throw new NotImplementedException();
-        }
+    //    private void SendDISZipFIle()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        private void CopyDBCFieldToDIS()
-        {
-            throw new NotImplementedException();
-        }
+    //    private void CopyDBCFieldToDIS()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        private IEnumerable<DBCs> SelectDBCforExport()
-        {
-            throw new NotImplementedException();
-        }
-        public void ReExport(string OldDIS)
-        {
-        }
+    //    private IEnumerable<DBCs> SelectDBCforExport()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //    public void ReExport(string OldDIS)
+    //    {
+    //    }
 
 
-    }
+    //}
 }

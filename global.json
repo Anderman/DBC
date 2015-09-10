@@ -3,8 +3,8 @@
     "src",
     "test",
     "../TagHelpers/src",
-    "../Mvc.JQuery.Datatables/src"
-    
+    "../Mvc.JQuery.Datatables/src",
+    "wrap"
   ],
   "sdk": {
     "version": "1.0.0-beta7"
