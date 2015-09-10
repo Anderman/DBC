@@ -62,7 +62,7 @@ namespace UserManagement.Controllers
                          //Roles = u.Roles.Join(DbContext.Roles, ur => ur.RoleId, rr => rr.Id, (ur, role2) => role2).Select(rr => rr),
                      });
             var zz = z.ToArray();
-            return new DataTables().GetJSonResult(
+            return new Mvc.JQuery.Datatables.DataTables().GetJSonResult(
                 z
                 , dTRequest);
         }
