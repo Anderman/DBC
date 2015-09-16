@@ -50,8 +50,7 @@
     "exclude": [
         "wwwroot",
         "node_modules",
-        "bower_components",
-        "Metronic"
+        "bower_components"
     ],
     "publishExclude": [
         "node_modules",

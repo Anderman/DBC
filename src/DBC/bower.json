@@ -2,17 +2,7 @@
     "name": "ASP.NET",
     "private": true,
     "dependencies": {
-        "jQuery1.11.2": "http://code.jquery.com/jquery-1.11.2.min.js",
-        "jquery-migrate": "1.2.1",
-        "bootstrap": "3.3.4",
-        "blockui": "*",
-        "jquery-validation": "1.13.1",
-        "jquery-validation-unobtrusive": "3.2.2",
-        "jquery.cookie-min": "1.4.1",
-        "jquery.uniform": "2.1.2",
-        "simple-line-icons": "1.0.0",
-        "font-awesome": "4.3.0",
-        "angular-datatables": "0.4.3",
+        "jquery.are-you-sure": "^1.9.0",
         "grunt": "^0.4.5"
     }
 }
