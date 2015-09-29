@@ -113,7 +113,7 @@ namespace UserManagement
             // Add the console logger.
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
-            app.UseApplicationInsightsExceptionTelemetry();
+            //app.UseApplicationInsightsExceptionTelemetry();
             //loggerFactory.AddProvider(new SqlLoggerProvider());
 
             // Configure the HTTP request pipeline.
@@ -121,7 +121,7 @@ namespace UserManagement
             // Add the following to the request pipeline only in development environment.
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
                 app.UseErrorPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }

@@ -3,7 +3,16 @@
 @*@inject IOptions<AppSettings> AppSettings*@
 
 <html lang="en" pmbx_context="756F7244-847C-42EA-83B1-B06CFA7FDF93">
-<!--<![endif]--><!-- BEGIN HEAD -->
+<!--<![endif]-->
+<!-- BEGIN HEAD
+    Per link tag min.version
+    Fallback test always to local version
+    Make it posible to copy to local min version but not fallbacktest
+    Make it posible to use fallback for local dev
+
+    scriptblock met envirement
+    zelfde scriptblock maar nu met test voor fallback
+    -->
 <head>
     <meta charset="utf-8">
     <title>@ViewBag.Title</title>
@@ -12,39 +21,48 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta content="" name="description">
     <meta content="" name="author">
+    <link href="/css/site.css" rel="stylesheet"
+          asp-use-minified="production,staging" />
+
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" 
-          asp-copy-src-to-fallback="development" 
+    @*<link href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">*@
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet"
+          asp-copy-src-to-fallback="development"
           asp-warn-if-test-is-invalid="development"
-          asp-fallback-test-class="hidden" 
-          asp-fallback-test-property="visibility" 
+          asp-fallback-test-class="invisible"
+          asp-fallback-test-property="visibility"
           asp-fallback-test-value="hidden" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/material.min.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/roboto.min.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/ripples.min.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/material.min.css" rel="stylesheet"
+          asp-copy-src-to-fallback="development"
+          asp-warn-if-test-is-invalid="development"
+          asp-fallback-test-class="mdi-fw"
+          asp-fallback-test-property="text-align"
+          asp-fallback-test-value="center" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/roboto.min.css" rel="stylesheet"
+          asp-copy-src-to-fallback="development"
+          asp-use-site-min-css="production,staging"
+          asp-use-local="development" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/ripples.min.css" rel="stylesheet"
+          asp-copy-src-to-fallback="development"
+          asp-use-site-min-css="production,staging"
+          asp-use-local="development" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--datatables-->
-    <link href="//datatables.net/release-datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" asp-copy-src-to-fallback="development" />
-    <!--controls-->
-    <link href="~/css/bootstrapMD-datetimepicker.css" rel="stylesheet">
+    <link href="https://datatables.net/release-datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet"
+          asp-copy-src-to-fallback="development"
+          asp-use-site-min-css="production,staging"
+          asp-use-local="development" />
     <!--custom-->
-    <link rel="stylesheet" href="~/css/site.css" />
-    <!-- END GLOBAL MANDATORY STYLES -->
-    <!-- BEGIN PAGE LEVEL STYLES -->
-    <!-- END PAGE LEVEL STYLES -->
+    <link href="/css/bootstrapMD-datetimepicker.css" rel="stylesheet"
+          asp-use-site-min-css="production,staging"
+          asp-use-local="development" />
     <link rel="shortcut icon" href="/favicon.ico">
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
-<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
-<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
-<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
-<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
-<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
-<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
-<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
-<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
 <body class="page page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-container-bg-solid page-compact page-sidebar-closed">
     <!-- BEGIN HEADER -->
     <div class="page-header navbar navbar-fixed-top">
@@ -213,7 +231,8 @@
     <!-- END CONTAINER -->
     <!-- BEGIN FOOTER -->
     <div class="page-footer">
-        <div class="page-footer-inner">2015 © Medella. <a href="http://wwww.medella.nl" title="Medella DBC" target="_blank">Medella!</a>
+        <div class="page-footer-inner">
+            2015 © Medella. <a href="http://wwww.medella.nl" title="Medella DBC" target="_blank">Medella!</a>
         </div>
         <div class="scroll-to-top">
             <i class="icon-arrow-up"></i>
@@ -226,20 +245,50 @@
     <script src="//www.keenthemes.com/preview/metronic/theme/assets/global/plugins/respond.min.js"></script>
     <script src="//www.keenthemes.com/preview/metronic/theme/assets/global/plugins/excanvas.min.js"></script>
     <![endif]-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/material.min.js" asp-copy-src-to-fallback="development"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/ripples.min.js" asp-copy-src-to-fallback="development"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
+            asp-copy-src-to-fallback="development" 
+            asp-fallback-test="window.jQuery"
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js" 
+            asp-copy-src-to-fallback="development" 
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/material.min.js" 
+            asp-copy-src-to-fallback="development"
+            asp-fallback-test="window.jQuery && window.jQuery.material"
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/ripples.min.js" 
+            asp-copy-src-to-fallback="development"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.ripples"
+            asp-warn-if-test-is-invalid="development"></script>
+            
 
-    <script src="https://datatables.net/release-datatables/media/js/jquery.dataTables.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery().dataTable" asp-warn-if-test-is-invalid="development"></script>
-    <script src="https://datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery().dataTable.TableTools" asp-warn-if-test-is-invalid="development"></script>
-    <script src="https://datatables.net/release-datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.js" asp-copy-src-to-fallback="development" asp-fallback-test="window.jQuery().dataTable.ext.renderer.pageButton.bootstrap" asp-warn-if-test-is-invalid="development"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js" asp-copy-src-to-fallback="development"></script>
-    <script src="/lib/jquery.are-you-sure/jquery.are-you-sure.js" asp-copy-src-to-fallback="development"></script>
-    
-    <script src="/js/mvc.jquery.datatables.js" asp-copy-src-to-fallback="development"></script>
-    <script src="/js/bootstrapMD-datetimepicker.js" asp-copy-src-to-fallback="development"></script>
-    <script src="/js/site.js" asp-file-version="false"></script>
+    <script src="https://datatables.net/release-datatables/media/js/jquery.dataTables.js" 
+            asp-copy-src-to-fallback="development" 
+            asp-fallback-test="window.jQuery().dataTable" 
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="https://datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js"
+            asp-copy-src-to-fallback="development" 
+            asp-fallback-test="window.jQuery().dataTable.TableTools" 
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="https://datatables.net/release-datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.js" 
+            asp-copy-src-to-fallback="development" 
+            asp-fallback-test="window.jQuery().dataTable.ext.renderer.pageButton.bootstrap" 
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js" 
+            asp-copy-src-to-fallback="development"
+            asp-fallback-test="window.moment" 
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="/lib/jquery.are-you-sure/jquery.are-you-sure.js" 
+            asp-copy-src-to-fallback="development"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.areYouSure"
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="/js/mvc.jquery.datatables.js" 
+            asp-copy-src-to-fallback="development"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.MvcDatatable"
+            asp-warn-if-test-is-invalid="development"></script>
+    <script src="/js/site.js" 
+            asp-file-version="false"></script>
     @RenderSection("scripts", required: false)
     <!-- END JAVASCRIPTS -->
     <!-- END BODY -->

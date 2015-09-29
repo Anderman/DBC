@@ -1,101 +1,45 @@
-﻿/// <reference path="bower_components/jquery.cookie-min/jquery.cookie.js" />
-/// <reference path="bower_components/jquery1.11.2/index.js" />
-/// <reference path="bower_components/jquery1.11.2/index.js" />
-/// <binding Clean='clean' />
-/// <reference path="bower_components/blockui/jquery.blockui.js" />
-/// <reference path="bower_components/angular/angular.min.js" />
+﻿/// <binding Clean='clean' />
 
 var gulp = require("gulp"),
-  rimraf = require("rimraf"),
-  fs = require("fs");
-var sass = require('gulp-sass');
-var csslint = require('gulp-csslint');
-var base64 = require('gulp-css-base64');
-
-eval("var project = " + fs.readFileSync("./project.json"));
+    rimraf = require("rimraf"),
+    concat = require("gulp-concat"),
+    cssmin = require("gulp-cssmin"),
+    uglify = require("gulp-uglify"),
+    project = require("./project.json"); 
 
 var paths = {
-    metronic: "./bower_components/assets/",
-    bower: "./bower_components/",
-    lib: "./" + project.webroot + "/lib/"
+    webroot: "./" + project.webroot + "/"
 };
 
-gulp.task("clean", function (cb) {
-    rimraf(paths.lib, cb);
+paths.js = paths.webroot + "js/**/*.js";
+paths.minJs = paths.webroot + "js/**/*.min.js";
+paths.css = paths.webroot + "css/**/*.css";
+paths.minCss = paths.webroot + "css/**/*.min.css";
+paths.concatJsDest = paths.webroot + "js/site.min.js";
+paths.concatCssDest = paths.webroot + "css/site.min.css";
+
+gulp.task("clean:js", function (cb) {
+    rimraf(paths.concatJsDest, cb);
 });
 
-gulp.task("copy", ["clean","sass"], function () {
-    var bowerjs = {
-        "bootstrap": "bootstrap/dist/**/*.js",
-        "jquery": "jQuery1.11.2/index.js",
-        "angularjs": "angular/angular.min.js",
-        "angularjs-datatables": "angular-datatables/dist/**/*.js",
-        "jquery-datatable": "datatables/media/js/jquery.datatables.min.js",
-        "jquery-migrate": "jquery-migrate/jquery-migrate.min.js",
-        "jquery-blockui": "blockui/jquery.blockUI.js",
-        "jquery-cookie": "jquery.cookie-min/jquery.cookie.js",
-        "jquery-uniform": "jquery.uniform/jquery.uniform.min.js",
-        "jquery-validation": "jquery-validation/dist/jquery.validate.min.js",
-        "jquery-validation-unobtrusive": "jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
-    }
-
-    var metronicjs = {
-        "Metronic": "global/scripts/metronic.js",
-        "Metronic-layout": "admin/layout/scripts/layout.js"
-    }
-
-    for (var destinationDir in bowerjs) {
-        gulp.src(paths.bower + bowerjs[destinationDir])
-          .pipe(gulp.dest(paths.lib + destinationDir));
-    }
-    for (var destinationDir in metronicjs) {
-        gulp.src(paths.metronic + metronicjs[destinationDir])
-          .pipe(gulp.dest(paths.lib + destinationDir));
-    }
-    var bowercss = {
-        "bootstrap": "bootstrap/dist/**/*.{css,map,ttf,svg,woff,eot}",
-        "font-awesome": "font-awesome/{css,fonts}/*.*",
-        "jquery-uniform/css": "jquery.uniform/themes/default/css/uniform.default.css",
-        "jquery-uniform/images": "jquery.uniform/themes/default/images/*.*",
-        "jquery-datatable/css": "datatables/media/css/jquery.datatables.min.css",
-        "jquery-datatable/images": "datatables/media/images/*.*",
-        "simple-line-icons": "simple-line-icons/{css,fonts}/*.*"
-    }
-    for (var destinationDir in bowercss) {
-        gulp.src(paths.bower + bowercss[destinationDir])
-          .pipe(gulp.dest(paths.lib + destinationDir));
-    }
-    gulp.src([
-        paths.metronic + "css/admin/pages/login.css",
-        paths.metronic + "css/admin/layout/layout.css",
-        paths.metronic + "css/admin/layout/custom.css",
-        paths.metronic + "css/global/components-rounded.css",
-        paths.metronic + "css/global/plugins.css"
-    ])
-      .pipe(gulp.dest(paths.lib + "css"));
-    gulp.src([
-        paths.metronic + "css/admin/layout/themes/default.css"
-    ])
-      .pipe(gulp.dest(paths.lib + "css/themes"));
-
-    gulp.src([
-        paths.metronic + "admin/pages/img/*.*",
-        paths.metronic + "admin/layout/img/*.*",
-        paths.metronic + "global/img/**/*.*"
-    ])
-      .pipe(gulp.dest(paths.lib + "img"));
-
+gulp.task("clean:css", function (cb) {
+    rimraf(paths.concatCssDest, cb);
 });
-gulp.task('sass', function () {
-    gulp.src('./bower_components/sass/**/*.scss')
-      .pipe(sass().on('error', sass.logError))
-      .pipe(gulp.dest('./bower_components/assets/css'));
+
+gulp.task("clean", ["clean:js", "clean:css"]);
+
+gulp.task("min:js", function () {
+    gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        .pipe(concat(paths.concatJsDest))
+        .pipe(uglify())
+        .pipe(gulp.dest("."));
 });
-gulp.task('csslint', function () {
-    gulp.src(paths.lib + '/css/plugins.css')
-    .pipe(csslint())
-    .pipe(csslint.reporter())
-    .pipe(base64())
-    .pipe(gulp.dest(paths.lib + '/base64.css'));
-    //.pipe(base64.reporter())
+
+gulp.task("min:css", function () {
+    gulp.src([paths.css, "!" + paths.minCss])
+        .pipe(concat(paths.concatCssDest))
+        .pipe(cssmin())
+        .pipe(gulp.dest("."));
 });
+
+gulp.task("min", ["min:js", "min:css"]);
