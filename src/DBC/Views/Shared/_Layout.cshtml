@@ -25,7 +25,6 @@
           asp-use-minified="production,staging" />
 
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    @*<link href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">*@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet"
           asp-copy-src-to-fallback="development"
@@ -49,16 +48,12 @@
           asp-copy-src-to-fallback="development"
           asp-use-site-min-css="production,staging"
           asp-use-local="development" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--datatables-->
     <link href="https://datatables.net/release-datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet"
           asp-copy-src-to-fallback="development"
           asp-use-site-min-css="production,staging"
           asp-use-local="development" />
     <!--custom-->
-    <link href="/css/bootstrapMD-datetimepicker.css" rel="stylesheet"
-          asp-use-site-min-css="production,staging"
-          asp-use-local="development" />
     <link rel="shortcut icon" href="/favicon.ico">
 </head>
 <!-- END HEAD -->
@@ -69,12 +64,11 @@
         <!-- BEGIN HEADER INNER -->
         <div class="page-header-inner">
             <!-- BEGIN LOGO -->
-            <div class="page-logo">
+            @*<div class="page-logo">
                 <a href="index.html"><img src="~/images/Logo-Medella.jpg" alt="logo" class="logo-default"></a>
                 <div class="menu-toggler sidebar-toggler">
-                    <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
                 </div>
-            </div>
+            </div>*@
             <!-- END LOGO -->
             <!-- BEGIN RESPONSIVE MENU TOGGLER -->
             <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
@@ -245,7 +239,7 @@
     <script src="//www.keenthemes.com/preview/metronic/theme/assets/global/plugins/respond.min.js"></script>
     <script src="//www.keenthemes.com/preview/metronic/theme/assets/global/plugins/excanvas.min.js"></script>
     <![endif]-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"
             asp-copy-src-to-fallback="development" 
             asp-fallback-test="window.jQuery"
             asp-warn-if-test-is-invalid="development"></script>
@@ -263,23 +257,25 @@
             asp-warn-if-test-is-invalid="development"></script>
             
 
-    <script src="https://datatables.net/release-datatables/media/js/jquery.dataTables.js" 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.9/js/jquery.dataTables.min.js" 
             asp-copy-src-to-fallback="development" 
             asp-fallback-test="window.jQuery().dataTable" 
             asp-warn-if-test-is-invalid="development"></script>
     <script src="https://datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js"
             asp-copy-src-to-fallback="development" 
             asp-fallback-test="window.jQuery().dataTable.TableTools" 
-            asp-warn-if-test-is-invalid="development"></script>
+            asp-warn-if-test-is-invalid="development"
+            asp-use-local="development"></script>
     <script src="https://datatables.net/release-datatables/extensions/Plugins/integration/bootstrap/3/dataTables.bootstrap.js" 
             asp-copy-src-to-fallback="development" 
             asp-fallback-test="window.jQuery().dataTable.ext.renderer.pageButton.bootstrap" 
-            asp-warn-if-test-is-invalid="development"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js" 
+            asp-warn-if-test-is-invalid="development"
+            asp-use-local="development" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js" 
             asp-copy-src-to-fallback="development"
             asp-fallback-test="window.moment" 
             asp-warn-if-test-is-invalid="development"></script>
-    <script src="/lib/jquery.are-you-sure/jquery.are-you-sure.js" 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js" 
             asp-copy-src-to-fallback="development"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.areYouSure"
             asp-warn-if-test-is-invalid="development"></script>
