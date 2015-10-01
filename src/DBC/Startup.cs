@@ -13,6 +13,7 @@ using Microsoft.Framework.Logging;
 using Microsoft.Dnx.Runtime;
 using UserManagement.Models;
 using Anderman.TagHelpers;
+using DBC.Logging;
 
 namespace UserManagement
 {
