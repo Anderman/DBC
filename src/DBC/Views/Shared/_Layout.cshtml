@@ -3,16 +3,6 @@
 @*@inject IOptions<AppSettings> AppSettings*@
 
 <html lang="en" pmbx_context="756F7244-847C-42EA-83B1-B06CFA7FDF93">
-<!--<![endif]-->
-<!-- BEGIN HEAD
-    Per link tag min.version
-    Fallback test always to local version
-    Make it posible to copy to local min version but not fallbacktest
-    Make it posible to use fallback for local dev
-
-    scriptblock met envirement
-    zelfde scriptblock maar nu met test voor fallback
-    -->
 <head>
     <meta charset="utf-8">
     <title>@ViewBag.Title</title>
@@ -38,189 +28,38 @@
     <!--custom-->
     <link rel="shortcut icon" href="/favicon.ico">
 </head>
-<!-- END HEAD -->
-<!-- BEGIN BODY -->
-<body class="page page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-container-bg-solid page-compact page-sidebar-closed">
+<body class="page page-container body-content">
     <!-- BEGIN HEADER -->
-    <div class="page-header navbar navbar-fixed-top">
-        <!-- BEGIN HEADER INNER -->
-        <div class="page-header-inner">
-            <!-- BEGIN LOGO -->
-            @*<div class="page-logo">
-                    <a href="index.html"><img src="~/images/Logo-Medella.jpg" alt="logo" class="logo-default"></a>
-                    <div class="menu-toggler sidebar-toggler">
-                    </div>
-                </div>*@
-            <!-- END LOGO -->
-            <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-            </a>
-            <!-- END RESPONSIVE MENU TOGGLER -->
-            <!-- BEGIN TOP NAVIGATION MENU -->
-            <div class="top-menu">
-                <ul class="nav navbar-nav pull-right">
-                    <!-- BEGIN NOTIFICATION DROPDOWN -->
-                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
-                            <i class="icon-bell"></i>
-                            <span class="badge badge-default">
-                                7
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="external">
-                                <h3><span class="bold">12 pending</span> notifications</h3>
-                                <a href="extra_profile.html">view all</a>
-                            </li>
-                            <li>
-                                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 250px;">
-                                    <div class="slimScrollBar" style="width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; background: rgb(99, 114, 131);"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(234, 234, 234);"></div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- END NOTIFICATION DROPDOWN -->
-                    <!-- BEGIN TODO DROPDOWN -->
-                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
-                            <i class="icon-calendar"></i>
-                            <span class="badge badge-default">
-                                3
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu extended tasks">
-                            <li class="external">
-                                <h3>You have <span class="bold">12 pending</span> tasks</h3>
-                                <a href="page_todo.html">view all</a>
-                            </li>
-                            <li>
-                                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 275px;">
-                                    <div class="slimScrollBar" style="width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 147.994129158513px; background: rgb(99, 114, 131);"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(234, 234, 234);"></div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- END TODO DROPDOWN -->
-                    <!-- BEGIN USER LOGIN DROPDOWN -->
-                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-user">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <img alt="" class="img-circle" src="http://www.keenthemes.com/preview/metronic/theme/assets/admin/layout/img/avatar3_small.jpg">
-                            <span class="username username-hide-on-mobile">
-                                Nick
-                            </span>
-                            <i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-default">
-                            <li>
-                                <a href="extra_profile.html">
-                                    <i class="icon-user"></i> My Profile
-                                </a>
-                            </li>
-                            <li>
-                                <a href="page_calendar.html">
-                                    <i class="icon-calendar"></i> My Calendar
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="page_todo.html">
-                                    <i class="icon-rocket"></i> My Tasks <span class="badge badge-success">
-                                        7
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="login.html">
-                                    <i class="icon-key"></i> Log Out
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- END USER LOGIN DROPDOWN -->
-                    <!-- BEGIN QUICK SIDEBAR TOGGLER -->
-                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                    <li class="dropdown dropdown-quick-sidebar-toggler">
-                        <a href="javascript:;" class="dropdown-toggle">
-                            <i class="icon-logout"></i>
-                        </a>
-                    </li>
-                    <!-- END QUICK SIDEBAR TOGGLER -->
-                </ul>
-            </div>
-            <!-- END TOP NAVIGATION MENU -->
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="" href="javascript:void(0)"><img src="~/images/Logo-Medella.jpg" alt="logo" class="logo-default"></a>
         </div>
-        <!-- END HEADER INNER -->
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+            @await Html.PartialAsync("Menu")
+        </div>
     </div>
-    <!-- END HEADER -->
-    <div class="clearfix">
-    </div>
+    <div class="clearfix"></div>
     <!-- BEGIN CONTAINER -->
     <div class="page-container">
-        <!-- BEGIN SIDEBAR -->
-        <div class="page-sidebar-wrapper">
-            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-            <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-            <div class="page-sidebar navbar-collapse collapse">
-                <!-- BEGIN SIDEBAR MENU -->
-                <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-                <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-                <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-                <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-                <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-                <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-                <ul class="page-sidebar-menu page-sidebar-menu-closed" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                    <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
-                    <li class="sidebar-search-wrapper">
-                        <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
-                        <!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
-                        <!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
-                        <form class="sidebar-search sidebar-search-bordered" action="extra_search.html" method="POST" pmbx_context="02D7B7E5-5CBE-4489-92FC-D496087C7FCE" style="margin-top: 75px;">
-                            <a href="javascript:;" class="remove">
-                                <i class="icon-close"></i>
-                            </a>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search..." pmbx_context="ED20B359-7B3C-4934-8423-1AFE07E339C1">
-                                <span class="input-group-btn">
-                                    <a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
-                                </span>
-                            </div>
-                        </form>
-                        <!-- END RESPONSIVE QUICK SEARCH FORM -->
-                    </li>
-                </ul>
-                <!-- END SIDEBAR MENU -->
-            </div>
-        </div>
-        <!-- END SIDEBAR -->
         <!-- BEGIN CONTENT -->
         <div class="page-content-wrapper">
             <div class="page-content" style="min-height:730px">
                 <!-- BEGIN PAGE CONTENT-->
                 @RenderBody()
-            </div>
+             </div>
         </div>
         <!-- END CONTENT -->
     </div>
     <!-- END CONTAINER -->
     <!-- BEGIN FOOTER -->
-    <div class="page-footer">
-        <div class="page-footer-inner">
+    <div class="footer navbar-fixed-bottom">
             2015 © Medella. <a href="http://wwww.medella.nl" title="Medella DBC" target="_blank">Medella!</a>
-        </div>
-        <div class="scroll-to-top">
-            <i class="icon-arrow-up"></i>
-        </div>
     </div>
-    <!-- END FOOTER -->
-    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-    <!-- BEGIN CORE PLUGINS -->
-    <!--[if lt IE 9]>
-    <script src="//www.keenthemes.com/preview/metronic/theme/assets/global/plugins/respond.min.js"></script>
-    <script src="//www.keenthemes.com/preview/metronic/theme/assets/global/plugins/excanvas.min.js"></script>
-    <![endif]-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/material.min.js"></script>
@@ -245,11 +84,14 @@
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.MvcDatatable"
             asp-warn-if-test-is-invalid="development"
             asp-use-site-min-js="staging,production"></script>
-    <script src="/js/site.js"
-            asp-file-version="false"></script>
+    <script src="/js/site.js" asp-file-version="true"></script>
+<script>
+    $(document).ready(function () {
+        // This command is used to initialize some elements and make them work properly
+        $.material.init();
+    });
+</script>
     @RenderSection("scripts", required: false)
-    <!-- END JAVASCRIPTS -->
-    <!-- END BODY -->
     <span role="status" aria-live="polite" class="select2-hidden-accessible"></span>
     <div role="log" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div>
 </body>

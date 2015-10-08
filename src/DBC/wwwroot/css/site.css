@@ -1,16 +1,21 @@
 ﻿body {
-    padding-top: 00px;
     padding-bottom: 20px;
     font-size: 140%;
+    padding-top: 70px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
-
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
 }
-
+@media (min-width: 768px) {
+    .navbar-fixed-top ul.navbar-right {
+        margin-right: 0px;
+    }
+}
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
 select,
