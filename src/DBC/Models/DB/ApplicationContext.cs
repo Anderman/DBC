@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Migrations;
-using UserManagement.Models;
+using DBC.Models;
 
 namespace DBC.Models.DB
 {

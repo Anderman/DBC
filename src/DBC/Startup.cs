@@ -11,11 +11,11 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Dnx.Runtime;
-using UserManagement.Models;
+using DBC.Models;
 using Anderman.TagHelpers;
 using DBC.Logging;
 
-namespace UserManagement
+namespace DBC
 {
     public class Startup
     {

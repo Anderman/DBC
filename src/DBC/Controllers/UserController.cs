@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using Mvc.JQuery.Datatables;
-using UserManagement.Models;
+using DBC.Models;
 using System.Linq.Expressions;
 using System;
 using System.Collections;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace UserManagement.Controllers
+namespace DBC.Controllers
 {
 
     public class role

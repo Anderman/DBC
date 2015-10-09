@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
-using System.Security.Principal;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using DBC.Models.View;
-using DBC.Controllers;
-using UserManagement.Models;
+using DBC.Models;
 using DBC.Services;
+using DBC.ViewModels.Manage;
 
-namespace UserManagement.Controllers
+namespace DBC.Controllers
 {
     [Authorize]
     public class ManageController : Controller
@@ -79,11 +77,9 @@ namespace UserManagement.Controllers
         {
             ManageMessageId? message = ManageMessageId.Error;
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     message = ManageMessageId.RemoveLoginSuccess;
                 }
@@ -104,15 +100,14 @@ namespace UserManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
                 return View(model);
             }
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
-            var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
-            await _smsSender.SendSmsAsync(model.Number, "Your security code is: " + code);
-            return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.Number });
+            var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
+            await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
+            return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
 
         //
@@ -122,8 +117,7 @@ namespace UserManagement.Controllers
         public async Task<IActionResult> EnableTwoFactorAuthentication()
         {
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 await _userManager.SetTwoFactorEnabledAsync(user, true);
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
@@ -137,8 +131,7 @@ namespace UserManagement.Controllers
         public async Task<IActionResult> DisableTwoFactorAuthentication()
         {
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 await _userManager.SetTwoFactorEnabledAsync(user, false);
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
@@ -161,16 +154,13 @@ namespace UserManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
                 return View(model);
             }
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 var result = await _userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.AddPhoneSuccess });
                 }
@@ -186,11 +176,9 @@ namespace UserManagement.Controllers
         public async Task<IActionResult> RemovePhoneNumber()
         {
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 var result = await _userManager.SetPhoneNumberAsync(user, null);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.RemovePhoneSuccess });
                 }
@@ -212,16 +200,13 @@ namespace UserManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
                 return View(model);
             }
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
@@ -245,17 +230,14 @@ namespace UserManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
                 return View(model);
             }
 
             var user = await GetCurrentUserAsync();
-            if (user != null)
-            {
+            if (user != null) {
                 var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
                 }
@@ -275,8 +257,7 @@ namespace UserManagement.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
             var user = await GetCurrentUserAsync();
-            if (user == null)
-            {
+            if (user == null) {
                 return View("Error");
             }
             var userLogins = await _userManager.GetLoginsAsync(user);
@@ -307,13 +288,11 @@ namespace UserManagement.Controllers
         public async Task<ActionResult> LinkLoginCallback()
         {
             var user = await GetCurrentUserAsync();
-            if (user == null)
-            {
+            if (user == null) {
                 return View("Error");
             }
             var info = await _signInManager.GetExternalLoginInfoAsync(User.GetUserId());
-            if (info == null)
-            {
+            if (info == null) {
                 return RedirectToAction(nameof(ManageLogins), new { Message = ManageMessageId.Error });
             }
             var result = await _userManager.AddLoginAsync(user, info);
@@ -325,8 +304,7 @@ namespace UserManagement.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
-            {
+            foreach (var error in result.Errors) {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
@@ -334,8 +312,7 @@ namespace UserManagement.Controllers
         private async Task<bool> HasPhoneNumber()
         {
             var user = await _userManager.FindByIdAsync(User.GetUserId());
-            if (user != null)
-            {
+            if (user != null) {
                 return user.PhoneNumber != null;
             }
             return false;
@@ -360,12 +337,10 @@ namespace UserManagement.Controllers
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl))
-            {
+            if (Url.IsLocalUrl(returnUrl)) {
                 return Redirect(returnUrl);
             }
-            else
-            {
+            else {
                 return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
             }
         }

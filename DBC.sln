@@ -16,6 +16,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mvc6.JQuery.Datatables", ".
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Taghelpers", "..\TagHelpers\src\TagHelpers\Taghelpers.xproj", "{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Beta7Sample", "src\Beta7Sample\Beta7Sample.xproj", "{7A6BFC2D-8795-445C-9DD3-A522DA77D8A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A6BFC2D-8795-445C-9DD3-A522DA77D8A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6BFC2D-8795-445C-9DD3-A522DA77D8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6BFC2D-8795-445C-9DD3-A522DA77D8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6BFC2D-8795-445C-9DD3-A522DA77D8A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

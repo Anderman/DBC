@@ -11,7 +11,7 @@ using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
 using Microsoft.Data.Entity.Relational;
 using Microsoft.Framework.OptionsModel;
-namespace UserManagement.Models
+namespace DBC.Models
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser

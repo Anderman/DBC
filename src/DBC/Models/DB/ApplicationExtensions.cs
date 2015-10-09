@@ -8,7 +8,7 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.DependencyInjection;
 
 
-namespace UserManagement.Models
+namespace DBC.Models
 {
     public static class ApplicationExtensions
     {

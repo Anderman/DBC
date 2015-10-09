@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DBC.Controllers;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using DBC.Models;
-using DBC.Models.View;
 using DBC.Services;
 using DBC.ViewModels.Account;
-using UserManagement.Controllers;
-using UserManagement.Models;
 
 namespace DBC.Controllers
 {
@@ -153,7 +149,7 @@ namespace DBC.Controllers
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null) {
-                return RedirectToAction(nameof(System.Web.UI.WebControls.Login));
+                return RedirectToAction(nameof(Login));
             }
 
             // Sign in the user with this external login provider if the user already has a login.

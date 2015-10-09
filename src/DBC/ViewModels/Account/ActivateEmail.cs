@@ -1,4 +1,4 @@
-﻿namespace DBC.Models.View
+﻿namespace DBC.ViewModels.Account
 {
     public class ActivateEmail
     {
