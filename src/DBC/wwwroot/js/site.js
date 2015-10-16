@@ -26,22 +26,37 @@ mvc.JQuery.Datatables.column.formatDate = function (data, type, full, meta) {
 mvc.JQuery.Datatables.getLengthMenu = function () { return [[5, 50, 100, -1], [5, 50, 100, 'All']] };
 mvc.JQuery.Datatables.getLanguage = function () { return {} };
 
+var dbc = {  };
+dbc.error=function (jqXHR, textStatus, errorThrown) {
+        var newWindow = window.open();
+        if (newWindow)
+            newWindow.document.write(jqXHR.responseText);
+        else
+            window.alert(errorThrown + "\n\n\nAllow popups to view full errors details!");
+    }
 // Bind every table with the class datatable
 $(document).ready(function () {
     $('table.datatables').each(function () {
         $(this).MvcDatatable({
             leaveMessage: 'De wijzigingen zijn niet opgeslagen! toch door gaan?',
-            error: function (jqXHR, textStatus, errorThrown) {
-                var newWindow = window.open();
-                if (newWindow)
-                    newWindow.document.write(jqXHR.responseText);
-                else
-                    window.alert(errorThrown + "\n\n\nAllow popups to view full errors details!");
-            },
+            error: dbc.error,
             succes: function (data, textStatus, jqXHR) { }
         });
     });
 });
 
+/* start progress-bar */
+(function ($) {
+    $.fn.progress = function (precent) {
+        if (precent === 0) {//this.hide();
+            this.css("display", "none")
+            this.css("width", precent + "%");
+        }
+        else
+            this.show(0, function () {
+                $(this).css("width", precent + "%");
+            });
+    };
+}(jQuery));
 
 

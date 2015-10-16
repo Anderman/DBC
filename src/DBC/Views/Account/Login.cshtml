@@ -12,53 +12,31 @@
 }
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
+    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+        <h3 class="form-title">
+            Aanmelden
+            @{
+                var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                if (loginProviders.Count != 0) {
+                    <span>of login met:</span>
+                    foreach (AuthenticationDescription p in loginProviders) {
+                        <button name="provider" value="@p.AuthenticationScheme" class="fa fa-@p.Caption" title="@p.Caption"></button>
+                    }
+                }
+            }
+        </h3>
+    </form>
     <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="login-form" role="form" style="display: block;">
-        <h3 class="form-title">Aanmelden</h3>
         <div asp-validation-summary="ValidationSummary.All" class="alert-danger"></div>
-        <div class="form-group">
-            <label asp-for="Email" class="control-label visible-ie8 visible-ie9"></label>
-            <input asp-for="Email" autofocus class="form-control form-control-solid placeholder-no-fix" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Password" class="control-label visible-ie8 visible-ie9"></label>
-            <input asp-for="Password" class="form-control form-control-solid placeholder-no-fix" autocomplete="off" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="lockout" class="control-label visible-ie8 visible-ie9"></label>
-            <input asp-for="lockout" type="number" data-msg-number="jajaj" class="form-control form-control-solid placeholder-no-fix" autocomplete="off" />
-            <span asp-validation-for="lockout" class="text-danger"></span>
-        </div>
+        <input class="form-control" asp-for="Email" asp-material-design="true" />
+        <input class="form-control" asp-for="Password" asp-material-design="true" />
 
         <div class="form-actions">
             <button type="submit" class="btn btn-success uppercase">Login</button>
-            <div class="checker"><span class=""><input asp-for="RememberMe" /></span></div>
-            <label asp-for="RememberMe" class="rememberme check"></label>
+            <input class="form-control" asp-for="RememberMe" asp-material-design="true" />
             <a class="forget-password" asp-action="ForgotPassword"><translate>Forgot your password?</translate></a>
         </div>
     </form>
-    @{
-        var LoginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-        if (LoginProviders.Count != 0)
-        {
-            <div class="form-actions" style="padding-bottom:0px;padding-top:10px">
-                <div class="login-options" style="margin-bottom:auto">
-                    <h4>Of login met</h4>
-                    <div class="social-icons">
-                        <ul>
-                            @foreach (AuthenticationDescription p in LoginProviders)
-                            {
-                                <li>
-                                    <a asp-action="ExternalLogin" asp-route-returnurl="@ViewBag.ReturnUrl" asp-route-provider="@p.AuthenticationScheme" class="social-icon-color @p.Caption" data-original-title="Goole Plus" ></a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        }
-    }
     <!-- END LOGIN FORM -->
 </div>
 

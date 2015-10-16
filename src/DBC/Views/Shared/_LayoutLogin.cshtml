@@ -5,24 +5,24 @@
 <html lang="nl">
 <!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-    <title>@ViewBag.Title - Medella DBC</title>
-    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.2/css/bootstrap.min.css"
-          asp-fallback-href-exclude="~/fallback/css/css/bootstrap.min.css"
-          asp-fallback-test-class="hidden" asp-fallback-test-property="visibility" asp-fallback-test-value="hidden" asp-copy-src-to-fallback="development" asp-warn-if-test-is-invalid="development" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
-          asp-fallback-href="~/fallback/css/css/font-awesome.min.css"
-          asp-fallback-test-class="fa" asp-fallback-test-property="display" asp-fallback-test-value="inline-block" asp-copy-src-to-fallback="development" asp-warn-if-test-is-invalid="development" />
-    <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/simple-line-icons.css" />
-    <link href="~/lib/jquery-uniform/css/uniform.default.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/uniform.default.css" />
-    <link href="~/lib/css/components-rounded.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/components-rounded.css" />
-    <link href="~/lib/css/themes/default.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/default.css" />
-    <link href="~/lib/css/layout.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/layout.css" />
-    <link href="~/lib/css/plugins.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/plugins.css" />
-    <link href="~/lib/css/login.css" rel="stylesheet" asp-fallback-href="~/fallback/css/css/login.css" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <link href="/css/site.css" rel="stylesheet" asp-use-minified="production,staging" />
+    <link href="/css/login.css" rel="stylesheet" asp-use-minified="production,staging" />
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/material.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/roboto.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/ripples.min.css" rel="stylesheet" />
+    <!--custom-->
+    <link rel="shortcut icon" href="/favicon.ico">
 </head>
 <body class="login">
     @RenderBody()
@@ -30,20 +30,17 @@
         2015 © Medella DBC.
     </div>
 
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.11.2.min.js" asp-fallback-src="~/fallback/js/jquery.js" asp-fallback-test="window.jQuery"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.migrate/jquery-migrate-1.2.1.min.js" asp-fallback-src="~/fallback/js/jquery-migrate.min.js" asp-fallback-test="window.jQuery.migrateWarnings">    </script>
-    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.4/bootstrap.min.js" asp-fallback-src="~/fallback/js/bootstrap.min.js" asp-fallback-test="window.jQuery().modal"></script>
-    <script src="~/lib/jquery-blockui/jquery.blockui.js"></script>
-    <script src="~/lib/jquery-cookie/jquery.cookie.js"></script>
-
-    <script src="~/lib/jquery-uniform/jquery.uniform.min.js"></script>
-    <script src="~/lib/metronic/metronic.js"></script>
-    <script src="~/lib/metronic-layout/layout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/material.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/ripples.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
+    <script src="/js/site.js" asp-file-version="true"></script>
     <script>
-        jQuery(document).ready(function () {
-            Metronic.init(); // init metronic core components
-            Layout.init(); // init current layout
-        });
+    $(document).ready(function () {
+        // This command is used to initialize some elements and make them work properly
+        $.material.init();
+    });
     </script>
     @RenderSection("scripts", required: false)
 </body>

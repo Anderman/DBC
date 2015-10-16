@@ -30,9 +30,6 @@
                 <input class="form-control" asp-for="Logins" asp-material-design="true" value="@string.Join(",", Model.Logins.Select(l => l.LoginProvider))" disabled />
                 <input class="form-control" asp-for="Claims" asp-material-design="true" value="@string.Join(",", Model.Claims.Select(l => l.ClaimType))" disabled />
                 <input class="form-control" asp-for="Roles" asp-material-design="true" value="@string.Join(",", Model.Roles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, Roles) => new { ur, Roles }).Select(ur => ur.Roles.Name ))" disabled />
-                <input class="form-control" asp-for="SecurityStamp" asp-material-design="true" disabled />
-                <input class="form-control" asp-for="NormalizedEmail" asp-material-design="true" disabled />
-                <input class="form-control" asp-for="PasswordHash" asp-material-design="true" disabled />
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary waves-effect waves-light modal-trigger disabled" disabled>Save</button>
                     <button type="button" class="btn btn-primary modal-close waves-effect waves-light">Cancel</button>

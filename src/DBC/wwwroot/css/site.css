@@ -1,4 +1,5 @@
-﻿body {
+﻿/*Body setup*/
+body {
     padding-bottom: 20px;
     font-size: 140%;
     padding-top: 70px;
@@ -11,31 +12,39 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+
 @media (min-width: 768px) {
     .navbar-fixed-top ul.navbar-right {
         margin-right: 0px;
     }
 }
-/* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
-    max-width: 280px;
+/*End Body setup*/
+/*Menu setup*/
+.logo-default {
+    height: 60px;
 }
 
-/* Carousel */
+.avatar-menu { /*correct padding link*/
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+/*Menu setup*/
+.page-content {
+    min-height: 730px;
+}
 
-@media (min-width: 768px) {
-    .carousel-caption {
-        z-index: 10 !important;
+    .page-content.form-small {
+        width: 400px;
+        margin: auto;
     }
+/*End Page setup*/
+
+
+/*End Datatable */
+div.DTTT.btn-group .btn {
+    margin-left: 5px;
 }
 
-body {
-}
- div.DTTT.btn-group .btn {
-        margin-left: 5px;
-    }
 div.DTTT {
     margin-bottom: 0.5em;
     float: right;
@@ -44,33 +53,51 @@ div.DTTT {
 div.dataTables_wrapper {
     clear: both;
 }
+
 div.DTTT {
     margin-bottom: 0.5em;
     float: left;
 }
- /*material*/ 
- .form-control-wrapper {
-     margin-top:10px;
- }
- .modal-open-backup {
-  overflow: hidden;
+/*End Datatable */
+
+/*material*/
+.form-control-wrapper {
+    margin-top: 10px;
+}
+/* Set widths on the form inputs since otherwise they're 100% wide ??????????*/
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+/*End Material*/
+
+
+/*Modal*/
+.modal-open-backup {
+    overflow: hidden;
+}
+/*End Modal*/
+
+/*progress-bar*/
+
+.progress.progress-bar-ajax {
+    background-color: transparent;
+    margin-bottom: 1em;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    left: 0px;
+    margin: 0px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.progress-bar-ajax .progress-bar {
+    float: left;
+    height: 100%;
+    width: 0%;
+    transition: width cubic-bezier(1,0,.42,.42) 10s;
+    -webkit-transition: width cubic-bezier(1,0,.42,.42) 10s;
+    -moz-transition: width cubic-bezier(1,0,.42,.42) 10s;
+    -o-transition: width cubic-bezier(1,0,.42,.42) 10s;
+}
+/*end progress-bar*/

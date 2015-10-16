@@ -15,9 +15,14 @@
     <ul class="nav navbar-nav navbar-right">
         @if (User.Identity.IsAuthenticated) {
             <li>
-                <a asp-controller="Manage" asp-action="Index" title="Manage">@User.GetUserName()!</a>
+                <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <img class="avatar-menu" width="56px" height="56px" src="~/images/avatar-man.svg" />
+                <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a asp-controller="Manage" asp-action="Index" title="Manage">Profiel</a></li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         }
         else {
             <li><a href="/Account/Register"> Register </a></li>

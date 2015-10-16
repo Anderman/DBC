@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
@@ -37,15 +38,8 @@ namespace DBC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(ManageMessageId? message = null)
         {
-            ViewData["StatusMessage"] =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : "";
-
+            string statusMessage = getStatusMessage(message);
+            ViewData["StatusMessage"] = statusMessage;
             var user = await GetCurrentUserAsync();
             var model = new IndexViewModel
             {
@@ -58,6 +52,17 @@ namespace DBC.Controllers
             return View(model);
         }
 
+        private static string getStatusMessage(ManageMessageId? message)
+        {
+            return message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                            : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+                            : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
+                            : message == ManageMessageId.Error ? "An error has occurred."
+                            : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
+                            : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                            : "";
+        }
+
         //
         // GET: /Account/RemoveLogin
         [HttpGet]
@@ -65,7 +70,7 @@ namespace DBC.Controllers
         {
             var user = await GetCurrentUserAsync();
             var linkedAccounts = await _userManager.GetLoginsAsync(user);
-            ViewData["ShowRemoveButton"] = await _userManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
+            ViewData["ShowRemoveButton"] = await _userManager.HasPasswordAsync(user) || linkedAccounts.Count >= 1;
             return View(linkedAccounts);
         }
 
@@ -73,12 +78,12 @@ namespace DBC.Controllers
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveLogin(string loginProvider, string providerKey)
+        public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
         {
             ManageMessageId? message = ManageMessageId.Error;
             var user = await GetCurrentUserAsync();
             if (user != null) {
-                var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
+                var result = await _userManager.RemoveLoginAsync(user, account.LoginProvider, account.ProviderKey);
                 if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     message = ManageMessageId.RemoveLoginSuccess;
@@ -191,7 +196,7 @@ namespace DBC.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            return View();
+            return PartialView();
         }
 
         //
@@ -201,19 +206,20 @@ namespace DBC.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid) {
-                return View(model);
+                return PartialView(model);
             }
             var user = await GetCurrentUserAsync();
             if (user != null) {
                 var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                 if (result.Succeeded) {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
+                    return new JsonResult(new { Message = getStatusMessage(ManageMessageId.ChangePasswordSuccess) });
                 }
                 AddErrors(result);
-                return View(model);
+                return PartialView(model);
             }
-            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+            return new JsonResult(new { Message = getStatusMessage(ManageMessageId.Error) });
+            //return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
         }
 
         //
@@ -262,7 +268,7 @@ namespace DBC.Controllers
             }
             var userLogins = await _userManager.GetLoginsAsync(user);
             var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
-            ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
+            ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count >= 1;
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,

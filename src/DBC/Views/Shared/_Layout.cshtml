@@ -25,10 +25,17 @@
           asp-copy-src-to-fallback="development"
           asp-use-site-min-css="production,staging"
           asp-use-local="development" />
+    <link href="~/css/snackbar.css" rel="stylesheet"
+          asp-copy-src-to-fallback="development"
+          asp-use-site-min-css="production,staging"
+          asp-use-local="development" />
     <!--custom-->
     <link rel="shortcut icon" href="/favicon.ico">
 </head>
 <body class="page page-container body-content">
+    <div class="progress progress-bar-ajax">
+        <div class="progress-bar progress-bar-info" style="width: 0%"></div>
+    </div>
     <!-- BEGIN HEADER -->
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
@@ -48,17 +55,17 @@
     <div class="page-container">
         <!-- BEGIN CONTENT -->
         <div class="page-content-wrapper">
-            <div class="page-content" style="min-height:730px">
+            <div class="page-content @ViewData["PageStyle"] ">
                 <!-- BEGIN PAGE CONTENT-->
                 @RenderBody()
-             </div>
+            </div>
         </div>
         <!-- END CONTENT -->
     </div>
     <!-- END CONTAINER -->
     <!-- BEGIN FOOTER -->
     <div class="footer navbar-fixed-bottom">
-            2015 © Medella. <a href="http://wwww.medella.nl" title="Medella DBC" target="_blank">Medella!</a>
+        2015 © Medella. <a href="http://wwww.medella.nl" title="Medella DBC" target="_blank">Medella!</a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
@@ -84,13 +91,16 @@
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.MvcDatatable"
             asp-warn-if-test-is-invalid="development"
             asp-use-site-min-js="staging,production"></script>
-    <script src="/js/site.js" asp-file-version="true"></script>
-<script>
-    $(document).ready(function () {
-        // This command is used to initialize some elements and make them work properly
-        $.material.init();
-    });
-</script>
+    <script src="/js/snackbar.js"
+            asp-copy-src-to-fallback="development"
+            asp-use-site-min-js="staging,production"></script>
+    <script src="/js/site.js" asp-use-minified="staging,production" asp-file-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            // This command is used to initialize some elements and make them work properly
+            $.material.init();
+        });
+    </script>
     @RenderSection("scripts", required: false)
     <span role="status" aria-live="polite" class="select2-hidden-accessible"></span>
     <div role="log" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div>

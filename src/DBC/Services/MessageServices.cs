@@ -8,7 +8,7 @@ namespace DBC.Services
     // This class is used by the application to send Email and SMS when you turn on two-factor authentication in ASP.NET Identity.
     // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
 
-    public class MessageServices
+    public class MessageServices : IEmailSender, ISmsSender
     {
         public MessageServices(IOptions<MessageServicesOptions> settingsAccessor)
         {
@@ -17,17 +17,21 @@ namespace DBC.Services
 
         public MessageServicesOptions Setting { get; }
 
-        public Task SendEmailAsync(string email, string subject, string message, string from = null,
-            string fromName = null)
+        public Task SendEmailAsync(string email, string subject, string message)
         {
-            var mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(from ?? Setting.from, fromName ?? Setting.fromName);
-            mailMessage.Body = message;
-            mailMessage.IsBodyHtml = true;
-            mailMessage.Subject = subject;
-            mailMessage.To.Add(email);
-            using (var smtpClient = new SmtpClient())
+            return SendEmailAsync(email, subject, message, null, null);
+        }
+        public Task SendEmailAsync(string email, string subject, string message, string from, string fromName)
+        {
+            var mailMessage = new MailMessage
             {
+                From = new MailAddress(@from ?? Setting.@from, fromName ?? Setting.fromName),
+                Body = message,
+                IsBodyHtml = true,
+                Subject = subject
+            };
+            mailMessage.To.Add(email);
+            using (var smtpClient = new SmtpClient()) {
                 smtpClient.Host = Setting.host;
                 smtpClient.Port = Setting.port;
                 smtpClient.EnableSsl = Setting.enableSsl;
@@ -40,33 +44,12 @@ namespace DBC.Services
             }
         }
 
-        public static Task SendSmsAsync(string number, string message)
-        {
-            // Plug in your SMS service here to send a text message.
-            return Task.FromResult(0);
-        }
-    }
-    public class AuthMessageSender : IEmailSender, ISmsSender
-    {
-        public Task SendEmailAsync(string email, string subject, string message)
-        {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
-        }
-
         public Task SendSmsAsync(string number, string message)
         {
             // Plug in your SMS service here to send a text message.
             return Task.FromResult(0);
         }
-    }
-    public interface IEmailSender
-    {
-        Task SendEmailAsync(string email, string subject, string message);
-    }
 
-    public interface ISmsSender
-    {
-        Task SendSmsAsync(string number, string message);
+
     }
 }

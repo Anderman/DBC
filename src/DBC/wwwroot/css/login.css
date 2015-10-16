@@ -1,0 +1,13 @@
+﻿body {
+}
+
+.login {
+    width: 400px;
+    height: 500px;
+    margin: auto;
+}
+.login .content {
+    border: 1px solid #DDD;
+    background: #FFF none repeat scroll 0% 0%;
+    padding:20px
+}

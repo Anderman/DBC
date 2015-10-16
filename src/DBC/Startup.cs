@@ -81,7 +81,7 @@ namespace DBC
             {
                 options.ClientId = Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                options.Caption = "googleplus";
+                options.Caption = "google-plus";
             });
 
             // Add MVC services to the services container.
@@ -90,7 +90,8 @@ namespace DBC
                 m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
             });
             //Own DBC service
-            services.AddSingleton<MessageServices, MessageServices>();
+            services.AddSingleton<IEmailSender, MessageServices>();
+            services.AddSingleton<ISmsSender, MessageServices>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
             IConfiguration config = Configuration.GetSection("mailSettings");
             services.Configure<MessageServicesOptions>(config);
@@ -101,8 +102,6 @@ namespace DBC
             // services.AddWebApiConventions();
 
             // Register application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
         // Configure is called after ConfigureServices is called.
