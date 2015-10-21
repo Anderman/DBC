@@ -1,5 +1,4 @@
 ﻿using DBC.Services;
-using UserManagement.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,8 +92,8 @@ namespace DBC
             // services.AddWebApiConventions();
 
             // Register application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            //services.AddTransient<IEmailSender, AuthMessageSender>();
+            //services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
         // Configure is called after ConfigureServices is called.
@@ -142,11 +141,13 @@ namespace DBC
             {
                 options.AppId = Configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.DisplayName = "facebook";
             });
             app.UseGoogleAuthentication(options =>
             {
                 options.ClientId = Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                options.DisplayName = "google plus";
             });
             //app.UseMicrosoftAccountAuthentication(options =>
             //{
