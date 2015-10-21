@@ -10,7 +10,7 @@ namespace DBC.Helpers
         {
             var childContent = await context.GetChildContentAsync();
             output.TagName = "";
-            output.Content.SetContent(childContent.ToString().Localize());
+            output.Content.SetContentEncoded(childContent.GetContent().ToString().Localize());
         }
     }
 }
