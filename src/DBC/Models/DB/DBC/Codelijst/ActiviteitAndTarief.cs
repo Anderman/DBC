@@ -28,8 +28,8 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         {
             builder.Entity<ActiviteitAndTarief>(b =>
             {
-                b.Property(c => c.declaratiecode).HasColumnType("char").MaxLength(6);
-                b.Property(c => c.declaratiecode_kleur).HasColumnType("char").MaxLength(5);
+                b.Property(c => c.declaratiecode).HasColumnType("char").HasMaxLength(6);
+                b.Property(c => c.declaratiecode_kleur).HasColumnType("char").HasMaxLength(5);
 
 
                 b.Index(p => p.Code).Unique(true);

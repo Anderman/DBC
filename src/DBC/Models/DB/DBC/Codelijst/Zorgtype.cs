@@ -33,8 +33,8 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Zorgtype>(b =>
             {
-                b.Property(c => c.groepcode).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.prestatiecodedeel).HasColumnType("char").MaxLength(3);
+                b.Property(c => c.groepcode).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.prestatiecodedeel).HasColumnType("char").HasMaxLength(3);
                 b.Index(p => p.Code).Unique(true);
             });
         }

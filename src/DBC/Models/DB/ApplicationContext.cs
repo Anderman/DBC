@@ -44,11 +44,11 @@ namespace DBC.Models.DB
             builder.Entity<ActiviteitAndTarief>().Index(p => p.declaratiecode);
             builder.Entity<Cirquit>().Index(p => new { p.Code, p.branche_indicatie });
             builder.Entity<Beroep>().Index(p => new { p.Code, p.branche_indicatie });
-            builder.Entity<Beslisboom>().Key(p => new { p.knoopNummer, p.Begindate });
-            builder.Entity<DBCs>().Key(p => p.DBCID);
+            builder.Entity<Beslisboom>().HasKey(p => new { p.knoopNummer, p.Begindate });
+            builder.Entity<DBCs>().HasKey(p => p.DBCID);
             builder.Entity<DBCs>().Index(p => p.ZorgtrajectIDExtern);
             builder.Entity<DBCs>().Index(p => p.DBCIDExtern);
-            builder.Entity<DBCTestset>().Key(p => p.DBCIDExtern3);
+            builder.Entity<DBCTestset>().HasKey(p => p.DBCIDExtern3);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);

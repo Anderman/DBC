@@ -3,7 +3,7 @@ using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 
 namespace DBC.Helpers
 {
-    [TargetElement("translate")]
+    [HtmlTargetElement("translate")]
     public class TranslateTagHelper : TagHelper
     {
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)

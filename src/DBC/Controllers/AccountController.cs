@@ -30,7 +30,7 @@ namespace DBC.Controllers
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ApplicationDbContext applicationDbContext, 
+            ApplicationDbContext applicationDbContext,
             IEmailTemplate emailTemplate)
         {
             _userManager = userManager;
@@ -109,7 +109,7 @@ namespace DBC.Controllers
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     var body = await _emailTemplate.RenderViewToString("Email", "ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                     await _emailSender.SendEmailAsync(model.Email, "Confirm your account".Localize(), body);
                     //await _signInManager.SignInAsync(user, isPersistent: false); //comment out do not log on a
@@ -161,8 +161,8 @@ namespace DBC.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Sign in the user with this external login provider if the user already has a login.
-            var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
+                // Sign in the user with this external login provider if the user already has a login.
+                var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (!result.Succeeded && !result.IsLockedOut && !result.RequiresTwoFactor)
             {
@@ -278,7 +278,7 @@ namespace DBC.Controllers
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                 var body = await _emailTemplate.RenderViewToString("Email", "ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                 await _emailSender.SendEmailAsync(model.Email, "Herstel wachtwoord", body);
                 return View("ForgotPasswordConfirmation");
@@ -451,7 +451,7 @@ namespace DBC.Controllers
 
         private async Task<ApplicationUser> GetCurrentUserAsync()
         {
-            return await _userManager.FindByIdAsync(Context.User.GetUserId());
+            return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }
 
         private IActionResult RedirectToLocal(string returnUrl)

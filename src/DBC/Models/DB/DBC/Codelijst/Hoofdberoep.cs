@@ -23,7 +23,7 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Hoofdberoep>(b =>
             {
-                b.Property(c => c.Code).HasColumnType("varchar").MaxLength(20);
+                b.Property(c => c.Code).HasColumnType("varchar").HasMaxLength(20);
                 b.Index(p => new { p.Code, p.branche_indicatie}).Unique(true);
             });
         }

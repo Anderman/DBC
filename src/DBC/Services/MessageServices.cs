@@ -12,7 +12,7 @@ namespace DBC.Services
     {
         public MessageServices(IOptions<MessageServicesOptions> settingsAccessor)
         {
-            Setting = settingsAccessor.Options;
+            Setting = settingsAccessor.Value;
         }
 
         public MessageServicesOptions Setting { get; }

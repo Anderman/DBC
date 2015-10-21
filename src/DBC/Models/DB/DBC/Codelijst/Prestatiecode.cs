@@ -34,12 +34,12 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Prestatiecode>(b =>
             {
-                b.Property(c => c.Code).HasColumnType("varchar").MaxLength(12);
-                b.Property(c => c.cl_declaratiecode).HasColumnType("varchar").MaxLength(6);
-                b.Property(c => c.agb_code).HasColumnType("char").MaxLength(4);
-                b.Property(c => c.cl_zorgtype_prestatiecodedeel).HasColumnType("char").MaxLength(3);
-                b.Property(c => c.cl_diagnose_prestatiecodedeel).HasColumnType("varchar").MaxLength(3);
-                b.Property(c => c.cl_productgroep_code).HasColumnType("varchar").MaxLength(6);
+                b.Property(c => c.Code).HasColumnType("varchar").HasMaxLength(12);
+                b.Property(c => c.cl_declaratiecode).HasColumnType("varchar").HasMaxLength(6);
+                b.Property(c => c.agb_code).HasColumnType("char").HasMaxLength(4);
+                b.Property(c => c.cl_zorgtype_prestatiecodedeel).HasColumnType("char").HasMaxLength(3);
+                b.Property(c => c.cl_diagnose_prestatiecodedeel).HasColumnType("varchar").HasMaxLength(3);
+                b.Property(c => c.cl_productgroep_code).HasColumnType("varchar").HasMaxLength(6);
                 b.Index(p => new { p.Code, p.cl_declaratiecode }).Unique(true);
             });
         }

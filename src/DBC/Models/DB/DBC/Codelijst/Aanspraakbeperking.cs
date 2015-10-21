@@ -21,7 +21,7 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Aanspraakbeperking>(b =>
             {
-                b.Property(c => c.Code).HasColumnType("char").MaxLength(3);
+                b.Property(c => c.Code).HasColumnType("char").HasMaxLength(3);
                 b.Index(p => p.Code).Unique(true);
             });
         }

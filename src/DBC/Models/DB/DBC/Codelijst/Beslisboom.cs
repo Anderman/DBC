@@ -33,7 +33,7 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Beslisboom>(b =>
             {
-                b.Key(p => new { p.knoopNummer, p.Begindate });
+                b.HasKey(p => new { p.knoopNummer, p.Begindate });
             });
         }
     }

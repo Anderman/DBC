@@ -88,14 +88,14 @@ namespace GGZDBC.Models.DBCModel.Afleiding
         {
             builder.Entity<Activiteit>(b =>
             {
-                b.Property(c => c.Code).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.groepcode).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.aanspraak_type).HasColumnType("char").MaxLength(1);
-                b.Property(c => c.soort).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.mag_direct).HasColumnType("char").MaxLength(1);
-                b.Property(c => c.mag_indirect).HasColumnType("char").MaxLength(1);
-                b.Property(c => c.mag_reistijd).HasColumnType("char").MaxLength(1);
-                b.Property(c => c.mag_groep).HasColumnType("char").MaxLength(1);
+                b.Property(c => c.Code).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.groepcode).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.aanspraak_type).HasColumnType("char").HasMaxLength(1);
+                b.Property(c => c.soort).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.mag_direct).HasColumnType("char").HasMaxLength(1);
+                b.Property(c => c.mag_indirect).HasColumnType("char").HasMaxLength(1);
+                b.Property(c => c.mag_reistijd).HasColumnType("char").HasMaxLength(1);
+                b.Property(c => c.mag_groep).HasColumnType("char").HasMaxLength(1);
                 b.Index(p => new { p.Code, p.branche_indicatie }).Unique(true);
             });
         }

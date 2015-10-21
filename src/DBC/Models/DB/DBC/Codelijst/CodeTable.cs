@@ -19,7 +19,7 @@ namespace GGZDBC.Models.DBCModel.Codelijst
         {
             builder.Entity<CodeTable>(b =>
             {
-                b.Property(c => c.Code).HasColumnType("varchar").MaxLength(20);
+                b.Property(c => c.Code).HasColumnType("varchar").HasMaxLength(20);
                 b.Index(p => p.Code).Unique(true);
             });
         }

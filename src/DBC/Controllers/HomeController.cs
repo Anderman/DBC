@@ -15,14 +15,14 @@ namespace DBC.Controllers
 
         public IActionResult About()
         {
-            ViewBag.Message = "Your1 application description page.";
+            ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewData["Message"] = "Your contact page.";
 
             return View();
         }

@@ -44,11 +44,11 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Diagnose>(b =>
             {
-                b.Property(c => c.groepcode).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.Diagnose_as).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.refcode_icd9cm).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.refcode_icd10).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.prestatieniveau).HasColumnType("varchar").MaxLength(20);
+                b.Property(c => c.groepcode).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.Diagnose_as).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.refcode_icd9cm).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.refcode_icd10).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.prestatieniveau).HasColumnType("varchar").HasMaxLength(20);
                 b.Index(p => new { p.Code, p.branche_indicatie }).Unique(true);
             });
         }

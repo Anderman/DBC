@@ -43,12 +43,12 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Productgroep>(b =>
             {
-                b.Property(c => c.code_verblijf).HasColumnType("char").MaxLength(3);
-                b.Property(c => c.code_behandeling).HasColumnType("char").MaxLength(3);
-                b.Property(c => c.type).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.setting).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.categorie).HasColumnType("char").MaxLength(50);
-                b.Property(c => c.diagnose_blinderen).HasColumnType("char").MaxLength(1);
+                b.Property(c => c.code_verblijf).HasColumnType("char").HasMaxLength(3);
+                b.Property(c => c.code_behandeling).HasColumnType("char").HasMaxLength(3);
+                b.Property(c => c.type).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.setting).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.categorie).HasColumnType("char").HasMaxLength(50);
+                b.Property(c => c.diagnose_blinderen).HasColumnType("char").HasMaxLength(1);
                 b.Index(p => p.Code).Unique(true);
             });
         }

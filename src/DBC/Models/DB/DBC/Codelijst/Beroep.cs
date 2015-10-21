@@ -31,8 +31,8 @@ namespace GGZDBC.Models.DBCModel.Registraties
         {
             builder.Entity<Beroep>(b =>
             {
-                b.Property(c => c.Code).HasColumnType("varchar").MaxLength(20);
-                b.Property(c => c.groepcode).HasColumnType("varchar").MaxLength(10);
+                b.Property(c => c.Code).HasColumnType("varchar").HasMaxLength(20);
+                b.Property(c => c.groepcode).HasColumnType("varchar").HasMaxLength(10);
                 b.Index(p => new { p.Code, p.branche_indicatie }).Unique(true);
             });
         }
