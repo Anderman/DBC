@@ -60,22 +60,27 @@ namespace DBC.Controllers
         {
             EnsureDatabaseCreated(_applicationDbContext);
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     return RedirectToLocal(returnUrl);
                 }
-                if (result.RequiresTwoFactor) {
+                if (result.RequiresTwoFactor)
+                {
                     return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 }
-                if (result.IsLockedOut) {
+                if (result.IsLockedOut)
+                {
                     return View("Lockout");
                 }
-                else {
+                else
+                {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    if(result.IsNotAllowed)
+                    if (result.IsNotAllowed)
                         ModelState.AddModelError(string.Empty, "Email or phonenumber not confirmed");
                     return View(model);
                 }
@@ -102,10 +107,12 @@ namespace DBC.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             EnsureDatabaseCreated(_applicationDbContext);
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -153,16 +160,18 @@ namespace DBC.Controllers
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string error = null)
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null) {
-                if (error != null) {
+            if (info == null)
+            {
+                if (error != null)
+                {
                     ModelState.AddModelError("", $"Het automatisch inloggen met external account geeft een error. {error}");
                     return View("Login");
                 }
                 return RedirectToAction("Login");
             }
 
-                // Sign in the user with this external login provider if the user already has a login.
-                var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
+            // Sign in the user with this external login provider if the user already has a login.
+            var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (!result.Succeeded && !result.IsLockedOut && !result.RequiresTwoFactor)
             {
@@ -180,13 +189,16 @@ namespace DBC.Controllers
                 }
             }
 
-            if (result.Succeeded) {
+            if (result.Succeeded)
+            {
                 return RedirectToLocal(returnUrl);
             }
-            if (result.RequiresTwoFactor) {
+            if (result.RequiresTwoFactor)
+            {
                 return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl });
             }
-            if (result.IsLockedOut) {
+            if (result.IsLockedOut)
+            {
                 return View("Lockout");
             }
             if (result.IsNotAllowed)
@@ -194,7 +206,8 @@ namespace DBC.Controllers
                 ModelState.AddModelError("", $"Confirmation of email or phonenumber is required before you can login");
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
             }
-            else {
+            else
+            {
                 // If the user does not have an account, then ask the user to create an account.
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
@@ -210,21 +223,26 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
         {
-            if (User.IsSignedIn()) {
+            if (User.IsSignedIn())
+            {
                 return RedirectToAction(nameof(ManageController.Index), "Manage");
             }
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 // Get the information about the user from the external login provider
                 var info = await _signInManager.GetExternalLoginInfoAsync();
-                if (info == null) {
+                if (info == null)
+                {
                     return View("ExternalLoginFailure");
                 }
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded) {
+                    if (result.Succeeded)
+                    {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToLocal(returnUrl);
                     }
@@ -241,11 +259,13 @@ namespace DBC.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null) {
+            if (userId == null || code == null)
+            {
                 return View("Error");
             }
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) {
+            if (user == null)
+            {
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
@@ -268,9 +288,11 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 var user = await _userManager.FindByNameAsync(model.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user))) {
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
@@ -313,16 +335,19 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
             var user = await _userManager.FindByNameAsync(model.Email);
-            if (user == null) {
+            if (user == null)
+            {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-            if (result.Succeeded) {
+            if (result.Succeeded)
+            {
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
             AddErrors(result);
@@ -345,7 +370,8 @@ namespace DBC.Controllers
         public async Task<ActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null) {
+            if (user == null)
+            {
                 return View("Error");
             }
             var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
@@ -360,26 +386,31 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendCode(SendCodeViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View();
             }
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null) {
+            if (user == null)
+            {
                 return View("Error");
             }
 
             // Generate the token and send it
             var code = await _userManager.GenerateTwoFactorTokenAsync(user, model.SelectedProvider);
-            if (string.IsNullOrWhiteSpace(code)) {
+            if (string.IsNullOrWhiteSpace(code))
+            {
                 return View("Error");
             }
 
             var message = "Your security code is: " + code;
-            if (model.SelectedProvider == "Email") {
+            if (model.SelectedProvider == "Email")
+            {
                 await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
             }
-            else if (model.SelectedProvider == "Phone") {
+            else if (model.SelectedProvider == "Phone")
+            {
                 await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), message);
             }
 
@@ -394,7 +425,8 @@ namespace DBC.Controllers
         {
             // Require that the user has already logged in via username/password or external login
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null) {
+            if (user == null)
+            {
                 return View("Error");
             }
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
@@ -407,7 +439,8 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
 
@@ -415,13 +448,16 @@ namespace DBC.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account
             // will be locked out for a specified amount of time.
             var result = await _signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
-            if (result.Succeeded) {
+            if (result.Succeeded)
+            {
                 return RedirectToLocal(model.ReturnUrl);
             }
-            if (result.IsLockedOut) {
+            if (result.IsLockedOut)
+            {
                 return View("Lockout");
             }
-            else {
+            else
+            {
                 ModelState.AddModelError("", "Invalid code.");
                 return View(model);
             }
@@ -436,7 +472,8 @@ namespace DBC.Controllers
         // when publishing your application.
         private static void EnsureDatabaseCreated(ApplicationDbContext context)
         {
-            if (!_databaseChecked) {
+            if (!_databaseChecked)
+            {
                 _databaseChecked = true;
                 context.Database.Migrate();
             }
@@ -444,7 +481,8 @@ namespace DBC.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors) {
+            foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
@@ -456,10 +494,12 @@ namespace DBC.Controllers
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl)) {
+            if (Url.IsLocalUrl(returnUrl))
+            {
                 return Redirect(returnUrl);
             }
-            else {
+            else
+            {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
