@@ -20,7 +20,7 @@
                 if (loginProviders.Count != 0) {
                     <span>of login met:</span>
                     foreach (AuthenticationDescription p in loginProviders) {
-                        <button name="provider" value="@p.AuthenticationScheme" class="fa fa-@p.Caption" title="@p.Caption"></button>
+                        <button name="provider" value="@p.AuthenticationScheme" class="fa fa-@p.DisplayName" title="@p.DisplayName"></button>
                     }
                 }
             }
