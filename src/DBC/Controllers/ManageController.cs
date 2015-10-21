@@ -82,9 +82,11 @@ namespace DBC.Controllers
         {
             ManageMessageId? message = ManageMessageId.Error;
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 var result = await _userManager.RemoveLoginAsync(user, account.LoginProvider, account.ProviderKey);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     message = ManageMessageId.RemoveLoginSuccess;
                 }
@@ -105,7 +107,8 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
             // Generate the token and send it
@@ -122,7 +125,8 @@ namespace DBC.Controllers
         public async Task<IActionResult> EnableTwoFactorAuthentication()
         {
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 await _userManager.SetTwoFactorEnabledAsync(user, true);
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
@@ -136,7 +140,8 @@ namespace DBC.Controllers
         public async Task<IActionResult> DisableTwoFactorAuthentication()
         {
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 await _userManager.SetTwoFactorEnabledAsync(user, false);
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
@@ -159,13 +164,16 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 var result = await _userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.AddPhoneSuccess });
                 }
@@ -181,9 +189,11 @@ namespace DBC.Controllers
         public async Task<IActionResult> RemovePhoneNumber()
         {
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 var result = await _userManager.SetPhoneNumberAsync(user, null);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.RemovePhoneSuccess });
                 }
@@ -205,13 +215,16 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return PartialView(model);
             }
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return new JsonResult(new { Message = getStatusMessage(ManageMessageId.ChangePasswordSuccess) });
                 }
@@ -236,14 +249,17 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(model);
             }
 
             var user = await GetCurrentUserAsync();
-            if (user != null) {
+            if (user != null)
+            {
                 var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
                 }
@@ -263,7 +279,8 @@ namespace DBC.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
             var user = await GetCurrentUserAsync();
-            if (user == null) {
+            if (user == null)
+            {
                 return View("Error");
             }
             var userLogins = await _userManager.GetLoginsAsync(user);
@@ -294,11 +311,13 @@ namespace DBC.Controllers
         public async Task<ActionResult> LinkLoginCallback()
         {
             var user = await GetCurrentUserAsync();
-            if (user == null) {
+            if (user == null)
+            {
                 return View("Error");
             }
             var info = await _signInManager.GetExternalLoginInfoAsync(User.GetUserId());
-            if (info == null) {
+            if (info == null)
+            {
                 return RedirectToAction(nameof(ManageLogins), new { Message = ManageMessageId.Error });
             }
             var result = await _userManager.AddLoginAsync(user, info);
@@ -310,7 +329,8 @@ namespace DBC.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors) {
+            foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
@@ -318,7 +338,8 @@ namespace DBC.Controllers
         private async Task<bool> HasPhoneNumber()
         {
             var user = await _userManager.FindByIdAsync(User.GetUserId());
-            if (user != null) {
+            if (user != null)
+            {
                 return user.PhoneNumber != null;
             }
             return false;
@@ -343,10 +364,12 @@ namespace DBC.Controllers
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl)) {
+            if (Url.IsLocalUrl(returnUrl))
+            {
                 return Redirect(returnUrl);
             }
-            else {
+            else
+            {
                 return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
             }
         }
