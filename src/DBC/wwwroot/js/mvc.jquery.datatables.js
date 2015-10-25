@@ -227,7 +227,7 @@ jQuery.fn.extend({
                 $.ajax({
                     type: $form.attr('method'),
                     url: $form.attr('action'),
-                    data: $form.serialize(),
+                    data: $(this).closest('form').serialize(),
                     success: function (data) {
                         if (data && typeof data ==='string') {
                             initModalForm(data);

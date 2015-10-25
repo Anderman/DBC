@@ -22,6 +22,7 @@
     <ProduceOutputsOnBuild>False</ProduceOutputsOnBuild>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Other\Westwind.Globalization\Westwind.Globalization\Westwind.Globalization.csproj" />
     <ProjectReference Include="..\DataTables\DataTables.csproj" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />

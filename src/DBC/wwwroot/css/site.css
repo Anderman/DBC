@@ -30,12 +30,16 @@ body {
 }
 /*Menu setup*/
 .page-content {
-    min-height: 730px;
+    min-height: 400px;
+    height:auto;
 }
 
     .page-content.form-small {
-        width: 400px;
+        width: 500px;
         margin: auto;
+        border: 1px solid #DDD;
+        background: #FFF none repeat scroll 0% 0%;
+        padding: 20px;
     }
 /*End Page setup*/
 
@@ -101,3 +105,8 @@ textarea {
     -o-transition: width cubic-bezier(1,0,.42,.42) 10s;
 }
 /*end progress-bar*/
+/* Forms */
+.vertical-align {
+    display: flex;
+    align-items: center;
+}

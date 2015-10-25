@@ -1,58 +1,57 @@
 ﻿@model IndexViewModel
+@using static Westwind.Globalization.DbRes;
 @{
     ViewData["Title"] = "Manage your account";
-    ViewData["PageStyle"]="form-small";
+    ViewData["PageStyle"] = "form-small";
 }
-
 <h2>@ViewData["Title"].</h2>
 <p class="text-success">@ViewData["StatusMessage"]</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword) {
-                <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/ChangePassword" >Change</button>
-            }
-            else
+<h4>Change your account settings</h4>
+<hr />
+<div class="form-horizontal vertical-align">
+    <label class="col-xs-6">Password:</label>
+    <div class="col-xs-6">
+
+        @if (Model.HasPassword)
             {
-                <a asp-controller="Manage" asp-action="SetPassword">Create</a>
-            }
-            ]
-        </dd>
-        <dt>External Logins:</dt>
-        <dd>
-            @Model.Logins.Count [<a asp-controller="Manage" asp-action="ManageLogins">Manage</a>]
-        </dd>
-    </dl>
+            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/ChangePassword">@T("Change","Resources","nl")</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/SetPassword">@T("Create")</button>
+        }
+    </div>
 </div>
+
+<div class="form-horizontal vertical-align">
+    <a class="col-xs-12" asp-controller="Manage" asp-action="ManageLogins">Remove or add external logins (@Model.Logins.Count):</a>
+</div>
+
 <div id="ajaxForm" class="modal fade" role="dialog"></div>
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-        <script type="text/javascript">
-            $('.modal-trigger').click(function () {
-                var link=$(this).attr("asp-modal-link");
-                $('#ajaxForm').ajaxForm({
-                    url: (link),
-                    leaveMessage: "",
-                    error: dbc.error,
-                    dataChanged: function (result) {
-                        $.snackbar({
-                            content: result.Message, // text of the snackbar
-                            style: "toast", // add a custom class to your snackbar
-                            timeout: 10000 // time in milliseconds after the snackbar autohides, 0 is disabled
-                        });
-                    }
-                });
+    <script type="text/javascript">
+        $('.modal-trigger').click(function () {
+            var link = $(this).attr("asp-modal-link");
+            $('#ajaxForm').ajaxForm({
+                url: (link),
+                leaveMessage: "",
+                error: dbc.error,
+                dataChanged: function (result) {
+                    $.snackbar({
+                        content: result.Message, // text of the snackbar
+                        style: "toast", // add a custom class to your snackbar
+                        timeout: 10000 // time in milliseconds after the snackbar autohides, 0 is disabled
+                    });
+                }
             });
-            $(document).ajaxStart(function () {
-                $(".progress-bar").progress(99);
-            }).ajaxSuccess(function () {
-                $(".progress-bar").progress(0);
-            });
-        </script>
-    }
+        });
+        $(document).ajaxStart(function () {
+            $(".progress-bar").progress(99);
+        }).ajaxSuccess(function () {
+            $(".progress-bar").progress(0);
+        });
+    </script>
+}

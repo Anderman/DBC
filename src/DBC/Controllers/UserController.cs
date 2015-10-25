@@ -46,9 +46,8 @@ namespace DBC.Controllers
         [AllowAnonymous]
         public JsonResult Index([FromBody]DataTablesRequest dTRequest)
         {
-            var q = DbContext.Users.Include(u => u.Logins).ToArray();
-            var yy = DbContext.UserRoles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { r.Name, ur.UserId });
-            var z = (from u in DbContext.Users//.Include(l => l.Logins).Include(r => r.Roles)
+            var userRoleNames = DbContext.UserRoles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { r.Name, ur.UserId });
+            var z = (from u in DbContext.Users
                      select new
                      {
                          u.Id,
@@ -57,9 +56,8 @@ namespace DBC.Controllers
                          u.UserName,
                          u.TwoFactorEnabled,
                          u.LockoutEnd,
-                         Logins = u.Logins.Select(l => new { LoginProvider = l.LoginProvider }),
-                         Roles = yy.Where(ur => ur.UserId == u.Id),
-                         //Roles = u.Roles.Join(DbContext.Roles, ur => ur.RoleId, rr => rr.Id, (ur, role2) => role2).Select(rr => rr),
+                         Logins = DbContext.UserLogins.Where(ul => ul.UserId == u.Id).Select(ul => new { LoginProvider = ul.LoginProvider }),//u.Logins.Select(l => new { LoginProvider = l.LoginProvider }).ToArray(), // rewrite to workarounf bug
+                         Roles = userRoleNames.Where(ur => ur.UserId == u.Id).Select(ur => new { Name = ur.Name }),
                      });
             var zz = z.ToArray();
             return new Mvc.JQuery.Datatables.DataTables().GetJSonResult(

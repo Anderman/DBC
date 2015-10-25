@@ -1,4 +1,5 @@
-﻿using System;
+﻿using static Westwind.Globalization.DbRes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -54,12 +55,12 @@ namespace DBC.Controllers
 
         private static string getStatusMessage(ManageMessageId? message)
         {
-            return message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                            : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                            : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                            : message == ManageMessageId.Error ? "An error has occurred."
-                            : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                            : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+            return message == ManageMessageId.ChangePasswordSuccess ? T("Your password has been changed.")
+                            : message == ManageMessageId.SetPasswordSuccess ? T("Your password has been set.")
+                            : message == ManageMessageId.SetTwoFactorSuccess ? T("Your two-factor authentication provider has been set.")
+                            : message == ManageMessageId.Error ? T("An error has occurred.")
+                            : message == ManageMessageId.AddPhoneSuccess ? T("Your phone number was added.")
+                            : message == ManageMessageId.RemovePhoneSuccess ? T("Your phone number was removed.")
                             : "";
         }
 
@@ -77,7 +78,7 @@ namespace DBC.Controllers
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
         {
             ManageMessageId? message = ManageMessageId.Error;
@@ -114,7 +115,7 @@ namespace DBC.Controllers
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
+            await _smsSender.SendSmsAsync(model.PhoneNumber, T("Your security code is: ") + code);
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
 
@@ -296,7 +297,7 @@ namespace DBC.Controllers
         //
         // POST: /Manage/LinkLogin
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public IActionResult LinkLogin(string provider)
         {
             // Request a redirect to the external login provider to link a login for the current user

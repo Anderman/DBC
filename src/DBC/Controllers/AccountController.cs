@@ -11,7 +11,7 @@ using Microsoft.Data.Entity;
 using DBC.Models;
 using DBC.Services;
 using DBC.ViewModels.Account;
-
+using static Westwind.Globalization.DbRes;
 namespace DBC.Controllers
 {
     [Authorize]
@@ -117,7 +117,7 @@ namespace DBC.Controllers
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    var body = await _emailTemplate.RenderViewToString("Email", "ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
+                    var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                     await _emailSender.SendEmailAsync(model.Email, "Confirm your account".Localize(), body);
                     //await _signInManager.SignInAsync(user, isPersistent: false); //comment out do not log on a
                     return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -301,7 +301,7 @@ namespace DBC.Controllers
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                var body = await _emailTemplate.RenderViewToString("Email", "ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
+                var body = await _emailTemplate.RenderViewToString<ActivateEmail>(@"/Views/Email/ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                 await _emailSender.SendEmailAsync(model.Email, "Herstel wachtwoord", body);
                 return View("ForgotPasswordConfirmation");
             }
