@@ -9,7 +9,10 @@
     },
     "web": {
       "commandName": "web",
-      "launchUrl": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+      "launchUrl": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+      "environmentVariables": {
+        "ASPNET_ENV": "Development"
+      }
     }
   }
 }

@@ -1,12 +1,11 @@
 ﻿@model IndexViewModel
-@using static Westwind.Globalization.DbRes;
 @{
     ViewData["Title"] = "Manage your account";
     ViewData["PageStyle"] = "form-small";
 }
 <h2>@ViewData["Title"].</h2>
 <p class="text-success">@ViewData["StatusMessage"]</p>
-<h4>@T("Change your account settings")</h4>
+<h4>"Change your account settings"</h4>
 <hr />
 <div class="form-horizontal vertical-align">
     <label class="col-xs-6">Password:</label>
@@ -14,17 +13,17 @@
 
         @if (Model.HasPassword)
             {
-            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/ChangePassword">@T("Change","Resources","nl")</button>
+            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/ChangePassword">"Change"</button>
         }
         else
         {
-            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/SetPassword">@T("Create")</button>
+            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/SetPassword">"Create"</button>
         }
     </div>
 </div>
 
 <div class="form-horizontal vertical-align">
-    <a class="col-xs-12" asp-controller="Manage" asp-action="ManageLogins">@T("Remove or add external logins ") (@Model.Logins.Count):</a>
+    <a class="col-xs-12" asp-controller="Manage" asp-action="ManageLogins">"Remove or add external logins " (@Model.Logins.Count):</a>
 </div>
 
 <div id="ajaxForm" class="modal fade" role="dialog"></div>

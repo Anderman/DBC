@@ -35,7 +35,6 @@
         "Mvc6.JQuery.Datatables": "1.0.0-*",
         "npm": "1.4.15.2",
         "TagHelpers": "1.0.0-*",
-        "Westwind.Globalization.Web": "2.2.1",
     },
     "commands": {
         "web": "Microsoft.AspNet.Server.Kestrel",

@@ -24,6 +24,8 @@ using Microsoft.Dnx.Runtime;
 using DBC.Models;
 using Anderman.TagHelpers;
 using DBC.Logging;
+using Microsoft.AspNet.Localization;
+using System.Globalization;
 
 namespace DBC
 {
@@ -44,6 +46,7 @@ namespace DBC
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
+
             builder.AddEnvironmentVariables();
             builder.AddApplicationInsightsSettings(developerMode: true);
             Configuration = builder.Build();
@@ -125,6 +128,21 @@ namespace DBC
 
         public void SetupRequestPipeline(IApplicationBuilder app)
         {
+            var requestLocalizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
+                SupportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("nl-NL")
+                },
+                SupportedUICultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("nl-NL")
+                }
+            };
+            app.UseRequestLocalization(requestLocalizationOptions);
             // Add the platform handler to the request pipeline.
             app.UseIISPlatformHandler();
 

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Http.Features;
+using Microsoft.AspNet.Localization;
 using Microsoft.AspNet.Mvc;
 
 namespace DBC.Controllers
@@ -15,7 +18,10 @@ namespace DBC.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            var requestCultureFeature = this.HttpContext.Features.Get<IRequestCultureFeature>();
+            var requestCulture = requestCultureFeature.RequestCulture;
+
+            ViewData["Message"] = $"Your application description page. culture.request={requestCulture.UICulture} thread.culture={CultureInfo.CurrentUICulture}" ;
 
             return View();
         }

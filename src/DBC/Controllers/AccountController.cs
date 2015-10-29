@@ -11,7 +11,6 @@ using Microsoft.Data.Entity;
 using DBC.Models;
 using DBC.Services;
 using DBC.ViewModels.Account;
-using static Westwind.Globalization.DbRes;
 namespace DBC.Controllers
 {
     [Authorize]
