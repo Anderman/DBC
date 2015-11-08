@@ -1,15 +1,12 @@
-﻿using System.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using CsvHelper.Configuration;
 using System.Globalization;
+using System.Linq;
+using CsvHelper.Configuration;
 using Microsoft.Data.Entity;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Codelijst
 {
     public class Beslisboom 
     {

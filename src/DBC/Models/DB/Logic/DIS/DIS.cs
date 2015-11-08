@@ -1,11 +1,6 @@
 ﻿//using GGZDBC.Models.DBCModel.Registraties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 
-namespace GGZDBC.ModelsLogic.DIS
+namespace DBC.Models.DB.Logic.DIS
 {
     /*
     DIS: All validated DBC are selectable for DIS sending. changing after sending leeds to delete record and insert record???

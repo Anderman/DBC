@@ -1,14 +1,10 @@
-﻿using CsvHelper.Configuration;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Web;
-using GGZDBC.Models.DBCModel.Registraties;
+using CsvHelper.Configuration;
+using DBC.Models.DB.DBC.Codelijst;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Registraties
 {
     public class Zorgtraject
     {

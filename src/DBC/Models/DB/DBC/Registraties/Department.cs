@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Registraties
 {
     public class Department
     {

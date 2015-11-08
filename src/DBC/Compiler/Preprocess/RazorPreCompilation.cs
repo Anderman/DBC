@@ -21,7 +21,7 @@
 
 using System;
 
-namespace Microsoft.AspNet.Mvc
+namespace DBC.Compiler.Preprocess
 {
     /// <summary>
     /// Specifies that a property or parameter value should be initialized via the dependency injection

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Data.SqlClient;
-using static DBC.Services.Localizations.StringLocalization;
-using System.Diagnostics;
-using System.Linq;
-using DBC.Services.Localizations;
+﻿using System.Linq;
+using DBC.Services.MyLocalizations;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Internal;
-using Microsoft.Data.Entity.Migrations;
 
-namespace DBC.Models
+namespace DBC.Models.DB
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
 

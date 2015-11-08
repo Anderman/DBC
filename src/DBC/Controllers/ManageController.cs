@@ -8,6 +8,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using DBC.Models;
+using DBC.Models.DB;
 using DBC.Services;
 using DBC.ViewModels.Manage;
 

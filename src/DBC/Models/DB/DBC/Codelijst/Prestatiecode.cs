@@ -1,17 +1,12 @@
 ﻿//agb_code|cl_zorgtype_prestatiecodedeel|cl_diagnose_prestatiecodedeel|zvz|cl_productgroep_code|cl_dbc_prestatiecode|cl_declaratiecode|begindatum|einddatum|mutatie
 
-using System.IO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
-using System.Globalization;
 using Microsoft.Data.Entity;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Codelijst
 {
     public class Prestatiecode : Codelijst.CodeTable
     {

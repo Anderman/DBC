@@ -1,13 +1,8 @@
-﻿using System.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
 
-namespace GGZDBC.Models.DBCModel.Testset
+namespace DBC.Models.DB.DBC.Testset
 {
     public class DBCTestset 
     {

@@ -27,7 +27,9 @@ using DBC.Models;
 using Anderman.TagHelpers;
 using DBC.Logging;
 using System.Globalization;
-using DBC.Services.Localizations;
+using DBC.Models.DB;
+using DBC.Services.MyLocalizations.DependencyInjection;
+using DBC.Services.MyLocalizations.Middelware;
 using Microsoft.AspNet.Localization;
 namespace DBC
 {

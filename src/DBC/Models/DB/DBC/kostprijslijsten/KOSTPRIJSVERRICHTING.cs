@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace GGZDBC.Models.DBCModel.kostprijslijsten
+﻿namespace DBC.Models.DB.DBC.kostprijslijsten
 {
     public class KOSTPRIJSVERRICHTING
     {

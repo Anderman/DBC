@@ -1,10 +1,11 @@
-﻿using CsvHelper.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using CsvHelper.Configuration;
+using DBC.Models.DB.DBC.Codelijst;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Registraties
 {
     public partial class DBCs
     {

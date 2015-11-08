@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 
-namespace DBC.Helpers
+namespace DBC.TagHelpers
 {
     [HtmlTargetElement("translate")]
     public class TranslateTagHelper : TagHelper

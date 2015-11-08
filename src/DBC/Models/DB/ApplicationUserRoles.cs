@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace DBC.Models
+namespace DBC.Models.DB
 {
     public class ApplicationUserRoles : IdentityUserRole<string>
     {

@@ -1,17 +1,13 @@
 ﻿//begindatum|einddatum|code|code_verblijf|code_behandeling|type|omschrijving_verblijf|omschrijving_behandeling|beschrijving|hierarchieniveau|selecteerbaar|sorteervolgorde|
 //setting|categorie|lekenvertaling|diagnose_blinderen|mutatie|branche_indicatie
-using System.IO;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CsvHelper.Configuration;
-using System.Globalization;
 using Microsoft.Data.Entity;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Registraties
 {
     public class Productgroep : Codelijst.CodeTable
     {

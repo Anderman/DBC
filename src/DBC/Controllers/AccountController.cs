@@ -9,6 +9,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using DBC.Models;
+using DBC.Models.DB;
 using DBC.Services;
 using DBC.ViewModels.Account;
 namespace DBC.Controllers

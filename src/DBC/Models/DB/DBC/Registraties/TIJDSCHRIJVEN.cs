@@ -1,12 +1,9 @@
-﻿using CsvHelper.Configuration;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Web;
+using CsvHelper.Configuration;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Registraties
 {
     public class Tijdschrijven
     {

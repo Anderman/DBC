@@ -7,8 +7,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.DependencyInjection;
 
-
-namespace DBC.Models
+namespace DBC.Models.DB
 {
     public static class ApplicationExtensions
     {

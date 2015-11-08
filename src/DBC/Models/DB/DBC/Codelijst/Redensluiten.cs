@@ -1,9 +1,7 @@
-﻿using CsvHelper.Configuration;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using CsvHelper.Configuration;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Codelijst
 {
     public class Redensluiten : Codelijst.CodeTable
     {

@@ -1,11 +1,10 @@
 ﻿//code|omschrijving|aanvullende_informatie|begindatum|einddatum|mutatie
-using System;
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using CsvHelper.Configuration;
 using Microsoft.Data.Entity;
 
-namespace GGZDBC.Models.DBCModel.Registraties
+namespace DBC.Models.DB.DBC.Codelijst
 {
     public class Aanspraakbeperking : Codelijst.CodeTable
     {
