@@ -1,24 +1,23 @@
 ﻿@model LoginViewModel
 @using System.Collections.Generic
 @using System.Threading.Tasks
-@using DBC.Models.DB
 @using Microsoft.AspNet.Http
 @using Microsoft.AspNet.Http.Authentication
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = T["Log in"];
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
         <h3 class="form-title">
-            Aanmelden
+            @ViewBag.Title
             @{
                 var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
                 if (loginProviders.Count != 0) {
-                    <span>of login met:</span>
+                    <span>:</span>
                     foreach (AuthenticationDescription p in loginProviders) {
                         <button name="provider" value="@p.AuthenticationScheme" class="fa fa-@p.DisplayName" title="@p.DisplayName"></button>
                     }

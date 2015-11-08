@@ -7,7 +7,7 @@
         Administrators = true;
     }
     @if (Administrators) {
-        <li><a href="/User">Users</a></li>}
+        <li><a href="/User">@T["Users"]</a></li>}
 
 </ul>
 
@@ -25,8 +25,8 @@
             </li>
         }
         else {
-            <li><a href="/Account/Register"> Register </a></li>
-            <li><a href="/Account/Login"> Log in</a></li>
+            <li><a href="/Account/Register">@T["Register"]</a></li>
+            <li><a href="/Account/Login">@T["Log in"]</a></li>
         }
         <li><a href="/Home/Contact">Contact</a></li>
         

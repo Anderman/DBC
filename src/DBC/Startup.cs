@@ -1,6 +1,8 @@
 ﻿using DBC.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Authentication.Twitter;
@@ -24,9 +26,9 @@ using Microsoft.Dnx.Runtime;
 using DBC.Models;
 using Anderman.TagHelpers;
 using DBC.Logging;
-using Microsoft.AspNet.Localization;
 using System.Globalization;
-
+using DBC.Services.Localizations;
+using Microsoft.AspNet.Localization;
 namespace DBC
 {
     public class Startup
@@ -44,11 +46,11 @@ namespace DBC
             {
                 // This reads the configuration keys from the secret store.  file:\\%APPDATA%\microsoft\UserSecrets\<applicationId>\secrets.json 
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
             }
+            builder.AddUserSecrets();
 
             builder.AddEnvironmentVariables();
-            builder.AddApplicationInsightsSettings(developerMode: true);
+            //builder.AddApplicationInsightsSettings(developerMode: true);
             Configuration = builder.Build();
         }
 
@@ -78,10 +80,16 @@ namespace DBC
                 .AddDefaultTokenProviders();
 
             // Add MVC services to the services container.
-            services.AddMvc(m =>
-            {
-                m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
-            });
+            services
+                .AddMvc(m =>
+                    {
+                        m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
+                    }
+                )
+                .AddViewLocalization(options => options.ResourcesPath = "Resources")
+                .AddDataAnnotationsLocalization()
+                ;
+
             //Own DBC service
             services.AddSingleton<IEmailSender, MessageServices>();
             services.AddSingleton<ISmsSender, MessageServices>();
@@ -89,6 +97,7 @@ namespace DBC
             IConfiguration config = Configuration.GetSection("mailSettings");
             services.Configure<MessageServicesOptions>(config);
 
+            LocalizationServiceCollectironDbExtensions.AddLocalization(services);
 
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
@@ -111,7 +120,7 @@ namespace DBC
             // Add the following to the request pipeline only in development environment.
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
@@ -179,6 +188,7 @@ namespace DBC
             //});
 
             // Add MVC to the request pipeline.
+            app.UseCacheWrite();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

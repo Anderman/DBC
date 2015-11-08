@@ -26,10 +26,6 @@ namespace DBC.Models
 
             if (context.AllMigrationsApplied())
             {
-                foreach (var role in roleManager.Roles)
-                {
-                    Console.WriteLine(role.Name);
-                }
                 foreach (string role in Enum.GetNames(typeof(Roles)))
                 {
                     if (!await roleManager.RoleExistsAsync(role))

@@ -9,7 +9,7 @@
        asp-datatables-edit="/User/Edit/"
        asp-datatables-create="/User/Create/"
        asp-datatables-edit-row-select="true"
-       asp-datatables-delete="/User/Delete/" 
+       asp-datatables-delete="/User/Delete/"
        asp-datatables-create-button="true"
        asp-datatables-language='getLanguage'
        asp-datatables-lengthmenu='getLengthMenu'
@@ -25,7 +25,7 @@
             <th asp-datatables-data="UserName" asp-datatables-searchable="true"> </th>
             <th asp-datatables-data="Logins" asp-datatables-orderable="false" asp-datatables-searchable="false" asp-datatables-render="[, ].LoginProvider"> </th>
             <th asp-datatables-data="Roles" asp-datatables-orderable="false" asp-datatables-searchable="false" asp-datatables-render="[, ].Name"> </th>
-            <th data-data="Id" asp-datatables-orderable="false" asp-datatables-render="editDeleteButton">edit/delete</th>
+            <th data-data="Email" asp-datatables-orderable="false" asp-datatables-render="editDeleteButton">edit/delete</th>
         </tr>
     </thead>
 </table>

@@ -4,6 +4,7 @@
     "test",
     "../TagHelpers/src",
     "../Mvc.JQuery.Datatables/src",
+    "C:/git/Other/Localization/src",
     "wrap"
   ],
   "sdk": {
