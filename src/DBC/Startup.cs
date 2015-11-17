@@ -28,9 +28,9 @@ using Anderman.TagHelpers;
 using DBC.Logging;
 using System.Globalization;
 using DBC.Models.DB;
-using DBC.Services.MyLocalizations.DependencyInjection;
-using DBC.Services.MyLocalizations.Middelware;
 using Microsoft.AspNet.Localization;
+using Anderman.JsonLocalization.Middelware;
+
 namespace DBC
 {
     public class Startup
@@ -82,6 +82,7 @@ namespace DBC
                 .AddDefaultTokenProviders();
 
             // Add MVC services to the services container.
+            LocalizationServiceCollectionJsonExtensions.AddLocalization(services);
             services
                 .AddMvc(m =>
                     {
@@ -91,6 +92,7 @@ namespace DBC
                 .AddViewLocalization(options => options.ResourcesPath = "Resources")
                 .AddDataAnnotationsLocalization()
                 ;
+            //services.AddLocalization((Microsoft.Framework.Localization.LocalizationOptions options) => options.ResourcesPath = "My/Resources");
 
             //Own DBC service
             services.AddSingleton<IEmailSender, MessageServices>();
@@ -99,7 +101,7 @@ namespace DBC
             IConfiguration config = Configuration.GetSection("mailSettings");
             services.Configure<MessageServicesOptions>(config);
 
-            LocalizationServiceCollectironDbExtensions.AddLocalization(services);
+
 
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
@@ -135,21 +137,20 @@ namespace DBC
             app.EnsureMigrationsApplied();
             app.EnsureSampleData().Wait();
             SetupRequestPipeline(app);
+
         }
 
         public void SetupRequestPipeline(IApplicationBuilder app)
         {
             var requestLocalizationOptions = new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
+                DefaultRequestCulture = new RequestCulture(new CultureInfo("nl-NL")),
                 SupportedCultures = new List<CultureInfo>
                 {
-                    new CultureInfo("en-US"),
                     new CultureInfo("nl-NL")
                 },
                 SupportedUICultures = new List<CultureInfo>
                 {
-                    new CultureInfo("en-US"),
                     new CultureInfo("nl-NL")
                 }
             };

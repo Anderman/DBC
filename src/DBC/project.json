@@ -36,7 +36,9 @@
         "Newtonsoft.Json": "7.0.1-*",
         "Mvc6.JQuery.Datatables": "1.0.0-*",
         "npm": "1.4.15.2",
-        "TagHelpers": "1.0.0-*"
+        "TagHelpers": "1.0.0-*",
+        "Microsoft.AspNet.Localization": "1.0.0-beta8",
+        "Anderman.JsonLocalization": "1.0.0-*"
     },
     "commands": {
         "web": "Microsoft.AspNet.Server.Kestrel",
@@ -45,7 +47,6 @@
     "frameworks": {
         "dnx451": {
             "dependencies": {
-                "DataTables": "1.0.0-*"
             },
             "frameworkAssemblies": {
                 "System.Web": "4.0.0.0"

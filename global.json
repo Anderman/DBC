@@ -1,13 +1,14 @@
 {
-  "projects": [
-    "src",
-    "test",
-    "../TagHelpers/src",
-    "../Mvc.JQuery.Datatables/src",
-    "C:/git/Other/Localization/src",
-    "wrap"
-  ],
-  "sdk": {
-    "version": "1.0.0-beta8"
-  }
+    "projects": [
+        "src",
+        "test",
+        "../TagHelpers/src",
+        "../Mvc.JQuery.Datatables/src",
+        "wrap",
+        "../Localization2/src"
+    ],
+
+    "sdk": {
+        "version": "1.0.0-beta8"
+    }
 }

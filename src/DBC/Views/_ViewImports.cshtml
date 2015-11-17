@@ -1,11 +1,11 @@
-﻿@inject IStringLocalization T
+﻿@inject Microsoft.Framework.Localization.IStringLocalizer<DBC.Controllers.HomeController> T
 @using DBC.Models
 @using DBC.ViewModels.Account
 @using DBC.ViewModels.Manage
 @using DBC
-@using DBC.Services.MyLocalizations
 @using Microsoft.Framework.OptionsModel
 @using Microsoft.AspNet.Identity
+@using Microsoft.Framework.Localization
 @addTagHelper "*, Microsoft.AspNet.Mvc.TagHelpers"
 @addTagHelper "*, DBC"
 @addTagHelper "*, TagHelpers"

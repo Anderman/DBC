@@ -33,7 +33,7 @@ gulp.task("min:js", function () {
         .pipe(concat(paths.concatJsDest))
         .pipe(uglify())
         .pipe(gulp.dest("."));
-});
+}); 
 
 gulp.task("min:css", function () {
     gulp.src([paths.css, "!" + paths.minCss])

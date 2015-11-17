@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DBC.Services.MyLocalizations;
+
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Internal;
@@ -10,7 +10,7 @@ namespace DBC.Models.DB
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Localizations> Localizations { get; set; }
+        //public DbSet<Localizations> Localizations { get; set; }
         private string _connectionString;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,7 +23,7 @@ namespace DBC.Models.DB
             
             
             base.OnModelCreating(builder);
-            builder.Entity<Localizations>().HasKey(p => new { p.Key, p.Culture });
+            //builder.Entity<Localizations>().HasKey(p => new { p.Key, p.Culture });
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
