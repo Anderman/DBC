@@ -24,7 +24,7 @@ namespace DBC.Services
     {
         private readonly ICompositeViewEngine _compositeViewEngine;
         private readonly ActionContext _actionContext;
-        public EmailTemplate(ICompositeViewEngine compositeViewEngine, IHttpContextAccessor httpContextAccessor, IActionContextAccessor actionContextAccessor)
+        public EmailTemplate(ICompositeViewEngine compositeViewEngine, IActionContextAccessor actionContextAccessor)
         {
             _compositeViewEngine = compositeViewEngine;
             _actionContext = actionContextAccessor.ActionContext;//needed because razorview depend on it (No service for type 'Microsoft.AspNet.Mvc.IUrlHelper' has been registered.)

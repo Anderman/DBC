@@ -7,10 +7,14 @@
     "projectUrl": "",
     "licenseUrl": "",
     "dependencies": {
-        "xunit.runner.aspnet": "2.0.0-aspnet-beta5*",
-        "Microsoft.AspNet.TestHost": "1.0.0-*",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-*",
-        "DBC": "1.0.0-*"
+        "DBC": "1.0.0-*",
+        "Microsoft.AspNet.Mvc": "6.0.0-beta8",
+        "Microsoft.Framework.DependencyInjection": "1.0.0-beta8",
+        "Moq": "4.2.1312.1622",
+        "xunit.runner.aspnet": "2.0.0-aspnet-beta8",
+        "Microsoft.AspNet.TestHost": "1.0.0-beta8",
+        "Microsoft.Framework.Logging.Testing": "1.0.0-beta8",
+        "Microsoft.AspNet.Http": "1.0.0-beta8"
     },
     "commands": {
         "test": "xunit.runner.aspnet"
@@ -19,8 +23,6 @@
     "frameworks": {
         "dnx451": {
             "dependencies": {
-                "Moq": "4.2.1312.1622",
-                "Newtonsoft.Json": "6.0.6"
             }
         }
     }

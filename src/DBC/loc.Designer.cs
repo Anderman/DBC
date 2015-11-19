@@ -16,6 +16,7 @@
                 return resourceCulture;
             }
             set
+
             {
                 resourceCulture = value;
             }

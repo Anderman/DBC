@@ -33,6 +33,28 @@ using Anderman.JsonLocalization.Middelware;
 
 namespace DBC
 {
+    public class StartupTest
+    {
+        private Startup _startup;
+        private IHostingEnvironment _hostingEnv;
+        IApplicationEnvironment _appenv;
+        public IServiceCollection Services;
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+
+            _startup.Configure(app, _hostingEnv, loggerFactory);
+        }
+        public void ConfigureServices(IServiceCollection services)
+        {
+            _appenv = services.Where(m => m.ServiceType == typeof(IApplicationEnvironment) && m.ImplementationInstance != null).Select(m => m.ImplementationInstance).First() as IApplicationEnvironment;
+            _hostingEnv = services.Where(m => m.ServiceType == typeof(IHostingEnvironment) && m.ImplementationInstance != null).Select(m => m.ImplementationInstance).First() as IHostingEnvironment;
+            _startup = new Startup(_hostingEnv, _appenv);
+
+            _startup.ConfigureServices(services);
+            Services = services;
+        }
+
+    }
     public class Startup
     {
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)

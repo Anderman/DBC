@@ -2,7 +2,7 @@
   "profiles": {
     "Test": {
       "commandName": "Test",
-      "sdkVersion": "dnx-clr-win-x86.1.0.0-beta5"
+      "sdkVersion": "dnx-clr-win-x86.1.0.0-beta8"
     }
   }
 }

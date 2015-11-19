@@ -5,14 +5,14 @@
 //using DBC.Services;
 //using Microsoft.AspNet.Hosting;
 //using Microsoft.AspNet.Http;
-//using Microsoft.AspNet.Http.Core;
+//using Microsoft.AspNet.Http.Internal;
 //using Microsoft.AspNet.Mvc;
-//using Microsoft.AspNet.Mvc.OptionDescriptors;
+//using Microsoft.AspNet.Mvc.Infrastructure;
 //using Microsoft.AspNet.Mvc.Razor;
 //using Microsoft.AspNet.Mvc.Rendering;
+//using Microsoft.AspNet.Mvc.ViewEngines;
 //using Microsoft.Framework.DependencyInjection;
 //using Microsoft.Framework.OptionsModel;
-//using Microsoft.Framework.Runtime;
 //using Moq;
 //using Xunit;
 
@@ -34,8 +34,8 @@
 //            IServiceProvider serviceProvider = services.BuildServiceProvider();
 //            ITypeActivatorCache typeActivatorCache = services.BuildServiceProvider().GetRequiredService<ITypeActivatorCache>();//new DefaultTypeActivatorCache();
 //            IOptions<MvcOptions> optionsAccessor = services.BuildServiceProvider().GetRequiredService<IOptions<MvcOptions>>();
-//            IHttpContextAccessor c  = services.BuildServiceProvider().GetRequiredService< IHttpContextAccessor>();
-//            IViewEngineProvider viewEngineProvider = services.BuildServiceProvider().GetRequiredService<IViewEngineProvider>();
+//            IHttpContextAccessor c = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>();
+//            //IViewStartProvider viewEngineProvider = services.BuildServiceProvider().GetRequiredService<IViewEngineProvider>();
 //            ICompositeViewEngine a = services.BuildServiceProvider().GetRequiredService<ICompositeViewEngine>();
 //            //var optionsSetup = new MvcOptionsSetup();
 //            //var options = new MvcOptions();
@@ -89,7 +89,7 @@
 //            applicationEnvironment.SetupGet(a => a.ApplicationName)
 //                                  .Returns("MyApp");
 //            applicationEnvironment.SetupGet(a => a.RuntimeFramework)
-//                                  .Returns(new FrameworkName("ASPNET", new Version(4,5,1)));
+//                                  .Returns(new FrameworkName("ASPNET", new Version(4, 5, 1)));
 //            applicationEnvironment.SetupGet(a => a.Configuration)
 //                                  .Returns("Debug");
 //            applicationEnvironment.SetupGet(a => a.ApplicationBasePath)

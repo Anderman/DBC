@@ -34,12 +34,13 @@
         "Microsoft.Framework.SecretManager": "1.0.0-beta8",
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta8",
         "Newtonsoft.Json": "7.0.1-*",
-        "Mvc6.JQuery.Datatables": "1.0.0-*",
-        "npm": "1.4.15.2",
-        "TagHelpers": "1.0.0-*",
         "Microsoft.AspNet.Localization": "1.0.0-beta8",
-        "Anderman.JsonLocalization": "1.0.0-*"
+        "npm": "1.4.15.2",
+        "TagHelpers": "1.0.0-beta8-build70",
+        "Anderman.JsonLocalization": "1.0.0-beta8-build29",
+        "Mvc6.JQuery.Datatables": "1.0.0-beta8-build179"
     },
+
     "commands": {
         "web": "Microsoft.AspNet.Server.Kestrel",
         "ef": "EntityFramework.Commands"

@@ -12,6 +12,8 @@ using DBC.Models;
 using DBC.Models.DB;
 using DBC.Services;
 using DBC.ViewModels.Account;
+using Microsoft.Framework.Localization;
+
 namespace DBC.Controllers
 {
     [Authorize]
@@ -23,6 +25,7 @@ namespace DBC.Controllers
         private readonly ISmsSender _smsSender;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IEmailTemplate _emailTemplate;
+        private IStringLocalizer<AccountController> T;
         private static bool _databaseChecked;
 
         public AccountController(
@@ -31,7 +34,8 @@ namespace DBC.Controllers
             IEmailSender emailSender,
             ISmsSender smsSender,
             ApplicationDbContext applicationDbContext,
-            IEmailTemplate emailTemplate)
+            IEmailTemplate emailTemplate,
+            IStringLocalizer<AccountController> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,6 +43,7 @@ namespace DBC.Controllers
             _smsSender = smsSender;
             _applicationDbContext = applicationDbContext;
             _emailTemplate = emailTemplate;
+            T = localizer;
         }
 
         //
@@ -58,7 +63,6 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            EnsureDatabaseCreated(_applicationDbContext);
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -79,7 +83,7 @@ namespace DBC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, T["Invalid login attempt."]);
                     if (result.IsNotAllowed)
                         ModelState.AddModelError(string.Empty, "Email or phonenumber not confirmed");
                     return View(model);
@@ -118,7 +122,7 @@ namespace DBC.Controllers
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
-                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account".Localize(), body);
+                    await _emailSender.SendEmailAsync(model.Email, T["Confirm your account"], body);
                     //await _signInManager.SignInAsync(user, isPersistent: false); //comment out do not log on a
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
