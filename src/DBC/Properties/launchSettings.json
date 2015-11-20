@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:47843/",
+      "applicationUrl": "http://localhost:10036/",
       "sslPort": 0
     }
   },
@@ -12,12 +12,11 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNET_ENV": "Development"
+        "Hosting:Environment": "Development"
       }
     },
     "web": {
       "commandName": "web",
-      "launchUrl": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
       "environmentVariables": {
         "Hosting:Environment": "Development"
       }

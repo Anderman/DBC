@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 
 namespace DBC.Services
 {

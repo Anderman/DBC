@@ -8,11 +8,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
+using Microsoft.Extensions.Logging;
 using DBC.Models;
-using DBC.Models.DB;
 using DBC.Services;
 using DBC.ViewModels.Account;
-using Microsoft.Framework.Localization;
+using Microsoft.Extensions.Localization;
+using DBC.Models.DB;
 
 namespace DBC.Controllers
 {
@@ -23,27 +24,32 @@ namespace DBC.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
+        private readonly ILogger _logger;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IEmailTemplate _emailTemplate;
         private IStringLocalizer<AccountController> T;
-        private static bool _databaseChecked;
+
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
+            ILoggerFactory loggerFactory,
             ApplicationDbContext applicationDbContext,
             IEmailTemplate emailTemplate,
             IStringLocalizer<AccountController> localizer)
+
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _logger = loggerFactory.CreateLogger<AccountController>();
             _applicationDbContext = applicationDbContext;
             _emailTemplate = emailTemplate;
             T = localizer;
+
         }
 
         //
@@ -71,6 +77,7 @@ namespace DBC.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -79,13 +86,14 @@ namespace DBC.Controllers
                 }
                 if (result.IsLockedOut)
                 {
+                    _logger.LogWarning(2, "User account locked out.");
                     return View("Lockout");
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, T["Invalid login attempt."]);
                     if (result.IsNotAllowed)
-                        ModelState.AddModelError(string.Empty, "Email or phonenumber not confirmed");
+                        ModelState.AddModelError(string.Empty, T["Email or phonenumber not confirmed"]);
                     return View(model);
                 }
             }
@@ -95,22 +103,12 @@ namespace DBC.Controllers
         }
 
         //
-        // GET: /Account/Register
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            EnsureDatabaseCreated(_applicationDbContext);
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -140,6 +138,7 @@ namespace DBC.Controllers
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();
+            _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -150,7 +149,6 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            EnsureDatabaseCreated(_applicationDbContext);
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -161,7 +159,7 @@ namespace DBC.Controllers
         // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string error = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null,string error=null)
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -195,6 +193,7 @@ namespace DBC.Controllers
 
             if (result.Succeeded)
             {
+                _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -248,6 +247,7 @@ namespace DBC.Controllers
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -458,6 +458,7 @@ namespace DBC.Controllers
             }
             if (result.IsLockedOut)
             {
+                _logger.LogWarning(7, "User account locked out.");
                 return View("Lockout");
             }
             else
@@ -468,20 +469,6 @@ namespace DBC.Controllers
         }
 
         #region Helpers
-
-        // The following code creates the database and schema if they don't exist.
-        // This is a temporary workaround since deploying database through EF migrations is
-        // not yet supported in this release.
-        // Please see this http://go.microsoft.com/fwlink/?LinkID=615859 for more information on how to do deploy the database
-        // when publishing your application.
-        private static void EnsureDatabaseCreated(ApplicationDbContext context)
-        {
-            if (!_databaseChecked)
-            {
-                _databaseChecked = true;
-                context.Database.Migrate();
-            }
-        }
 
         private void AddErrors(IdentityResult result)
         {

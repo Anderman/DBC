@@ -1,6 +1,7 @@
 ﻿@using System.Security.Claims
 
-@if (User.Identity.IsAuthenticated) {
+@if (User.IsSignedIn())
+{
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
@@ -11,15 +12,15 @@
                     <li><a asp-controller="Manage" asp-action="Index" title="Manage">Profiel</a></li>
                     <li class="divider"></li>
                     <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                </ul> 
-                
+                </ul>
             </li>
         </ul>
     </form>
 }
-else {
+else
+{
     <ul class="nav navbar-nav navbar-right">
-        <li><a id="registerLink" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a id="loginLink" asp-controller="Account" asp-action="Login">Log in</a></li>
+        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+        <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
     </ul>
 }

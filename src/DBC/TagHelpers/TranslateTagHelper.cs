@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNet.Razor.Runtime.TagHelpers;
+using Microsoft.AspNet.Razor.TagHelpers;
 
 namespace DBC.TagHelpers
 {
@@ -8,9 +8,9 @@ namespace DBC.TagHelpers
     {
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var childContent = await context.GetChildContentAsync();
+            var childContent = await output.GetChildContentAsync();
             output.TagName = "";
-            output.Content.SetContentEncoded(childContent.GetContent().ToString().Localize());
+            output.Content.SetHtmlContent(childContent.GetContent().ToString().Localize());
         }
     }
 }

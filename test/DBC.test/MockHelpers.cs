@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using Moq;
-using Microsoft.Framework.OptionsModel;
 using System.Linq;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http.Internal;
@@ -50,34 +49,34 @@ namespace Microsoft.AspNet.Identity.Test
             return new Mock<RoleManager<TRole>>(store, roles, null, null, null, null);
         }
 
-        public static Mock<ILogger<T>> MockILogger<T>(StringBuilder logStore = null) where T : class
-        {
-            logStore = logStore ?? LogMessage;
-            var logger = new Mock<ILogger<T>>();
-            logger.Setup(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<int>(), It.IsAny<object>(),
-                It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()))
-                .Callback((LogLevel logLevel, int eventId, object state, Exception exception, Func<object, Exception, string> formatter) =>
-                {
-                    if (formatter == null)
-                    {
-                        logStore.Append(state.ToString());
-                    }
-                    else
-                    {
-                        logStore.Append(formatter(state, exception));
-                    }
-                    logStore.Append(" ");
-                });
-            logger.Setup(x => x.BeginScopeImpl(It.IsAny<object>())).Callback((object state) =>
-                {
-                    logStore.Append(state.ToString());
-                    logStore.Append(" ");
-                });
-            logger.Setup(x => x.IsEnabled(LogLevel.Verbose)).Returns(true);
-            logger.Setup(x => x.IsEnabled(LogLevel.Warning)).Returns(true);
+        //public static Mock<ILogger<T>> MockILogger<T>(StringBuilder logStore = null) where T : class
+        //{
+        //    logStore = logStore ?? LogMessage;
+        //    var logger = new Mock<ILogger<T>>();
+        //    logger.Setup(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<int>(), It.IsAny<object>(),
+        //        It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()))
+        //        .Callback((LogLevel logLevel, int eventId, object state, Exception exception, Func<object, Exception, string> formatter) =>
+        //        {
+        //            if (formatter == null)
+        //            {
+        //                logStore.Append(state.ToString());
+        //            }
+        //            else
+        //            {
+        //                logStore.Append(formatter(state, exception));
+        //            }
+        //            logStore.Append(" ");
+        //        });
+        //    logger.Setup(x => x.BeginScopeImpl(It.IsAny<object>())).Callback((object state) =>
+        //        {
+        //            logStore.Append(state.ToString());
+        //            logStore.Append(" ");
+        //        });
+        //    logger.Setup(x => x.IsEnabled(LogLevel.Verbose)).Returns(true);
+        //    logger.Setup(x => x.IsEnabled(LogLevel.Warning)).Returns(true);
 
-            return logger;
-        }
+        //    return logger;
+        //}
 
         //public static UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
         //{
@@ -101,17 +100,17 @@ namespace Microsoft.AspNet.Identity.Test
         //    return userManager;
         //}
 
-        public static RoleManager<TRole> TestRoleManager<TRole>(IRoleStore<TRole> store = null) where TRole : class
-        {
-            store = store ?? new Mock<IRoleStore<TRole>>().Object;
-            var roles = new List<IRoleValidator<TRole>>();
-            roles.Add(new RoleValidator<TRole>());
-            return new RoleManager<TRole>(store, roles,
-                new UpperInvariantLookupNormalizer(),
-                new IdentityErrorDescriber(),
-                null,
-                null);
-        }
+        //public static RoleManager<TRole> TestRoleManager<TRole>(IRoleStore<TRole> store = null) where TRole : class
+        //{
+        //    store = store ?? new Mock<IRoleStore<TRole>>().Object;
+        //    var roles = new List<IRoleValidator<TRole>>();
+        //    roles.Add(new RoleValidator<TRole>());
+        //    return new RoleManager<TRole>(store, roles,
+        //        new UpperInvariantLookupNormalizer(),
+        //        new IdentityErrorDescriber(),
+        //        null,
+        //        null);
+        //}
 
     }
 }

@@ -14,6 +14,12 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CsvHelper", "wrap\CsvHelper
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DBC.test", "test\DBC.test\DBC.test.xproj", "{FD8F48B8-D2B7-4625-BA48-88B4BCD6F0A1}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Anderman.JsonLocalization", "..\Localization\src\Anderman.JsonLocalization\Anderman.JsonLocalization.xproj", "{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mvc6.JQuery.Datatables", "..\Mvc.JQuery.Datatables\src\Mvc6.JQuery.Datatables\Mvc6.JQuery.Datatables.xproj", "{FA56DBCA-3159-42A1-8837-C687B6ADC99A}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TagHelpers", "..\TagHelpers\src\TagHelpers\TagHelpers.xproj", "{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +45,24 @@ Global
 		{FD8F48B8-D2B7-4625-BA48-88B4BCD6F0A1}.DemoMode|Any CPU.Build.0 = Debug|Any CPU
 		{FD8F48B8-D2B7-4625-BA48-88B4BCD6F0A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD8F48B8-D2B7-4625-BA48-88B4BCD6F0A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}.DemoMode|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}.DemoMode|Any CPU.Build.0 = Debug|Any CPU
+		{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CCB3F8-45B4-4927-8579-FE6B4EBB29D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA56DBCA-3159-42A1-8837-C687B6ADC99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA56DBCA-3159-42A1-8837-C687B6ADC99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA56DBCA-3159-42A1-8837-C687B6ADC99A}.DemoMode|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA56DBCA-3159-42A1-8837-C687B6ADC99A}.DemoMode|Any CPU.Build.0 = Debug|Any CPU
+		{FA56DBCA-3159-42A1-8837-C687B6ADC99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA56DBCA-3159-42A1-8837-C687B6ADC99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.DemoMode|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.DemoMode|Any CPU.Build.0 = Debug|Any CPU
+		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9B15ED-4AF9-4497-9279-A5CF132CBA70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

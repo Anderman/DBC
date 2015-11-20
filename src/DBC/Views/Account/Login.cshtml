@@ -1,24 +1,25 @@
-﻿@model LoginViewModel
-@using System.Collections.Generic
-@using System.Threading.Tasks
+﻿@using System.Collections.Generic
 @using Microsoft.AspNet.Http
 @using Microsoft.AspNet.Http.Authentication
+@model LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewBag.Title = T["Log in"];
+    ViewData["Title"] = T["Log in"];
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
         <h3 class="form-title">
-            @ViewBag.Title
+            @ViewData["Title"]
             @{
                 var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                if (loginProviders.Count != 0) {
+                if (loginProviders.Count != 0)
+                {
                     <span>:</span>
-                    foreach (AuthenticationDescription p in loginProviders) {
+                    foreach (AuthenticationDescription p in loginProviders)
+                    {
                         <button name="provider" value="@p.AuthenticationScheme" class="fa fa-@p.DisplayName" title="@p.DisplayName"></button>
                     }
                 }
@@ -40,5 +41,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

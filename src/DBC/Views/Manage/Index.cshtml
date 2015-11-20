@@ -1,10 +1,9 @@
-﻿@using System.Threading.Tasks
-@using DBC.ViewModels.Manage
-@model DBC.ViewModels.Manage.IndexViewModel
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = T["Manage your account"];
     ViewData["PageStyle"] = "form-small";
 }
+
 <h2>@ViewData["Title"].</h2>
 <p class="text-success">@ViewData["StatusMessage"]</p>
 <h4>@T["Change your account settings"]</h4>
@@ -23,7 +22,6 @@
         }
     </div>
 </div>
-
 <div class="form-horizontal vertical-align">
     <a class="col-xs-12" asp-controller="Manage" asp-action="ManageLogins">@T["Remove or add external logins "] (@Model.Logins.Count):</a>
 </div>
@@ -33,7 +31,7 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
         $('.modal-trigger').click(function () {
             var link = $(this).attr("asp-modal-link");
             $('#ajaxForm').ajaxForm({
@@ -54,5 +52,5 @@
         }).ajaxSuccess(function () {
             $(".progress-bar").progress(0);
         });
-    </script>
+</script>
 }

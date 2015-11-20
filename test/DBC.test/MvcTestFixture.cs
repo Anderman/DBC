@@ -11,27 +11,13 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.AspNet.TestHost;
-using Microsoft.Dnx.Runtime;
-using Microsoft.Dnx.Runtime.Infrastructure;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.Logging.Testing;
+using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 
 namespace Microsoft.AspNet.Mvc.FunctionalTests
 {
-    public class myTestServer : TestServer
-    {
-        IServiceProvider _services;
-        public myTestServer(WebHostBuilder builder): base(builder)
-        {
-            Debugger.Launch();
-
-        }
-        //public override TestServer Create(IServiceProvider services, Action<IApplicationBuilder> configureApp, Func<IServiceCollection, IServiceProvider> configureServices)
-        //{
-        //    return base(services, configureApp, configureServices);
-        //}
-    }
     public class MvcTestFixture : IDisposable
     {
         private readonly TestServer _server;
@@ -49,19 +35,9 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
                     .DeclaredMethods
                     .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 2)
                     ?.CreateDelegate(typeof(Action<IApplicationBuilder, ILoggerFactory>), startupInstance);
+                Debug.Assert(configureWithLogger != null);
 
                 configureApplication = application => configureWithLogger(application, NullLoggerFactory.Instance);
-            }
-            if (configureApplication == null)
-            {
-                var configureApplicationWithLogAndEnvAndApp = (Action<IApplicationBuilder, ILoggerFactory, IHostingEnvironment, IApplicationEnvironment>)startupTypeInfo
-                    .DeclaredMethods
-                    .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 4)
-                    ?.CreateDelegate(typeof(Action<IApplicationBuilder, ILoggerFactory, IHostingEnvironment, IApplicationEnvironment>), startupInstance);
-                var env = new HostingEnvironment();
-                IApplicationEnvironment app = null;
-                Debug.Assert(configureApplicationWithLogAndEnvAndApp != null);
-                configureApplication = application => configureApplicationWithLogAndEnvAndApp(application, NullLoggerFactory.Instance, env, app);
             }
 
             var buildServices = (Func<IServiceCollection, IServiceProvider>)startupTypeInfo
@@ -86,18 +62,15 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             // RequestLocalizationOptions saves the current culture when constructed, potentially changing response
             // localization i.e. RequestLocalizationMiddleware behavior. Ensure the saved culture
             // (DefaultRequestCulture) is consistent regardless of system configuration or personal preferences.
-            _server = myTestServer.Create(
-               CallContextServiceLocator.Locator.ServiceProvider,
-               configureApplication,
-               configureServices: InitializeServices(startupTypeInfo.Assembly, buildServices));
+            _server = TestServer.Create(
+                configureApplication,
+                configureServices: InitializeServices(startupTypeInfo.Assembly, buildServices));
 
             Client = _server.CreateClient();
-            Server = _server;
             Client.BaseAddress = new Uri("http://localhost");
         }
 
         public HttpClient Client { get; }
-        public TestServer Server { get; }
 
         public void Dispose()
         {
@@ -113,8 +86,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             Assembly startupAssembly,
             Func<IServiceCollection, IServiceProvider> buildServices)
         {
-            var applicationServices = CallContextServiceLocator.Locator.ServiceProvider;
-            var libraryManager = applicationServices.GetRequiredService<ILibraryManager>();
+            var libraryManager = PlatformServices.Default.LibraryManager;
 
             // When an application executes in a regular context, the application base path points to the root
             // directory where the application is located, for example .../samples/MvcSample.Web. However, when
@@ -126,15 +98,18 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             var library = libraryManager.GetLibrary(applicationName);
             var applicationRoot = Path.GetDirectoryName(library.Path);
 
-            var applicationEnvironment = applicationServices.GetRequiredService<IApplicationEnvironment>();
+            var applicationEnvironment = PlatformServices.Default.Application;
 
             return (services) =>
             {
+                //var appEnv = services.Where(m => m.ServiceType == typeof(IApplicationEnvironment) && m.ImplementationInstance != null).Select(m=> m).Last() ;
+                //services.Remove(appEnv);
+
                 services.AddInstance<IApplicationEnvironment>(
                     new TestApplicationEnvironment(applicationEnvironment, applicationName, applicationRoot));
 
                 var hostingEnvironment = new HostingEnvironment();
-                hostingEnvironment.Initialize(applicationRoot, "Production");
+                hostingEnvironment.Initialize(applicationRoot, config: null);
                 services.AddInstance<IHostingEnvironment>(hostingEnvironment);
 
                 // Inject a custom assembly provider. Overrides AddMvc() because that uses TryAdd().

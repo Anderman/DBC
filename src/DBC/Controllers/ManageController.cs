@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Extensions.Logging;
 using DBC.Models;
 using DBC.Models.DB;
 using DBC.Services;
@@ -21,21 +21,24 @@ namespace DBC.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
+        private readonly ILogger _logger;
 
         public ManageController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            ISmsSender smsSender)
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        IEmailSender emailSender,
+        ISmsSender smsSender,
+        ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _logger = loggerFactory.CreateLogger<ManageController>();
         }
 
         //
-        // GET: /Account/Index
+        // GET: /Manage/Index
         [HttpGet]
         public async Task<IActionResult> Index(ManageMessageId? message = null)
         {
@@ -65,20 +68,9 @@ namespace DBC.Controllers
         }
 
         //
-        // GET: /Account/RemoveLogin
-        [HttpGet]
-        public async Task<IActionResult> RemoveLogin()
-        {
-            var user = await GetCurrentUserAsync();
-            var linkedAccounts = await _userManager.GetLoginsAsync(user);
-            ViewData["ShowRemoveButton"] = await _userManager.HasPasswordAsync(user) || linkedAccounts.Count >= 1;
-            return View(linkedAccounts);
-        }
-
-        //
         // POST: /Manage/RemoveLogin
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
         {
             ManageMessageId? message = ManageMessageId.Error;
@@ -96,14 +88,14 @@ namespace DBC.Controllers
         }
 
         //
-        // GET: /Account/AddPhoneNumber
+        // GET: /Manage/AddPhoneNumber
         public IActionResult AddPhoneNumber()
         {
             return View();
         }
 
         //
-        // POST: /Account/AddPhoneNumber
+        // POST: /Manage/AddPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
@@ -130,6 +122,7 @@ namespace DBC.Controllers
             {
                 await _userManager.SetTwoFactorEnabledAsync(user, true);
                 await _signInManager.SignInAsync(user, isPersistent: false);
+                _logger.LogInformation(1, "User enabled two-factor authentication.");
             }
             return RedirectToAction(nameof(Index), "Manage");
         }
@@ -145,12 +138,13 @@ namespace DBC.Controllers
             {
                 await _userManager.SetTwoFactorEnabledAsync(user, false);
                 await _signInManager.SignInAsync(user, isPersistent: false);
+                _logger.LogInformation(2, "User disabled two-factor authentication.");
             }
             return RedirectToAction(nameof(Index), "Manage");
         }
 
         //
-        // GET: /Account/VerifyPhoneNumber
+        // GET: /Manage/VerifyPhoneNumber
         [HttpGet]
         public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
         {
@@ -160,7 +154,7 @@ namespace DBC.Controllers
         }
 
         //
-        // POST: /Account/VerifyPhoneNumber
+        // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
@@ -185,7 +179,7 @@ namespace DBC.Controllers
         }
 
         //
-        // GET: /Account/RemovePhoneNumber
+        // GET: /Manage/RemovePhoneNumber
         [HttpGet]
         public async Task<IActionResult> RemovePhoneNumber()
         {
@@ -211,7 +205,7 @@ namespace DBC.Controllers
         }
 
         //
-        // POST: /Account/Manage
+        // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -227,13 +221,13 @@ namespace DBC.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    _logger.LogInformation(3, "User changed their password successfully.");
                     return new JsonResult(new { Message = getStatusMessage(ManageMessageId.ChangePasswordSuccess) });
                 }
                 AddErrors(result);
                 return PartialView(model);
             }
             return new JsonResult(new { Message = getStatusMessage(ManageMessageId.Error) });
-            //return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
         }
 
         //
@@ -270,7 +264,7 @@ namespace DBC.Controllers
             return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
         }
 
-        //GET: /Account/Manage
+        //GET: /Manage/ManageLogins
         [HttpGet]
         public async Task<IActionResult> ManageLogins(ManageMessageId? message = null)
         {
@@ -286,7 +280,7 @@ namespace DBC.Controllers
             }
             var userLogins = await _userManager.GetLoginsAsync(user);
             var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
-            ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count >= 1;
+            ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
@@ -297,7 +291,7 @@ namespace DBC.Controllers
         //
         // POST: /Manage/LinkLogin
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public IActionResult LinkLogin(string provider)
         {
             // Request a redirect to the external login provider to link a login for the current user
@@ -336,16 +330,6 @@ namespace DBC.Controllers
             }
         }
 
-        private async Task<bool> HasPhoneNumber()
-        {
-            var user = await _userManager.FindByIdAsync(User.GetUserId());
-            if (user != null)
-            {
-                return user.PhoneNumber != null;
-            }
-            return false;
-        }
-
         public enum ManageMessageId
         {
             AddPhoneSuccess,
@@ -361,18 +345,6 @@ namespace DBC.Controllers
         private async Task<ApplicationUser> GetCurrentUserAsync()
         {
             return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        }
-
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
-            }
         }
 
         #endregion

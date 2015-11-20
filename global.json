@@ -5,10 +5,10 @@
         "../TagHelpers/src",
         "../Mvc.JQuery.Datatables/src",
         "wrap",
-        "../Localization2/src"
+        "../Localization/src"
     ],
 
     "sdk": {
-        "version": "1.0.0-beta8"
+        "version": "1.0.0-rc1-final"
     }
 }

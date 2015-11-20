@@ -8,13 +8,15 @@
     "licenseUrl": "",
     "dependencies": {
         "DBC": "1.0.0-*",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta8",
-        "Microsoft.Framework.DependencyInjection": "1.0.0-beta8",
+        "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
+        "Microsoft.Extensions.DependencyInjection": "1.0.0-rc1-final",
         "Moq": "4.2.1312.1622",
-        "xunit.runner.aspnet": "2.0.0-aspnet-beta8",
-        "Microsoft.AspNet.TestHost": "1.0.0-beta8",
-        "Microsoft.Framework.Logging.Testing": "1.0.0-beta8",
-        "Microsoft.AspNet.Http": "1.0.0-beta8"
+        "xunit.runner.aspnet": "2.0.0-aspnet-rc1-15897",
+        "Microsoft.AspNet.TestHost": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Http": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Logging.Testing": "1.0.0-rc1-15837",
+        "Microsoft.AspNet.Hosting": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final"
     },
     "commands": {
         "test": "xunit.runner.aspnet"

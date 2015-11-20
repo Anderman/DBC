@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Http.Features;
-using Microsoft.AspNet.Localization;
 using Microsoft.AspNet.Mvc;
 
 namespace DBC.Controllers
@@ -18,10 +15,7 @@ namespace DBC.Controllers
 
         public IActionResult About()
         {
-            var requestCultureFeature = this.HttpContext.Features.Get<IRequestCultureFeature>();
-            var requestCulture = requestCultureFeature.RequestCulture;
-
-            ViewData["Message"] = $"Your application description page. culture.request={requestCulture.UICulture} thread.culture={CultureInfo.CurrentUICulture}" ;
+            ViewData["Message"] = "Your application description page.";
 
             return View();
         }
@@ -35,7 +29,7 @@ namespace DBC.Controllers
 
         public IActionResult Error()
         {
-            return View("~/Views/Shared/Error.cshtml");
+            return View();
         }
     }
 }

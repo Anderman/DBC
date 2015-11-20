@@ -1,16 +1,10 @@
-﻿@using System
-@using System.Threading.Tasks
-@*@inject IOptions<AppSettings> AppSettings*@
-
-<html lang="en" pmbx_context="756F7244-847C-42EA-83B1-B06CFA7FDF93">
+﻿<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>@ViewBag.Title</title>
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta content="" name="description">
-    <meta content="" name="author">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DBC</title>
     <link href="/css/site.css" rel="stylesheet"
           asp-use-minified="production,staging" />
 
@@ -96,6 +90,7 @@
             $.material.init();
         });
     </script>
+
     @RenderSection("scripts", required: false)
     <span role="status" aria-live="polite" class="select2-hidden-accessible"></span>
     <div role="log" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div>
