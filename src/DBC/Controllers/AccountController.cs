@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -102,34 +103,34 @@ namespace DBC.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                    // Send an email with this link
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
-                    await _emailSender.SendEmailAsync(model.Email, T["Confirm your account"], body);
-                    //await _signInManager.SignInAsync(user, isPersistent: false); //comment out do not log on a
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
-                }
-                AddErrors(result);
-            }
+        //// UserManager create accounts 
+        //// POST: /Account/Register
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Register(RegisterViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+        //        var result = await _userManager.CreateAsync(user, model.Password);
+        //        if (result.Succeeded)
+        //        {
+        //            // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+        //            // Send an email with this link
+        //            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        //            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+        //            var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
+        //            await _emailSender.SendEmailAsync(model.Email, T["Confirm your account"], body);
+        //            //await _signInManager.SignInAsync(user, isPersistent: false); //comment out do not log on a
+        //            return RedirectToAction(nameof(HomeController.Index), "Home");
+        //        }
+        //        AddErrors(result);
+        //    }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+        //    // If we got this far, something failed, redisplay form
+        //    return View(model);
+        //}
 
         //
         // POST: /Account/LogOff
@@ -159,14 +160,14 @@ namespace DBC.Controllers
         // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null,string error=null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string error = null)
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 if (error != null)
                 {
-                    ModelState.AddModelError("", $"Het automatisch inloggen met external account geeft een error. {error}");
+                    ModelState.AddModelError("", T["The external login service gives an error: {0}.", error]);
                     return View("Login");
                 }
                 return RedirectToAction("Login");
@@ -177,6 +178,8 @@ namespace DBC.Controllers
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (!result.Succeeded && !result.IsLockedOut && !result.RequiresTwoFactor)
             {
+                //Local only Email exist and it not yet confirm or registed as external login. 
+                //if a user has proven he own this email address then confirm the registration and register the external login to the user
                 var user = await _userManager.FindByEmailAsync(email);
                 if (user != null)
                 {
@@ -186,14 +189,17 @@ namespace DBC.Controllers
                     }
                     user.EmailConfirmed = true;
                     await _userManager.UpdateAsync(user);
-                    await _userManager.AddLoginAsync(user, info);
+                    if ((await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey))==null)
+                    {
+                        await _userManager.AddLoginAsync(user, info);
+                    }
                     result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
                 }
             }
 
             if (result.Succeeded)
             {
-                _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
+                _logger.LogInformation(5, $"User logged in with {info.ProviderDisplayName} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -206,57 +212,17 @@ namespace DBC.Controllers
             }
             if (result.IsNotAllowed)
             {
-                ModelState.AddModelError("", $"Confirmation of email or phonenumber is required before you can login");
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                ModelState.AddModelError("", T["Confirmation of email or phonenumber is required before you can login"]);
+                return RedirectToAction(nameof(Login), new { ReturnUrl = returnUrl });
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
-                ModelState.AddModelError("", $"Uw {info.LoginProvider} account is niet gekoppeld. U kunt uw {info.LoginProvider} account koppelen in uw profiel.");
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                // If the user does not have an account, then ask the user to login with a different account.
+                ModelState.AddModelError("", T["Your {0} account is unknown to the application. You can add your {0} account in your profile.", info.LoginProvider]);
+                return RedirectToAction(nameof(Login), new { ReturnUrl = returnUrl });
             }
         }
 
-        //
-        // POST: /Account/ExternalLoginConfirmation
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
-        {
-            if (User.IsSignedIn())
-            {
-                return RedirectToAction(nameof(ManageController.Index), "Manage");
-            }
-
-            if (ModelState.IsValid)
-            {
-                // Get the information about the user from the external login provider
-                var info = await _signInManager.GetExternalLoginInfoAsync();
-                if (info == null)
-                {
-                    return View("ExternalLoginFailure");
-                }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
-                    }
-                }
-                AddErrors(result);
-            }
-
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(model);
-        }
 
         // GET: /Account/ConfirmEmail
         [HttpGet]
@@ -273,7 +239,7 @@ namespace DBC.Controllers
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            return View(result.Succeeded ? nameof(ConfirmEmail) : "Error");
         }
 
         //
@@ -294,20 +260,21 @@ namespace DBC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    return View(nameof(ForgotPasswordConfirmation));
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                var callbackUrl = Url.Action(nameof(ResetPassword),"Account", new { userId = user.Id, code = code }, protocol: HttpContext?.Request?.Scheme);
                 var body = await _emailTemplate.RenderViewToString<ActivateEmail>(@"/Views/Email/ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
-                await _emailSender.SendEmailAsync(model.Email, "Herstel wachtwoord", body);
-                return View("ForgotPasswordConfirmation");
+                await _emailSender.SendEmailAsync(model.Email, T["Reset password"], body);
+                //show a screen that the use should check hit email
+                return View(nameof(ForgotPasswordConfirmation));
             }
 
             // If we got this far, something failed, redisplay form
@@ -343,13 +310,14 @@ namespace DBC.Controllers
             {
                 return View(model);
             }
-            var user = await _userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");

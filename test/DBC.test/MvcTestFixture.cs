@@ -102,9 +102,9 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
 
             return (services) =>
             {
-                //var appEnv = services.Where(m => m.ServiceType == typeof(IApplicationEnvironment) && m.ImplementationInstance != null).Select(m=> m).Last() ;
-                //services.Remove(appEnv);
-
+#if DNX451
+                AppDomain.CurrentDomain.SetData("APP_CONTEXT_BASE_DIRECTORY", applicationRoot);
+#endif
                 services.AddInstance<IApplicationEnvironment>(
                     new TestApplicationEnvironment(applicationEnvironment, applicationName, applicationRoot));
 
