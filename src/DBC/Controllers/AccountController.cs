@@ -189,7 +189,7 @@ namespace DBC.Controllers
                     }
                     user.EmailConfirmed = true;
                     await _userManager.UpdateAsync(user);
-                    if ((await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey))==null)
+                    if ((await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey)) == null)
                     {
                         await _userManager.AddLoginAsync(user, info);
                     }
@@ -199,7 +199,7 @@ namespace DBC.Controllers
 
             if (result.Succeeded)
             {
-                _logger.LogInformation(5, $"User logged in with {info.ProviderDisplayName} provider.", info.LoginProvider);
+                _logger.LogInformation(5, "User logged in with {0} provider.", info.ProviderDisplayName);
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -270,7 +270,7 @@ namespace DBC.Controllers
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action(nameof(ResetPassword),"Account", new { userId = user.Id, code = code }, protocol: HttpContext?.Request?.Scheme);
+                var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: HttpContext?.Request?.Scheme);
                 var body = await _emailTemplate.RenderViewToString<ActivateEmail>(@"/Views/Email/ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                 await _emailSender.SendEmailAsync(model.Email, T["Reset password"], body);
                 //show a screen that the use should check hit email
@@ -341,6 +341,7 @@ namespace DBC.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
         {
+            // Require that the user has already logged in via username/password or external login
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -363,6 +364,7 @@ namespace DBC.Controllers
                 return View();
             }
 
+            // Require that the user has already logged in via username/password or external login
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -376,10 +378,11 @@ namespace DBC.Controllers
                 return View("Error");
             }
 
-            var message = "Your security code is: " + code;
+            var message = T["Your security code is: {0}", code];
             if (model.SelectedProvider == "Email")
             {
-                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
+                var e = await _userManager.GetEmailAsync(user);
+                await _emailSender.SendEmailAsync(e, T["Security Code"], message);
             }
             else if (model.SelectedProvider == "Phone")
             {
@@ -431,7 +434,7 @@ namespace DBC.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Invalid code.");
+                ModelState.AddModelError("", T["Invalid code."]);
                 return View(model);
             }
         }
@@ -444,11 +447,6 @@ namespace DBC.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-        }
-
-        private async Task<ApplicationUser> GetCurrentUserAsync()
-        {
-            return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
