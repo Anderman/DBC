@@ -160,7 +160,7 @@ namespace DBC.Controllers
         public async void ExternalLoginCallback_ExternalSucces_LocalNotConfirmed()
         {
             // Arrange
-            var controller = MockAccountController(MockSignInManager(SignInResult.Failed, SignInResult.Failed, DefaultInfo()), MockUserManager(findByEmailAsync: user));
+            var controller = MockAccountController(MockSignInManager(SignInResult.Failed, SignInResult.Failed, DefaultInfo()), MockUserManager(user: user));
             // Act
             var result = await controller.ExternalLoginCallback("returnurl", null) as RedirectToActionResult;
             //assert
@@ -175,7 +175,7 @@ namespace DBC.Controllers
             // Arrange
             var controller = MockAccountController(
                 MockSignInManager(SignInResult.Failed, SignInResult.NotAllowed, DefaultInfo()),
-                MockUserManager(findByEmailAsync: user));
+                MockUserManager(user: user));
             //var controller = MockAccountController(SignInResult.Failed, SignInResult.NotAllowed, nullInfo: false, EmailAddress: "RegisterUserEmail");
             // Act
             var result = await controller.ExternalLoginCallback("returnurl", null) as RedirectToActionResult;
@@ -190,7 +190,7 @@ namespace DBC.Controllers
             // Arrange
             var controller = MockAccountController(
                 MockSignInManager(SignInResult.Failed, SignInResult.LockedOut, DefaultInfo()),
-                MockUserManager(findByEmailAsync: user));
+                MockUserManager(user: user));
             //var controller = MockAccountController(SignInResult.Failed, SignInResult.LockedOut, nullInfo: false, EmailAddress: "RegisterUserEmail");
             // Act
             var result = await controller.ExternalLoginCallback("returnurl", null) as ViewResult;
@@ -203,7 +203,7 @@ namespace DBC.Controllers
             // Arrange
             var controller = MockAccountController(
                 MockSignInManager(SignInResult.Failed, SignInResult.TwoFactorRequired, DefaultInfo()),
-                MockUserManager(findByEmailAsync: user));
+                MockUserManager(user: user));
             // Act
             var result = await controller.ExternalLoginCallback("returnurl", null) as RedirectToActionResult;
             //assert
@@ -370,25 +370,65 @@ namespace DBC.Controllers
         public async void ResetPassword_with_Registered_User_And_Invalid_Code()
         {
             // Arrange
-            var controller = MockAccountController(null, MockUserManager(user, IdentityResult.Failed()));
+            var controller = MockAccountController(null, MockUserManager(user, IdentityResult.Failed(new IdentityError() {Code="1",Description="Error"})));
             // Act
-            var result = await controller.ResetPassword(new ResetPasswordViewModel()) as RedirectToActionResult;
+
+            var result = await controller.ResetPassword(new ResetPasswordViewModel() { Code = "token", Password = "password", Email = "EmailAddress@" }) as ViewResult;
             //assert
-            Assert.Equal(nameof(AccountController.ResetPasswordConfirmation), result?.ActionName);
+            Assert.NotNull(result);
+
+            Assert.Equal("ResetPassword", result?.ViewName?? "ResetPassword");
+            Assert.Equal("Error", controller.ModelState.Values.Select(m => m.Errors[0].ErrorMessage).First());
         }
         [Fact]
         public async void ResetPassword_with_registered_user_and_valid_code()
         {
             // Arrange
-            var controller = MockAccountController(null, MockUserManager(null, user, IdentityResult.Success, false));
+            var controller = MockAccountController(null, MockUserManager(user, IdentityResult.Success, false));
             // Act
             var result = await controller.ResetPassword(new ResetPasswordViewModel() { Code = "token", Password = "password", Email = "EmailAddress@" }) as RedirectToActionResult;
 
             //assert
             Assert.Equal(nameof(AccountController.ResetPasswordConfirmation), result?.ActionName);
             _mockUserManager.Verify(m => m.ResetPasswordAsync(user, AnyString, AnyString), Times.Once);
-
         }
+
+
+
+        [Fact]
+        public async void SendCode_AnonymousUser()
+        {
+            // Arrange
+            var controller = MockAccountController(MockSignInManager(), MockUserManager());
+            // Act
+            var result = await controller.SendCode("returnurl", rememberMe: true) as ViewResult;
+
+            //assert
+            Assert.Equal("Error", result?.ViewName);
+        }
+        [Fact]
+        public async void SendCode_RegisteredUser()
+        {
+            // Arrange
+            var controller = MockAccountController(MockSignInManager(user), MockUserManager(user));
+            // Act
+            var result = await controller.SendCode("returnurl", rememberMe: true) as ViewResult;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.NotNull(controller.ViewData.Model);
+            Assert.Equal(nameof(AccountController.SendCode), result?.ViewName??"SendCode");
+        }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -451,23 +491,25 @@ namespace DBC.Controllers
         {
             return MockUserManager(null);
         }
-        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser findByIdAsync, IdentityResult confirmEmailAsync)
+        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser user, IdentityResult confirmEmailAsync)
         {
-            return MockUserManager(findByIdAsync, null, confirmEmailAsync, false);
+            return MockUserManager(user, confirmEmailAsync, false);
         }
-        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser findByEmailAsync, bool isEmailConfirmedAsync)
+        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser user, bool isEmailConfirmedAsync)
         {
-            return MockUserManager(null, findByEmailAsync, null, isEmailConfirmedAsync);
+            return MockUserManager(user, null, isEmailConfirmedAsync);
         }
-        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser findByEmailAsync)
+        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser user)
         {
-            return MockUserManager(null, findByEmailAsync, null, false);
+            return MockUserManager(user, null, false);
         }
-        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser findByIdAsync, ApplicationUser findByEmailAsync, IdentityResult identityResult, bool isEmailConfirmedAsync)
+        private static UserManager<ApplicationUser> MockUserManager(ApplicationUser user, IdentityResult identityResult, bool isEmailConfirmedAsync)
         {
+            IList<string> userFactors = new List<string>() { "purpose1", "purpose2" };
             _mockUserManager = Microsoft.AspNet.Identity.Test.MockHelpers.MockUserManager<ApplicationUser>();
-            _mockUserManager.Setup(m => m.FindByEmailAsync(AnyString)).Returns(Task.FromResult(findByEmailAsync));
-            _mockUserManager.Setup(m => m.FindByIdAsync("userId")).Returns(Task.FromResult(findByIdAsync));
+            _mockUserManager.Setup(m => m.FindByEmailAsync(AnyString)).Returns(Task.FromResult(user));
+            _mockUserManager.Setup(m => m.FindByIdAsync("userId")).Returns(Task.FromResult(user));
+            _mockUserManager.Setup(m => m.GetValidTwoFactorProvidersAsync(It.IsAny<ApplicationUser>())).Returns(Task.FromResult(result: userFactors));
             _mockUserManager.Setup(m => m.ConfirmEmailAsync(It.IsAny<ApplicationUser>(), "code")).Returns(Task.FromResult(identityResult));
             _mockUserManager.Setup(m => m.ResetPasswordAsync(It.IsAny<ApplicationUser>(), "token", "password")).Returns(Task.FromResult(identityResult));
             _mockUserManager.Setup(m => m.IsEmailConfirmedAsync(It.IsAny<ApplicationUser>())).Returns(Task.FromResult(isEmailConfirmedAsync));
@@ -483,6 +525,10 @@ namespace DBC.Controllers
         {
             return MockSignInManager(SignInResult.Success);
         }
+        private static SignInManager<ApplicationUser> MockSignInManager(ApplicationUser user)
+        {
+            return MockSignInManager(SignInResult.Success, SignInResult.Success, null, user, SignInResult.Success);
+        }
         private static SignInManager<ApplicationUser> MockSignInManager(SignInResult signInResult)
         {
             return MockSignInManager(signInResult, null);
@@ -495,7 +541,7 @@ namespace DBC.Controllers
         {
             return MockSignInManager(signInResult1, signInResult2, info, null, null);
         }
-        private static SignInManager<ApplicationUser> MockSignInManager(SignInResult signInAsync1, SignInResult signInAsync2, ExternalLoginInfo info, ApplicationUser GetTwoFactorAuthenticationUserAsync, SignInResult TwoFactorSignInAsync)
+        private static SignInManager<ApplicationUser> MockSignInManager(SignInResult signInAsync1, SignInResult signInAsync2, ExternalLoginInfo info, ApplicationUser getTwoFactorAuthenticationUserAsync, SignInResult twoFactorSignInAsync)
         {
             var mockSignInManager = Microsoft.AspNet.Identity.Test.MockHelpers.MockSignInManager<ApplicationUser>();
             mockSignInManager.Setup(m => m.GetExternalLoginInfoAsync(It.IsAny<string>())).Returns(Task.FromResult<ExternalLoginInfo>(info));
@@ -504,8 +550,8 @@ namespace DBC.Controllers
             tasks.Enqueue(Task.FromResult<SignInResult>(signInAsync2));
             mockSignInManager.Setup(m => m.PasswordSignInAsync(AnyString, AnyString, It.IsAny<bool>(), It.IsAny<bool>())).Returns(tasks.Dequeue);
             mockSignInManager.Setup(m => m.ExternalLoginSignInAsync(AnyString, AnyString, It.IsAny<bool>())).Returns(tasks.Dequeue);
-            mockSignInManager.Setup(m => m.GetTwoFactorAuthenticationUserAsync()).Returns(Task.FromResult(GetTwoFactorAuthenticationUserAsync));
-            mockSignInManager.Setup(m => m.TwoFactorSignInAsync(AnyString, AnyString, It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(TwoFactorSignInAsync));
+            mockSignInManager.Setup(m => m.GetTwoFactorAuthenticationUserAsync()).Returns(Task.FromResult(getTwoFactorAuthenticationUserAsync));
+            mockSignInManager.Setup(m => m.TwoFactorSignInAsync(AnyString, AnyString, It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(twoFactorSignInAsync));
 
             return mockSignInManager.Object;
         }
