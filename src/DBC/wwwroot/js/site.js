@@ -1,4 +1,4 @@
-﻿
+
 //This script is the same for each jquery-datatable.
 //Define your own functions to extend the column rendering or custom error/succes message
 
@@ -21,19 +21,60 @@ mvc.JQuery.Datatables.column.editDeleteButton = function (data, type, full, meta
 }
 
 mvc.JQuery.Datatables.column.formatDate = function (data, type, full, meta) {
-    return data ? window.moment(data).format(meta.settings.aoColumns[meta.col].mvc6Par || 'YY-DD-mm hh:mm:ss') : null;
+    return data ? window.moment(data).format(meta.settings.aoColumns[meta.col].mvc6Par || 'YYYY-MM-DD HH:mm:ss') : null;
 }
 mvc.JQuery.Datatables.getLengthMenu = function () { return [[5, 50, 100, -1], [5, 50, 100, 'All']] };
 mvc.JQuery.Datatables.getLanguage = function () { return {} };
 
-var dbc = {  };
-dbc.error=function (jqXHR, textStatus, errorThrown) {
-        var newWindow = window.open();
-        if (newWindow)
-            newWindow.document.write(jqXHR.responseText);
-        else
-            window.alert(errorThrown + "\n\n\nAllow popups to view full errors details!");
+var dbc = {};
+//obj $this or javascript obj,bool,date,int,string
+dbc.serverRequest = function (url, obj, success) {
+    if (typeof obj === 'object' && typeof date.getMonth !== 'function')
+    {
+        $.ajax({
+            type: 'post',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            url: url,
+            data: JSON.stringify(obj),
+            success: success,
+            error: dbc.error
+        });
     }
+    if (obj instanceof jQuery) {
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: obj.closest('form').serialize(),
+            success: success,
+            error: dbc.error
+        });
+    }
+    else {
+        $.ajax({
+            type: 'post',
+            url: url+'/'+ obj,
+            success: success,
+            error: dbc.error
+        });
+    }
+};
+dbc.error = function (jqXHR, textStatus, errorThrown) {
+    var newWindow = window.open();
+    if (newWindow)
+        newWindow.document.write(jqXHR.responseText || textStatus + ':' + errorThrown);
+    else
+        window.alert(errorThrown + "\n\n\nAllow popups to view full errors details!");
+};
+dbc.snackbar = function (data) {
+    $.snackbar({ content: data });
+}
+
+
+
+
+
+
 // Bind every table with the class datatable
 $(document).ready(function () {
     $('table.datatables').each(function () {

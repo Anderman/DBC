@@ -11,9 +11,9 @@
         // Browser globals
         factory(jQuery);
     }
-}(function( $ ){
+}(function ($) {
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("body").append("<div id=snackbar-container/>");
     });
 
@@ -26,59 +26,59 @@
     }
 
     $(document)
-    .on("click", "[data-toggle=snackbar]", function() {
+    .on("click", "[data-toggle=snackbar]", function () {
         $(this).snackbar("toggle");
     })
-    .on("click", "#snackbar-container .snackbar", function() {
+    .on("click", "#snackbar-container .snackbar", function () {
         $(this).snackbar("hide");
     });
 
-    $.snackbar = function(options) {
+    $.snackbar = function (options) {
 
         if (isset(options) && options === Object(options)) {
             var $snackbar;
 
-			var snackbarNew = false;
+            var snackbarNew = false;
 
             if (!isset(options.id)) {
                 $snackbar = $("<div/>").attr("id", "snackbar" + Date.now()).attr("class", "snackbar");
-				snackbarNew = true;
+                snackbarNew = true;
             } else {
                 if ($("#" + options.id).length) {
-					$snackbar = $("#" + options.id);
-				} else {
-					$snackbar = $("<div/>").attr("id", "" + options.id).attr("class", "snackbar");
-					snackbarNew = true;
-				}
+                    $snackbar = $("#" + options.id);
+                } else {
+                    $snackbar = $("<div/>").attr("id", "" + options.id).attr("class", "snackbar");
+                    snackbarNew = true;
+                }
             }
 
             var snackbarStatus = $snackbar.hasClass("snackbar-opened");
 
             if (isset(options.style)) {
-				if (snackbarStatus) {
-					$snackbar.attr("class", "snackbar snackbar-opened " + options.style);
+                if (snackbarStatus) {
+                    $snackbar.attr("class", "snackbar snackbar-opened " + options.style);
                 } else {
-					$snackbar.attr("class", "snackbar " + options.style);
+                    $snackbar.attr("class", "snackbar " + options.style);
                 }
-				$snackbar.attr("data-style", options.style);
+                $snackbar.attr("data-style", options.style);
             } else {
                 if (snackbarStatus) {
-					$snackbar.attr("class", "snackbar snackbar-opened");
+                    $snackbar.attr("class", "snackbar snackbar-opened");
                 } else {
-					$snackbar.attr("class", "snackbar");
+                    $snackbar.attr("class", "snackbar");
                 }
             }
 
             options.htmlAllowed = isset(options.htmlAllowed) ? options.htmlAllowed : false;
 
             options.timeout = (isset(options.timeout)) ? options.timeout : 3000;
-			$snackbar.attr("data-timeout", options.timeout);
+            $snackbar.attr("data-timeout", options.timeout);
 
             options.content = (options.htmlAllowed) ? options.content : $("<p>" + options.content + "</p>").text();
 
-			if (isset(options.htmlAllowed)) {
-				$snackbar.attr("data-html-allowed", options.htmlAllowed);
-			}
+            if (isset(options.htmlAllowed)) {
+                $snackbar.attr("data-html-allowed", options.htmlAllowed);
+            }
 
             if (isset(options.content)) {
                 if ($snackbar.find(".snackbar-content").length) {
@@ -86,7 +86,7 @@
                 } else {
                     $snackbar.prepend("<span class=snackbar-content>" + options.content + "</span>");
                 }
-				$snackbar.attr("data-content", options.content);
+                $snackbar.attr("data-content", options.content);
             }
 
             if (snackbarNew) {
@@ -106,7 +106,7 @@
 
             var animationId1 = Date.now();
             $snackbar.data("animationId1", animationId1);
-            setTimeout(function() {
+            setTimeout(function () {
                 if ($snackbar.data("animationId1") === animationId1) {
                     if (!isset(options.action) || options.action == "show") {
                         $snackbar.addClass("snackbar-opened");
@@ -121,7 +121,7 @@
             $snackbar.data("animationId2", animationId2);
 
             if (options.timeout !== 0) {
-                setTimeout(function() {
+                setTimeout(function () {
                     if ($snackbar.data("animationId2") === animationId2) {
                         $snackbar.removeClass("snackbar-opened");
                     }
@@ -135,8 +135,8 @@
         }
     };
 
-    $.fn.snackbar = function(action) {
-        if (typeof action==='undefined'){
+    $.fn.snackbar = function (action) {
+        if (typeof action === 'undefined') {
             return;
         }
         var options = {};
@@ -155,7 +155,7 @@
             if (isset(action)) {
                 options.id = this.attr("data-snackbar-id");
 
-                if(action === "show" || action === "hide" || action == "toggle") {
+                if (action === "show" || action === "hide" || action == "toggle") {
                     options.action = action;
                 }
             }
@@ -168,13 +168,13 @@
         } else {
 
             options = {
-					id: this.attr("id"),
-                    content: $(this).attr("data-content"),
-                    style: $(this).attr("data-style"),
-                    timeout: $(this).attr("data-timeout"),
-                    htmlAllowed: $(this).attr("data-html-allowed")
-                };
-            if(action === "show" || action === "hide" || action == "toggle") {
+                id: this.attr("id"),
+                content: $(this).attr("data-content"),
+                style: $(this).attr("data-style"),
+                timeout: $(this).attr("data-timeout"),
+                htmlAllowed: $(this).attr("data-html-allowed")
+            };
+            if (action === "show" || action === "hide" || action == "toggle") {
                 options.action = action;
             }
             return $.snackbar(options);

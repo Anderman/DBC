@@ -1,10 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Confirm Email";
+﻿@model ResetPasswordViewModel
+@{
+    ViewData["Title"] = T["Create password"];
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
-
 <h2>@ViewData["Title"].</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
-    </p>
+<div class="content">
+    <form asp-controller="Account" asp-action="ConfirmEmail" method="post" class="login-form" role="form">
+        <h4>@T["Enter your password to complete the registration"]</h4>
+        <hr />
+        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+        <input type="hidden" asp-for="Code" />
+        <input type="hidden" asp-for="Email" />
+        <input class="form-control" asp-for="Password" asp-material-design="true" />
+        <input class="form-control" asp-for="ConfirmPassword" asp-material-design="true" />
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary uppercase">@T["Create Password"]</button>
+            <input class="" asp-for="RememberMe" type="checkbox" asp-material-design="true" />
+        </div>
+    </form>
 </div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

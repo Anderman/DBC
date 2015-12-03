@@ -1,1 +1,130 @@
-{"Log in": {"str": "Log in", "Added": "1-1-0001 00:00:00"},"Register": {"str": "Registreren", "Added": "1-1-0001 00:00:00"},"Users": {"str": "gebruikers", "Added": "1-1-0001 00:00:00"}}
+{
+    "A Email is send to {0}.": {
+        "str": "Een e-mail wordt verzonden naar {0}.",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Change": {
+        "str": "Verandering",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Change your account settings": {
+        "str": "Uw account wijzigen",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Check email": { 
+        "str": "E-mail controleren",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Confirm Email": {
+        "str": "Bevestig Email",
+        "Added": "1-1-0001 00:00:00"
+    }, 
+    "Create password": {
+        "str": "Maak een wachtwoord",
+        "Added": "1-1-0001 00:00:00"  
+    },
+    "Create Password": {
+        "str": "Maak een wachtwoord",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Enter your email address to reset your password.": {
+        "str": "Vul uw e-mail adres om uw wachtwoord te resetten.",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Enter your password to complete the registration": {
+        "str": "Voer uw wachtwoord in om de registratie te voltooien",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Enter your password.": {
+        "str": "Voer uw wachtwoord in.",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "enter your verification code": {
+        "str": "Voer uw verificatiecode",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Forgot password?": {
+        "str": "Paswoord vergeten?",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Forgot your password?": {
+        "str": "Wachtwoord vergeten?",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "It can take several miniute before receiving the email": {
+        "str": "Het kan enige minuten duren voordat de e-mail aankomt.",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Log in": {
+        "str": "Log in",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Manage your account": {
+        "str": "Beheer je account",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "No email received?": {
+        "str": "Geen e-mail ontvangen ?",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Password:": {
+        "str": "Wachtwoord:",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Please <a href='{0}'>Click here to log in</a>.": {
+        "str": "<a Href='{0}'> Klik hier om in te loggen.</a>",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Register": {
+        "str": "Registreren",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Remove or add external logins ": {
+        "str": "Verwijderen of toe te voegen externe logins",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Reset": {
+        "str": "Reset",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Reset password confirmation.": {
+        "str": "Reset wachtwoord bevestiging.",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Reset your password": {
+        "str": "Stel je wachtwoord opnieuw in",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Send inventation email": {
+        "str": "Uitnodiging e-mail",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Send Verification Code": {
+        "str": "Stuur Verificatie Code",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Send verification code by": {
+        "str": "Stuur verificatiecode door",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Submit": {
+        "str": "voorleggen",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Thank you for confirming your email.": {
+        "str": "Dank u voor het bevestigen van je e-mail .",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "The email ended up in your spam": {
+        "str": "De e-mail is in uw spambox terecht gekomen.",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Users": {
+        "str": "gebruikers",
+        "Added": "1-1-0001 00:00:00"
+    },
+    "Your password has been reset.": {
+        "str": "Uw wachtwoord is gereset.",
+        "Added": "1-1-0001 00:00:00"
+    }
+}

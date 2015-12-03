@@ -1,0 +1,9 @@
+﻿@model ICollection<SelectListItem>
+
+<h3>Priority Items</h3>
+<ul>
+    @foreach (var item in Model)
+    {
+        <input class="form-control" asp-for="@item" type="radio" value="Email" />
+    }
+</ul>

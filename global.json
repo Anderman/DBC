@@ -5,7 +5,10 @@
         "../TagHelpers/src",
         "../Mvc.JQuery.Datatables/src",
         "wrap",
-        "../Localization/src"
+        "../Localization/src",
+        "../RazorMinify/src",
+        "../HtmlAP",
+        "../Other/HtmlAgilityPack/src"
     ],
 
     "sdk": {

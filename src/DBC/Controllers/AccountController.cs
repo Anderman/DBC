@@ -28,7 +28,7 @@ namespace DBC.Controllers
         private readonly ILogger _logger;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IEmailTemplate _emailTemplate;
-        private IStringLocalizer<AccountController> T;
+        private readonly IStringLocalizer<AccountController> T;
 
 
         public AccountController(
@@ -75,7 +75,8 @@ namespace DBC.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
@@ -227,9 +228,9 @@ namespace DBC.Controllers
         // GET: /Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IActionResult> ConfirmEmail(string userId, string confirmCode)
         {
-            if (userId == null || code == null)
+            if (userId == null || confirmCode == null)
             {
                 return View("Error");
             }
@@ -238,8 +239,64 @@ namespace DBC.Controllers
             {
                 return View("Error");
             }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            return View(result.Succeeded ? nameof(ConfirmEmail) : "Error");
+            var result = await _userManager.ConfirmEmailAsync(user, confirmCode);
+            if (!result.Succeeded)
+            {
+                AddErrors(result);
+
+                return View("Error");
+            }
+            var model = new ResetPasswordViewModel()
+            {
+                Code = await _userManager.GeneratePasswordResetTokenAsync(user),
+                Email = user.Email
+            };
+            return View(nameof(ConfirmEmail), model);
+        }
+        // GET: /Account/ConfirmEmail
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(ResetPasswordViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
+            if (result.Succeeded)
+            {
+                var signInResult = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (signInResult.Succeeded)
+                {
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+                if (signInResult.RequiresTwoFactor)
+                {
+                    return RedirectToAction(nameof(SendCode));
+                }
+                if (signInResult.IsLockedOut)
+                {
+                    _logger.LogWarning(2, "User account locked out.");
+                    return View("Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, T["Invalid login attempt."]);
+                    if (signInResult.IsNotAllowed)
+                        ModelState.AddModelError(string.Empty, T["Email or phonenumber not confirmed"]);
+                    return View(model);
+                }
+            }
+            AddErrors(result);
+            return View();
         }
 
         //
@@ -261,20 +318,21 @@ namespace DBC.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
+
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View(nameof(ForgotPasswordConfirmation));
+                    return View(nameof(ForgotPasswordConfirmation), model);
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: HttpContext?.Request?.Scheme);
-                var body = await _emailTemplate.RenderViewToString<ActivateEmail>(@"/Views/Email/ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
+                var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                 await _emailSender.SendEmailAsync(model.Email, T["Reset password"], body);
                 //show a screen that the use should check hit email
-                return View(nameof(ForgotPasswordConfirmation));
+                return View(nameof(ForgotPasswordConfirmation), model);
             }
 
             // If we got this far, something failed, redisplay form
@@ -306,14 +364,16 @@ namespace DBC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email) ?? await _userManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
+                _logger.LogInformation("Could not find user with email {email}", model.Email);
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
@@ -342,6 +402,7 @@ namespace DBC.Controllers
         public async Task<ActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
         {
             // Require that the user has already logged in via username/password or external login
+            //TwoFactorUserId cookie is set after login. So get that user from cookie	
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -349,7 +410,8 @@ namespace DBC.Controllers
             }
             var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            //factorOptions.Add(new SelectListItem() { Text = "SMS", Value = "SMS" });
+            return View(new SendCodeViewModel { SelectedProvider = factorOptions.First().Value, Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         //
@@ -363,7 +425,6 @@ namespace DBC.Controllers
             {
                 return View();
             }
-
             // Require that the user has already logged in via username/password or external login
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)

@@ -7,33 +7,37 @@ using DBC.Models;
 using System.Linq.Expressions;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using DBC.Models.DB;
 using Microsoft.AspNet.Authorization;
+using System.Diagnostics;
+using DBC.Services;
+using DBC.ViewModels.Account;
+using Microsoft.Extensions.Localization;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DBC.Controllers
 {
-
-    public class role
-    {
-        public string Name { get; set; }
-    }
-    public class roles : List<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
-    {
-    }
-
     public class UserController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public UserController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        private readonly IEmailSender _emailSender;
+        private readonly IEmailTemplate _emailTemplate;
+        private IStringLocalizer<AccountController> T;
+        public UserController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            IEmailSender emailSender,
+            IEmailTemplate emailTemplate,
+            IStringLocalizer<AccountController> localizer)
         {
             DbContext = context;
             _userManager = userManager;
-
+            _emailSender = emailSender;
+            _emailTemplate = emailTemplate;
+            T = localizer;
         }
 
         public ApplicationDbContext DbContext { get; }
@@ -74,17 +78,29 @@ namespace DBC.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Create(ApplicationUser model)
+        public async Task<IActionResult> Create(ApplicationUser user)
         {
             if (ModelState.IsValid)
             {
-                await _userManager.CreateAsync(model);
-
-                return new EmptyResult();
+                var result = await _userManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    if (!user.EmailConfirmed)
+                    {
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, confirmCode = code }, protocol: HttpContext.Request.Scheme);
+                        var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
+                        await _emailSender.SendEmailAsync(user.Email, T["Confirm your account"], body);
+                    }
+                    return new EmptyResult();
+                }
+                else
+                {
+                    AddErrors(result);
+                }
             }
-            return PartialView(model);
+            return PartialView(user);
         }
-
 
         [HttpGet]
         [AllowAnonymous]
@@ -117,6 +133,22 @@ namespace DBC.Controllers
             }
             return PartialView(model);
         }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendEmail(string Id)
+        {
+
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return new JsonResult($"Error: The user does not exist");
+            }
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, confirmCode = code }, protocol: HttpContext.Request.Scheme);
+            var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
+            await _emailSender.SendEmailAsync(user.Email, T["Confirm your account"], body);
+            return new JsonResult($"Email is send to {user.Email}");
+        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -133,6 +165,13 @@ namespace DBC.Controllers
             var user = await _userManager.FindByIdAsync(model.Id);
             await _userManager.DeleteAsync(user);
             return new EmptyResult();
+        }
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }

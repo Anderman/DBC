@@ -8,9 +8,8 @@
     ViewData["Title"] = T["Log in"];
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
-<div class="content">
-    <!-- BEGIN LOGIN FORM -->
-    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+<div id="div1" class="content">
+    <form id=a1 asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
         <h3 class="form-title">
             @ViewData["Title"]
             @{
@@ -26,18 +25,16 @@
             }
         </h3>
     </form>
-    <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="login-form" role="form" style="display: block;">
-        <div asp-validation-summary="ValidationSummary.All" class="alert-danger"></div>
-        <input class="form-control" asp-for="Email" asp-material-design="true" />
+    <form id=a2 asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="login-form" style="display: block;">
+        <div asp-validation-summary="ValidationSummary.All" class="alert-dismissible alert-warning"><button type="button" class="close" onclick="$('.alert-dismissible').hide()">×</button></div>
+        <input id="div2" class="form-control" asp-for="Email" asp-material-design="true"/>
         <input class="form-control" asp-for="Password" asp-material-design="true" />
-
         <div class="form-actions">
-            <button type="submit" class="btn btn-success uppercase">Login</button>
-            <input class="form-control" asp-for="RememberMe" asp-material-design="true" />
-            <a class="forget-password" asp-action="ForgotPassword"><translate>Forgot your password?</translate></a>
+            <button type="submit" class="btn btn-primary uppercase">Login</button>
+            <input class="" asp-for="RememberMe" type="checkbox" asp-material-design="true" />
         </div>
+        <a class="forget-password" asp-action="ForgotPassword">@T["Forgot your password?"]</a>
     </form>
-    <!-- END LOGIN FORM -->
 </div>
 
 @section Scripts {

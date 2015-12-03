@@ -50,7 +50,7 @@ namespace DBC.Models.DB
                 throw new System.Exception("Not all migration are applied");
         }
 
-        private static async System.Threading.Tasks.Task CreateUserIfNotExist(UserManager<ApplicationUser> userManager, string email, string password, string role, string loginProvider = null, string providerKey = null)
+        private static async Task CreateUserIfNotExist(UserManager<ApplicationUser> userManager, string email, string password, string role, string loginProvider = null, string providerKey = null)
         {
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)

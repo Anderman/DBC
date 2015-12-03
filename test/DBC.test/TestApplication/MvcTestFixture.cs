@@ -11,12 +11,12 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.AspNet.TestHost;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
+using Microsoft.Extensions.PlatformAbstractions;
 
-namespace Microsoft.AspNet.Mvc.FunctionalTests
+namespace DBC.test.TestApplication
 {
     public class MvcTestFixture : IDisposable
     {
@@ -25,39 +25,20 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
         public MvcTestFixture(object startupInstance)
         {
             var startupTypeInfo = startupInstance.GetType().GetTypeInfo();
-            var configureApplication = (Action<IApplicationBuilder>)startupTypeInfo
-                .DeclaredMethods
-                .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 1)
-                ?.CreateDelegate(typeof(Action<IApplicationBuilder>), startupInstance);
-            if (configureApplication == null)
-            {
-                var configureWithLogger = (Action<IApplicationBuilder, ILoggerFactory>)startupTypeInfo
-                    .DeclaredMethods
-                    .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 2)
-                    ?.CreateDelegate(typeof(Action<IApplicationBuilder, ILoggerFactory>), startupInstance);
-                Debug.Assert(configureWithLogger != null);
-
-                configureApplication = application => configureWithLogger(application, NullLoggerFactory.Instance);
-            }
 
             var buildServices = (Func<IServiceCollection, IServiceProvider>)startupTypeInfo
                 .DeclaredMethods
                 .FirstOrDefault(m => m.Name == "ConfigureServices" && m.ReturnType == typeof(IServiceProvider))
                 ?.CreateDelegate(typeof(Func<IServiceCollection, IServiceProvider>), startupInstance);
-            if (buildServices == null)
-            {
-                var configureServices = (Action<IServiceCollection>)startupTypeInfo
-                    .DeclaredMethods
-                    .FirstOrDefault(m => m.Name == "ConfigureServices" && m.ReturnType == typeof(void))
-                    ?.CreateDelegate(typeof(Action<IServiceCollection>), startupInstance);
-                Debug.Assert(configureServices != null);
 
-                buildServices = services =>
-                {
-                    configureServices(services);
-                    return services.BuildServiceProvider();
-                };
-            }
+            var configureStartup = (Action<IApplicationBuilder, IHostingEnvironment, ILoggerFactory>)startupTypeInfo
+                    .DeclaredMethods
+                    .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 3)
+                    ?.CreateDelegate(typeof(Action<IApplicationBuilder, IHostingEnvironment, ILoggerFactory>), startupInstance);
+            Action<IApplicationBuilder> configureApplication = application =>
+                    configureStartup(application, GetHostingEnvironment(startupTypeInfo), NullLoggerFactory.Instance);
+
+
 
             // RequestLocalizationOptions saves the current culture when constructed, potentially changing response
             // localization i.e. RequestLocalizationMiddleware behavior. Ensure the saved culture
@@ -86,7 +67,6 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             Assembly startupAssembly,
             Func<IServiceCollection, IServiceProvider> buildServices)
         {
-            var libraryManager = PlatformServices.Default.LibraryManager;
 
             // When an application executes in a regular context, the application base path points to the root
             // directory where the application is located, for example .../samples/MvcSample.Web. However, when
@@ -95,8 +75,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             // To compensate, we need to calculate the correct project path and override the application
             // environment value so that components like the view engine work properly in the context of the test.
             var applicationName = startupAssembly.GetName().Name;
-            var library = libraryManager.GetLibrary(applicationName);
-            var applicationRoot = Path.GetDirectoryName(library.Path);
+            var applicationRoot = GetApplicationRoot(applicationName);
 
             var applicationEnvironment = PlatformServices.Default.Application;
 
@@ -108,13 +87,11 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
                 services.AddInstance<IApplicationEnvironment>(
                     new TestApplicationEnvironment(applicationEnvironment, applicationName, applicationRoot));
 
-                var hostingEnvironment = new HostingEnvironment();
-                hostingEnvironment.Initialize(applicationRoot, config: null);
+                var hostingEnvironment = GetHostingEnvironment(applicationRoot);
                 services.AddInstance<IHostingEnvironment>(hostingEnvironment);
 
                 // Inject a custom assembly provider. Overrides AddMvc() because that uses TryAdd().
-                var assemblyProvider = new StaticAssemblyProvider();
-                assemblyProvider.CandidateAssemblies.Add(startupAssembly);
+                var assemblyProvider = GetStaticAssemblyProvider(startupAssembly);
                 services.AddInstance<IAssemblyProvider>(assemblyProvider);
 
                 AddAdditionalServices(services);
@@ -122,5 +99,36 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
                 return buildServices(services);
             };
         }
+
+        private static StaticAssemblyProvider GetStaticAssemblyProvider(Assembly assembly)
+        {
+            var assemblyProvider = new StaticAssemblyProvider();
+            assemblyProvider.CandidateAssemblies.Add(assembly);
+            return assemblyProvider;
+        }
+
+
+        private static HostingEnvironment GetHostingEnvironment(Type type)
+        {
+            return GetHostingEnvironment(type.Assembly);
+        }
+
+        private static HostingEnvironment GetHostingEnvironment(Assembly assembly)
+        {
+            return GetHostingEnvironment(GetApplicationRoot(assembly));
+        }
+
+        private static HostingEnvironment GetHostingEnvironment(string applicationRoot)
+        {
+            var hostingEnvironment = new HostingEnvironment();
+            hostingEnvironment.Initialize(applicationRoot, config: null);
+            return hostingEnvironment;
+        }
+
+        public static string GetApplicationRoot(Assembly assembly) =>
+            GetApplicationRoot(assembly.GetName().Name);
+        public static string GetApplicationRoot(string applicationName) =>
+            Path.GetDirectoryName(PlatformServices.Default.LibraryManager.GetLibrary(applicationName).Path);
+
     }
 }

@@ -1,21 +1,24 @@
 ﻿@model SendCodeViewModel
 @{
-    ViewData["Title"] = "Send Verification Code";
+    ViewData["Title"] = T["Send verification code by"];
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-<h2>@ViewData["Title"].</h2>
-
-<form asp-controller="Account" asp-action="SendCode" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal" role="form">
-    <input asp-for="RememberMe" type="hidden" />
-    <div class="row">
-        <div class="col-md-8">
-            Select Two-Factor Authentication Provider:
-            <select asp-for="SelectedProvider" asp-items="Model.Providers"></select>
-            <button type="submit" class="btn btn-default">Submit</button>
+<div class="content">
+    <form asp-controller="Account" asp-action="SendCode" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal" role="form">
+        <h4 class="form-title">@ViewData["Title"]</h4>
+        <input asp-for="RememberMe" type="hidden" />
+        @foreach (var item in Model.Providers)
+        {
+            <div class="radio radio-primary">
+                <label><input asp-for="SelectedProvider" type="radio" value="@item.Value" />@item.Text</label>
+            </div>
+        }
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">@T["Submit"]</button>
         </div>
-    </div>
-</form>
-
+    </form>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

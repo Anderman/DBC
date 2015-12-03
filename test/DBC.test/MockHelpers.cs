@@ -12,16 +12,19 @@ using System.Linq;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
-namespace Microsoft.AspNet.Identity.Test
+namespace DBC.Test
 {
     public static class MockHelpers
     {
         public static StringBuilder LogMessage = new StringBuilder();
-        public static Mock<SignInManager<TUser>> MockSignInManager<TUser>() where TUser : class
+        private static string AnyString => It.IsAny<string>();
+        public static Mock<SignInManager<TUser>> MockSignInManager2<TUser>() where TUser : class
         {
             var context = new Mock<HttpContext>();
-            var manager = MockUserManager<TUser>();
+            var manager = MockUserManager2<TUser>();
             return new Mock<SignInManager<TUser>>(manager.Object,
                 new HttpContextAccessor { HttpContext = context.Object },
                 new Mock<IUserClaimsPrincipalFactory<TUser>>().Object,
@@ -29,15 +32,15 @@ namespace Microsoft.AspNet.Identity.Test
             { CallBase = true };
         }
 
-        public static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
+        public static Mock<UserManager<TUser>> MockUserManager2<TUser>() where TUser : class
         {
-            IList<IUserValidator<TUser>> UserValidators = new List<IUserValidator<TUser>>();
-            IList<IPasswordValidator<TUser>> PasswordValidators = new List<IPasswordValidator<TUser>>();
+            IList<IUserValidator<TUser>> userValidators = new List<IUserValidator<TUser>>();
+            IList<IPasswordValidator<TUser>> passwordValidators = new List<IPasswordValidator<TUser>>();
 
             var store = new Mock<IUserStore<TUser>>();
-            UserValidators.Add(new UserValidator<TUser>());
-            PasswordValidators.Add(new PasswordValidator<TUser>());
-            var mgr = new Mock<UserManager<TUser>>(store.Object, null, null, UserValidators, PasswordValidators, null, null, null, null, null);
+            userValidators.Add(new UserValidator<TUser>());
+            passwordValidators.Add(new PasswordValidator<TUser>());
+            var mgr = new Mock<UserManager<TUser>>(store.Object, null, null, userValidators, passwordValidators, null, null, null, null, null);
             return mgr;
         }
 
@@ -49,68 +52,92 @@ namespace Microsoft.AspNet.Identity.Test
             return new Mock<RoleManager<TRole>>(store, roles, null, null, null, null);
         }
 
-        //public static Mock<ILogger<T>> MockILogger<T>(StringBuilder logStore = null) where T : class
-        //{
-        //    logStore = logStore ?? LogMessage;
-        //    var logger = new Mock<ILogger<T>>();
-        //    logger.Setup(x => x.Log(It.IsAny<LogLevel>(), It.IsAny<int>(), It.IsAny<object>(),
-        //        It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()))
-        //        .Callback((LogLevel logLevel, int eventId, object state, Exception exception, Func<object, Exception, string> formatter) =>
-        //        {
-        //            if (formatter == null)
-        //            {
-        //                logStore.Append(state.ToString());
-        //            }
-        //            else
-        //            {
-        //                logStore.Append(formatter(state, exception));
-        //            }
-        //            logStore.Append(" ");
-        //        });
-        //    logger.Setup(x => x.BeginScopeImpl(It.IsAny<object>())).Callback((object state) =>
-        //        {
-        //            logStore.Append(state.ToString());
-        //            logStore.Append(" ");
-        //        });
-        //    logger.Setup(x => x.IsEnabled(LogLevel.Verbose)).Returns(true);
-        //    logger.Setup(x => x.IsEnabled(LogLevel.Warning)).Returns(true);
 
-        //    return logger;
-        //}
+        //Mock UserManager
+        public static UserManager<TUser> MockUserManager<TUser>() where TUser : class
+        {
+            return MockUserManager<TUser>(null);
+        }
+        public static UserManager<TUser> MockUserManager<TUser>(TUser user, string generateTwoFactorToken) where TUser : class
+        {
+            return MockUserManager<TUser>(user, null, false, generateTwoFactorToken);
+        }
+        public static UserManager<TUser> MockUserManager<TUser>(TUser user, IdentityResult confirmEmailAsync) where TUser : class
+        {
+            return MockUserManager<TUser>(user, confirmEmailAsync, false, null);
+        }
+        public static UserManager<TUser> MockUserManager<TUser>(TUser user, bool isEmailConfirmedAsync) where TUser : class
+        {
+            return MockUserManager<TUser>(user, null, isEmailConfirmedAsync, null);
+        }
+        public static UserManager<TUser> MockUserManager<TUser>(TUser user) where TUser : class
+        {
+            return MockUserManager<TUser>(user, null, false, null);
+        }
+        public static UserManager<TUser> MockUserManager<TUser>(TUser user, IdentityResult identityResult, bool isEmailConfirmedAsync, string generateTwoFactorToken) where TUser : class
+        {
+            IList<string> userFactors = new List<string>() { "purpose1", "purpose2" };
+            IList<IUserValidator<TUser>> userValidators = new List<IUserValidator<TUser>>();
+            IList<IPasswordValidator<TUser>> passwordValidators = new List<IPasswordValidator<TUser>>();
+            var store = new Mock<IUserStore<TUser>>();
+            userValidators.Add(new UserValidator<TUser>());
+            passwordValidators.Add(new PasswordValidator<TUser>());
+            var mockUserManager = new Mock<UserManager<TUser>>(store.Object, null, null, userValidators, passwordValidators, null, null, null, null, null);
+            mockUserManager.Setup(m => m.FindByEmailAsync(AnyString)).Returns(Task.FromResult(user));
+            mockUserManager.Setup(m => m.FindByIdAsync("userId")).Returns(Task.FromResult(user));
+            mockUserManager.Setup(m => m.GetValidTwoFactorProvidersAsync(It.IsAny<TUser>())).Returns(Task.FromResult(result: userFactors));
+            mockUserManager.Setup(m => m.ConfirmEmailAsync(It.IsAny<TUser>(), "code")).Returns(Task.FromResult(identityResult));
+            mockUserManager.Setup(m => m.ResetPasswordAsync(It.IsAny<TUser>(), "token", "password")).Returns(Task.FromResult(identityResult));
+            mockUserManager.Setup(m => m.IsEmailConfirmedAsync(It.IsAny<TUser>())).Returns(Task.FromResult(isEmailConfirmedAsync));
+            mockUserManager.Setup(m => m.GeneratePasswordResetTokenAsync(It.IsAny<TUser>())).Returns(Task.FromResult("PasswordResetToken"));
+            mockUserManager.Setup(m => m.GenerateTwoFactorTokenAsync(It.IsAny<TUser>(), "Email")).Returns(Task.FromResult(generateTwoFactorToken));
+            mockUserManager.Setup(m => m.GetEmailAsync(It.IsAny<TUser>())).Returns(Task.FromResult("EmailAddress@"));
 
-        //public static UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
-        //{
-        //    store = store ?? new Mock<IUserStore<TUser>>().Object;
-        //    var options = new Mock<IOptions<IdentityOptions>>();
-        //    var idOptions = new IdentityOptions();
-        //    idOptions.Lockout.AllowedForNewUsers = false;
-        //    options.Setup(o => o.Options).Returns(idOptions);
-        //    var userValidators = new List<IUserValidator<TUser>>();
-        //    var validator = new Mock<IUserValidator<TUser>>();
-        //    userValidators.Add(validator.Object);
-        //    var pwdValidators = new List<PasswordValidator<TUser>>();
-        //    pwdValidators.Add(new PasswordValidator<TUser>());
-        //    var userManager = new UserManager<TUser>(store, options.Object, new PasswordHasher<TUser>(),
-        //        userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
-        //        new IdentityErrorDescriber(), Enumerable.Empty<IUserTokenProvider<TUser>>(),
-        //        new Mock<ILogger<UserManager<TUser>>>().Object,
-        //        null);
-        //    validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
-        //        .Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
-        //    return userManager;
-        //}
 
-        //public static RoleManager<TRole> TestRoleManager<TRole>(IRoleStore<TRole> store = null) where TRole : class
-        //{
-        //    store = store ?? new Mock<IRoleStore<TRole>>().Object;
-        //    var roles = new List<IRoleValidator<TRole>>();
-        //    roles.Add(new RoleValidator<TRole>());
-        //    return new RoleManager<TRole>(store, roles,
-        //        new UpperInvariantLookupNormalizer(),
-        //        new IdentityErrorDescriber(),
-        //        null,
-        //        null);
-        //}
+            return mockUserManager.Object;
+        }
 
+        //mock SignInManager
+        public static SignInManager<TUser> MockSignInManager<TUser>() where TUser : class
+        {
+            return MockSignInManager<TUser>(SignInResult.Success);
+        }
+        public static SignInManager<TUser> MockSignInManager<TUser>(TUser user) where TUser : class
+        {
+            return MockSignInManager(user, SignInResult.Success, SignInResult.Success, null);
+        }
+        public static SignInManager<TUser> MockSignInManager<TUser>(SignInResult signInResult) where TUser : class
+        {
+            return MockSignInManager<TUser>(signInResult, null);
+        }
+        public static SignInManager<TUser> MockSignInManager<TUser>(SignInResult signInResult, ExternalLoginInfo info) where TUser : class
+        {
+            return MockSignInManager<TUser>(signInResult, signInResult, info);
+        }
+        public static SignInManager<TUser> MockSignInManager<TUser>(SignInResult signInResult1, SignInResult signInResult2, ExternalLoginInfo info) where TUser : class
+        {
+            return MockSignInManager<TUser>(null, signInResult1, signInResult2, info);
+        }
+        public static SignInManager<TUser> MockSignInManager<TUser>(TUser user, SignInResult signInAsync1, SignInResult signInAsync2, ExternalLoginInfo info) where TUser : class
+        {
+            var mockSignInManager = MockSignInManager2<TUser>();
+            mockSignInManager.Setup(m => m.GetExternalLoginInfoAsync(It.IsAny<string>())).Returns(Task.FromResult<ExternalLoginInfo>(info));
+            var tasks = new Queue<Task<SignInResult>>();
+            tasks.Enqueue(Task.FromResult<SignInResult>(signInAsync1));
+            tasks.Enqueue(Task.FromResult<SignInResult>(signInAsync2));
+            mockSignInManager.Setup(m => m.PasswordSignInAsync(AnyString, AnyString, It.IsAny<bool>(), It.IsAny<bool>())).Returns(tasks.Dequeue);
+            mockSignInManager.Setup(m => m.PasswordSignInAsync(It.IsAny<TUser>(), AnyString, It.IsAny<bool>(), It.IsAny<bool>())).Returns(tasks.Dequeue);
+            mockSignInManager.Setup(m => m.ExternalLoginSignInAsync(AnyString, AnyString, It.IsAny<bool>())).Returns(tasks.Dequeue);
+            mockSignInManager.Setup(m => m.GetTwoFactorAuthenticationUserAsync()).Returns(Task.FromResult(user));
+            mockSignInManager.Setup(m => m.TwoFactorSignInAsync(AnyString, AnyString, It.IsAny<bool>(), It.IsAny<bool>())).Returns(Task.FromResult(signInAsync1));
+            return mockSignInManager.Object;
+        }
+        public static ExternalLoginInfo DefaultInfo()
+        {
+            var mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+            mockClaimsPrincipal.Setup(m => m.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.Email, "emailaddress@"));
+            return new Mock<ExternalLoginInfo>(mockClaimsPrincipal.Object, "google", "google", "google").Object;
+        }
     }
+
 }

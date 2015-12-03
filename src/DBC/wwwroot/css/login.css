@@ -1,4 +1,4 @@
-﻿body {
+body {
 }
 
 .login {
@@ -10,4 +10,7 @@
     border: 1px solid #DDD;
     background: #FFF none repeat scroll 0% 0%;
     padding:20px
+}
+.field-validation-error span{
+    position: absolute;
 }

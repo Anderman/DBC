@@ -18,6 +18,11 @@ using DBC.Models.DB;
 using Microsoft.AspNet.Localization;
 using Anderman.JsonLocalization.Middelware;
 using System.Diagnostics;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Data.Entity.Infrastructure;
+using Microsoft.Data.Entity.Storage.Internal;
 
 namespace DBC
 {
@@ -26,21 +31,39 @@ namespace DBC
         private Startup _startup;
         private IHostingEnvironment _hostingEnv;
         public IServiceCollection Services;
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
-        {
-
-            _startup.Configure(app, _hostingEnv, loggerFactory);
-        }
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             _hostingEnv = services.Where(m => m.ServiceType == typeof(IHostingEnvironment) && m.ImplementationInstance != null).Select(m => m.ImplementationInstance).Last() as IHostingEnvironment;
             _startup = new Startup(_hostingEnv);
 
-            _startup.ConfigureServices(services);
+            services.AddEntityFramework()
+                .AddInMemoryDatabase()
+                .AddDbContext<ApplicationDbContext>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+            LocalizationServiceCollectionJsonExtensions.AddLocalization(services);
+            services
+                .AddMvc(m =>
+                {
+                    m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
+                });
+
+            // Add application services.
+
+            services.AddSingleton<IEmailSender, MessageServices>();
+            services.AddSingleton<ISmsSender, MessageServices>();
+            services.AddTransient<IEmailTemplate, EmailTemplate>();
+            IConfiguration config = _startup.Configuration.GetSection("mailSettings");
+            services.Configure<MessageServicesOptions>(config);
             Services = services;
             return Services.BuildServiceProvider();
         }
-
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            _startup.Configure(app, env, loggerFactory);
+        }
     }
     public class Startup
     {
@@ -50,19 +73,23 @@ namespace DBC
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
             }
+            builder.AddUserSecrets();
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; set; }
-
+        public class AuthMessageSMSSenderOptions
+        {
+            public string SID { get; set; }
+            public string AuthToken { get; set; }
+            public string SendNumber { get; set; }
+        }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -84,23 +111,31 @@ namespace DBC
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
             LocalizationServiceCollectionJsonExtensions.AddLocalization(services);
+            //services.TryAddTransient<IMvcRazorHost, MyMvcRazorHost>();
             services
                 .AddMvc(m =>
                 {
                     m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
-                }
-                )
+                })
                 .AddViewLocalization(options => options.ResourcesPath = "Resources")
-                .AddDataAnnotationsLocalization();
+                //.AddDataAnnotationsLocalization()
+                ;
 
             // Add application services.
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+                options.Lockout.MaxFailedAccessAttempts = 1;
+            });
+
             services.AddSingleton<IEmailSender, MessageServices>();
             services.AddSingleton<ISmsSender, MessageServices>();
+            services.Configure<AuthMessageSMSSenderOptions>(Configuration);
             services.AddTransient<IEmailTemplate, EmailTemplate>();
             IConfiguration config = Configuration.GetSection("mailSettings");
             services.Configure<MessageServicesOptions>(config);
+            services.Configure<AuthMessageSMSSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
