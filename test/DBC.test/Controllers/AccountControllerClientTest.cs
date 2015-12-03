@@ -19,7 +19,7 @@ namespace DBC.test.Controllers
         public HttpClient Client { get; }
         public TestServer Server { get; }
         public const string relPath = "../../src/DBC/";
-        public AccountControllerClientTest(MvcTestFixture<DBC.StartupTest> fixture)
+        public AccountControllerClientTest(MvcTestFixture<StartupTest> fixture)
         {
 
             Client = fixture.Client;
@@ -38,9 +38,10 @@ namespace DBC.test.Controllers
             var c = new ClientWrapper(Client);
             var y = await c.Get("/Account/Login", 2);
             var z = await c.Post("/Account/Login", 1, new formValues() {
-                { "Email","Kuifje@kuifje.be" },
+                { "Email","Bobbie@kuifje.be" },
                 { "Password","@Password!" }
             });
+
             
 
             //var response = await Client.GetAsync("/Account/Login");

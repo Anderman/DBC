@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
@@ -23,6 +24,7 @@ namespace DBC.Models.DB
             var userManager = app.ApplicationServices.GetService<UserManager<ApplicationUser>>();
             var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
 
+
             if (context.AllMigrationsApplied())
             {
                 foreach (string role in Enum.GetNames(typeof(Roles)))
@@ -34,7 +36,7 @@ namespace DBC.Models.DB
 
                 }
 
-                string password = "P@ssword!";
+                string password = "P@ssw0rd!";
                 await CreateUserIfNotExist(userManager, "thom@medella.nl", password, Roles.Admin.ToString(), "Google", "110018662340682049067");
                 await CreateUserIfNotExist(userManager, "Bobbie@kuifje.be", password, Roles.Admin.ToString());
                 await CreateUserIfNotExist(userManager, "KapiteinArchibaldHaddock@kuifje.be", password, Roles.Admin.ToString());

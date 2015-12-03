@@ -36,7 +36,7 @@ namespace DBC.test.TestApplication
                     .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 3)
                     ?.CreateDelegate(typeof(Action<IApplicationBuilder, IHostingEnvironment, ILoggerFactory>), startupInstance);
             Action<IApplicationBuilder> configureApplication = application =>
-                    configureStartup(application, GetHostingEnvironment(startupTypeInfo), NullLoggerFactory.Instance);
+                    configureStartup(application, GetHostingEnvironment(startupTypeInfo), new LoggerFactory());
 
 
 
@@ -120,7 +120,7 @@ namespace DBC.test.TestApplication
 
         private static HostingEnvironment GetHostingEnvironment(string applicationRoot)
         {
-            var hostingEnvironment = new HostingEnvironment();
+            var hostingEnvironment = new HostingEnvironment() { EnvironmentName = "Testing" };
             hostingEnvironment.Initialize(applicationRoot, config: null);
             return hostingEnvironment;
         }

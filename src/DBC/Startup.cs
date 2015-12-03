@@ -38,7 +38,7 @@ namespace DBC
 
             services.AddEntityFramework()
                 .AddInMemoryDatabase()
-                .AddDbContext<ApplicationDbContext>();
+                .AddDbContext<ApplicationDbContext>(o=>o.UseInMemoryDatabase());
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -60,9 +60,10 @@ namespace DBC
             Services = services;
             return Services.BuildServiceProvider();
         }
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             _startup.Configure(app, env, loggerFactory);
+            await app.EnsureSampleData();
         }
     }
     public class Startup
@@ -147,12 +148,19 @@ namespace DBC
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                if (env.EnvironmentName == "Testing")
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                }
 
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
                 try
@@ -164,7 +172,7 @@ namespace DBC
                              .Database.Migrate();
                     }
                 }
-                catch { }
+                catch (Exception ex) { }
             }
             app.UseRequestLocalization(new RequestLocalizationOptions()
             {

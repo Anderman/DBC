@@ -11,12 +11,9 @@ namespace DBC.Models.DB
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         //public DbSet<Localizations> Localizations { get; set; }
-        private string _connectionString;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            _connectionString = ((SqlServerOptionsExtension)optionsBuilder.Options.Extensions.First()).ConnectionString;
-            //Console.WriteLine($"ApplicationDbContext{_connectionString}");
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
