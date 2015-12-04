@@ -75,7 +75,6 @@ namespace DBC.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var u = _applicationDbContext.Users.ToList();
 
                 var user = await _userManager.FindByEmailAsync(model.Email) ?? new ApplicationUser();
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -338,6 +337,7 @@ namespace DBC.Controllers
                 var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ResetPasswordEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                 await _emailSender.SendEmailAsync(model.Email, T["Reset password"], body);
                 //show a screen that the use should check hit email
+
                 return View(nameof(ForgotPasswordConfirmation), model);
             }
 

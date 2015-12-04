@@ -6,23 +6,33 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Anderman.TagHelpers;
+using DBC.Models.DB;
+using DBC.Services;
 using Microsoft.AspNet.TestHost;
 using Xunit;
 using DBC.test.HtmlHelpers;
 using DBC.test.HtmlHelper;
 using DBC.test.TestApplication;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Data.Entity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DBC.test.Controllers
 {
-    public class AccountControllerClientTest : IClassFixture<MvcTestFixture<DBC.StartupTest>>
+    public class AccountControllerClientTest : IClassFixture<TestApplicationFixture<DBC.StartupTest>>
     {
+        public StartupTest MyApp { get; }
+        public TestMessageServices TestMessageServices { get; }
+
         public HttpClient Client { get; }
         public TestServer Server { get; }
         public const string relPath = "../../src/DBC/";
-        public AccountControllerClientTest(MvcTestFixture<StartupTest> fixture)
+        public AccountControllerClientTest(TestApplicationFixture<StartupTest> fixture)
         {
-
+            MyApp = (StartupTest)fixture.MyApp;
             Client = fixture.Client;
+            TestMessageServices = MyApp.ServiceProvider.GetRequiredService<IEmailSender>() as TestMessageServices;
         }
 
         [Fact]
@@ -74,18 +84,32 @@ namespace DBC.test.Controllers
         [Fact]
         public async Task Create_User()
         {
-            var client = new ClientWrapper(Client);
-            await client.Get("/User/Create");
-            //ACT
+            var emailAddress = "new@test.nl";
+            //Arrange
+            var client = new ClientWrapper(Client,TestMessageServices);
 
+            //Act
+            await client.Get("/User/Create");
+            //Assert
+            Assert.Contains("Create User", client.Html);
+
+            //ACT
             var response = await client.Post("/User/Create", client.Form(1), new formValues()
             {
-                {"UserName", "new@test.nl"},
-                {"Email", "new@test.nl"},
-                { "AccessFailedCount","0"}
+                {"UserName", emailAddress},
+                {"Email", emailAddress},
+                {"AccessFailedCount", "0"}
             });
+            //Assert
             Assert.Contains("success", client.Html); //succesfull send email message
+            Assert.True(TestMessageServices.TestHtmlEmail.ContainsKey("new@test.nl"));
+
+            //ACT
+            await client.Click_on_Link_in_Email(emailAddress);
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.Contains("Enter your password to complete", client.Html);
         }
+
 
         //var response = await Client.GetAsync("/Account/Login");
         //var responseBody = await response.Content.ReadAsStringAsync();

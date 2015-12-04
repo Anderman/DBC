@@ -19,11 +19,12 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace DBC.test.TestApplication
 {
-    public class MvcTestFixture : IDisposable
+    public class TestFixture : IDisposable
     {
         private readonly TestServer _server;
+        public readonly object MyApp;
 
-        public MvcTestFixture(object startupInstance)
+        public TestFixture(object startupInstance)
         {
             var startupTypeInfo = startupInstance.GetType().GetTypeInfo();
 
@@ -37,7 +38,7 @@ namespace DBC.test.TestApplication
                     .FirstOrDefault(m => m.Name == "Configure" && m.GetParameters().Length == 3)
                     ?.CreateDelegate(typeof(Action<IApplicationBuilder, IHostingEnvironment, ILoggerFactory>), startupInstance);
             Action<IApplicationBuilder> configureApplication = application =>
-                    configureStartup(application, GetHostingEnvironment(startupTypeInfo), new LoggerFactory());
+                    configureStartup(application, new TestHostingEnvironment(startupTypeInfo), new LoggerFactory());
 
 
 
@@ -47,7 +48,7 @@ namespace DBC.test.TestApplication
             _server = TestServer.Create(
                 configureApplication,
                 configureServices: InitializeServices(startupTypeInfo.Assembly, buildServices));
-
+            MyApp = startupInstance;
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri("http://localhost");
         }
@@ -75,61 +76,28 @@ namespace DBC.test.TestApplication
             // points to the root folder of the test project.
             // To compensate, we need to calculate the correct project path and override the application
             // environment value so that components like the view engine work properly in the context of the test.
-            var applicationName = startupAssembly.GetName().Name;
-            var applicationRoot = GetApplicationRoot(applicationName);
-
-            var applicationEnvironment = PlatformServices.Default.Application;
-
             return (services) =>
             {
 #if DNX451
-                AppDomain.CurrentDomain.SetData("APP_CONTEXT_BASE_DIRECTORY", applicationRoot);
+                AppDomain.CurrentDomain.SetData("APP_CONTEXT_BASE_DIRECTORY", ApplicationRoot.GetDirectoryName(startupAssembly));
 #endif
-                services.AddInstance<IApplicationEnvironment>(
-                    new TestApplicationEnvironment(applicationEnvironment, applicationName, applicationRoot));
+                services.AddInstance<IApplicationEnvironment>(new TestApplicationEnvironment(startupAssembly));
 
-                var hostingEnvironment = GetHostingEnvironment(applicationRoot);
-                services.AddInstance<IHostingEnvironment>(hostingEnvironment);
+                services.AddInstance<IHostingEnvironment>(new TestHostingEnvironment(startupAssembly));
 
                 // Inject a custom assembly provider. Overrides AddMvc() because that uses TryAdd().
-                var assemblyProvider = GetStaticAssemblyProvider(startupAssembly);
-                services.AddInstance<IAssemblyProvider>(assemblyProvider);
+                services.AddInstance<IAssemblyProvider>(new TestStaticAssemblyProvider(startupAssembly));
 
                 AddAdditionalServices(services);
 
                 return buildServices(services);
             };
         }
+    }
 
-        private static StaticAssemblyProvider GetStaticAssemblyProvider(Assembly assembly)
-        {
-            var assemblyProvider = new StaticAssemblyProvider();
-            assemblyProvider.CandidateAssemblies.Add(assembly);
-            return assemblyProvider;
-        }
-
-
-        private static HostingEnvironment GetHostingEnvironment(Type type)
-        {
-            return GetHostingEnvironment(type.Assembly);
-        }
-
-        private static HostingEnvironment GetHostingEnvironment(Assembly assembly)
-        {
-            return GetHostingEnvironment(GetApplicationRoot(assembly));
-        }
-
-        private static HostingEnvironment GetHostingEnvironment(string applicationRoot)
-        {
-            var hostingEnvironment = new HostingEnvironment() { EnvironmentName = "Testing" };
-            hostingEnvironment.Initialize(applicationRoot, config: null);
-            return hostingEnvironment;
-        }
-
-        public static string GetApplicationRoot(Assembly assembly) =>
-            GetApplicationRoot(assembly.GetName().Name);
-        public static string GetApplicationRoot(string applicationName) =>
-            Path.GetDirectoryName(PlatformServices.Default.LibraryManager.GetLibrary(applicationName).Path);
-
+    public static class ApplicationRoot
+    {
+        public static string GetDirectoryName(Assembly assembly) =>
+            Path.GetDirectoryName(PlatformServices.Default.LibraryManager.GetLibrary(assembly.GetName().Name).Path);
     }
 }

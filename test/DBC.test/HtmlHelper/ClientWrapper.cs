@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CodeComb.HtmlAgilityPack;
+using DBC.test.TestApplication;
 using Microsoft.AspNet.Http;
 namespace DBC.test.HtmlHelper
 {
@@ -15,11 +16,18 @@ namespace DBC.test.HtmlHelper
     {
         public string Html;
         private readonly HttpClient _client;
+        private readonly TestMessageServices _testMessageServices;
         public HtmlDocument Doc = new HtmlDocument();
         public HttpResponseMessage ResponseMsg;
         private readonly formValues _cookies = new formValues();
         private int _errorNumber = 0;
 
+
+        public ClientWrapper(HttpClient client, TestMessageServices testMessageServices)
+        {
+            _client = client;
+            _testMessageServices = testMessageServices;
+        }
 
         public ClientWrapper(HttpClient client)
         {
@@ -75,6 +83,12 @@ namespace DBC.test.HtmlHelper
             //_allInputs = GetAllInputFromForm(formIndex: formIndex);
 
             return await Task.FromResult(ResponseMsg);
+        }
+
+        public async Task<HttpResponseMessage> Click_on_Link_in_Email(string emailAddress)
+        {
+            var url = _testMessageServices.TestHtmlEmail[emailAddress].Url;
+            return await Get(url);
         }
 
         public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;

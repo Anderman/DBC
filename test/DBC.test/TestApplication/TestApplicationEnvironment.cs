@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Reflection;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.PlatformAbstractions;
 
@@ -14,6 +15,13 @@ namespace DBC.test.TestApplication
     {
         private readonly IApplicationEnvironment _original;
 
+        public TestApplicationEnvironment(Assembly startupAssembly) : this(
+            PlatformServices.Default.Application,
+            startupAssembly.GetName().Name,
+            ApplicationRoot.GetDirectoryName(startupAssembly))
+        {
+        }
+
         public TestApplicationEnvironment(IApplicationEnvironment original, string name, string basePath)
         {
             _original = original;
@@ -22,32 +30,16 @@ namespace DBC.test.TestApplication
         }
 
         public string ApplicationName { get; }
-
-        public string ApplicationVersion
-        {
-            get
-            {
-                return _original.ApplicationVersion;
-            }
-        }
-
         public string ApplicationBasePath { get; }
 
-        public string Configuration
-        {
-            get
-            {
-                return _original.Configuration;
-            }
-        }
+        public string ApplicationVersion =>
+            _original.ApplicationVersion;
 
-        public FrameworkName RuntimeFramework
-        {
-            get
-            {
-                return _original.RuntimeFramework;
-            }
-        }
+        public string Configuration =>
+            _original.Configuration;
+
+        public FrameworkName RuntimeFramework =>
+            _original.RuntimeFramework;
 
         public object GetData(string name)
         {
