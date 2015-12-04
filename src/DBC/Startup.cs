@@ -36,35 +36,6 @@ namespace DBC
             _hostingEnv = services.Where(m => m.ServiceType == typeof(IHostingEnvironment) && m.ImplementationInstance != null).Select(m => m.ImplementationInstance).Last() as IHostingEnvironment;
             _startup = new Startup(_hostingEnv);
 
-            //services.AddEntityFramework()
-            //    .AddInMemoryDatabase()
-            //    .AddDbContext<ApplicationDbContext>(o=>o.UseInMemoryDatabase());
-
-            //services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            //{
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequiredLength = 4;
-            //    options.Password.RequireLowercase = false;
-            //    options.Password.RequireUppercase = false;
-            //    options.Password.RequireNonLetterOrDigit = false;
-            //    options.SignIn.RequireConfirmedEmail = true;
-            //    options.User.RequireUniqueEmail = true;
-            //})
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
-            //LocalizationServiceCollectionJsonExtensions.AddLocalization(services);
-            //services
-            //    .AddMvc(m =>
-            //    {
-            //        m.ModelMetadataDetailsProviders.Add(new AdditionalValuesMetadataProvider());
-            //    });
-
-            //// Add application services.
-
-            //services.Configure<MessageServicesOptions>(_startup.Configuration.GetSection("mailSettings"));
-            //services.AddSingleton<IEmailSender, MessageServices>();
-            //services.AddSingleton<ISmsSender, MessageServices>();
-            //services.AddTransient<IEmailTemplate, EmailTemplate>();
             ServiceProvider = services.BuildServiceProvider();
             return ServiceProvider;
         }
