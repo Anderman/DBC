@@ -77,10 +77,9 @@ namespace DBC.Controllers
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var u = _applicationDbContext.Users.ToList();
 
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                var result = user==null?
-                    SignInResult.Failed:
-                    await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(model.Email) ?? new ApplicationUser();
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
@@ -95,11 +94,14 @@ namespace DBC.Controllers
                     _logger.LogWarning(2, "User account locked out.");
                     return View("Lockout");
                 }
+                if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError(string.Empty, T["Email or phonenumber not confirmed"]);
+                    return View(model);
+                }
                 else
                 {
                     ModelState.AddModelError(string.Empty, T["Invalid login attempt."]);
-                    if (result.IsNotAllowed)
-                        ModelState.AddModelError(string.Empty, T["Email or phonenumber not confirmed"]);
                     return View(model);
                 }
             }

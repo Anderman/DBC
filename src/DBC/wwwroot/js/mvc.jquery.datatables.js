@@ -63,10 +63,7 @@
                         url: (editLink) + id,
                         leaveMessage: options.leaveMessage,
                         error: options.error,
-                        dataChanged: function (result) {
-                            connect.tableTools.fnSelectNone();//Fix tabletool bug to disable buttons when no row is selected
-                            connect.datatable.fnDraw(false);//redraw the table to show the new data
-                        }
+                        dataChanged: dataChanged
                     });
                 }
             }
@@ -83,10 +80,7 @@
                     url: createLink,
                     leaveMessage: options.leaveMessage,
                     error: options.error,
-                    dataChanged: function (result) {
-                        connect.tableTools.fnSelectNone();//Fix tabletool bug to disable buttons when no row is selected
-                        connect.datatable.fnDraw(false);//redraw the table to show the new data
-                    }
+                    dataChanged: dataChanged
                 });
             }
         }
@@ -100,18 +94,27 @@
             fnClick: function (nButton, oConfig, selected) {
                 if (!selected)
                     selected = this.fnGetSelectedData();
-                for (i = 0; i < selected.length; i++) {
+                for (var i = 0; i < selected.length; i++) {
                     var id = selected[i].Id;
                     $('#ajaxForm').ajaxForm({
                         url: deleteLink + id,
                         leaveMessage: options.leaveMessage,
                         error: options.error,
-                        dataChanged: function (result) {
-                            connect.tableTools.fnSelectNone(); //Fix tabletool bug to disable buttons when no row is selected
-                            connect.datatable.fnDraw(false); //redraw the table to show the new data
-                        }
+                        dataChanged: dataChanged
                     });
                 }
+            }
+        }
+        var dataChanged = function (result) {
+            connect.tableTools.fnSelectNone(); //Fix tabletool bug to disable buttons when no row is selected
+            connect.datatable.fnDraw(false); //redraw the table to show the new data
+            if (result) {
+                var parts = result.success.split('.');
+                var func = window;
+                for (var i = 0; i < parts.length; i++)
+                    func = func ? func[parts[i]] : null;
+                if (typeof func == 'function')
+                    func(result.data);
             }
         }
         var buttons = [];
@@ -175,6 +178,11 @@ jQuery.fn.extend({
         $modal.css({ display: "block" });
     }
 });
+//ajaxform
+//Post of form is submitted as ajax request as formpost values
+//response of post can html or json
+// html response will replace current form with new html
+// json response will call the option.datachanged(data) if 
 jQuery.fn.extend({
     ajaxForm: function (options) {
         var modal = this;
@@ -229,7 +237,8 @@ jQuery.fn.extend({
                     url: $form.attr('action'),
                     data: $(this).closest('form').serialize(),
                     success: function (data) {
-                        if (data && typeof data ==='string') {
+                        debugger;
+                        if (data && typeof data === 'string') {
                             initModalForm(data);
                         } else {
                             $(modal).modal('hide');

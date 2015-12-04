@@ -18,7 +18,6 @@ namespace DBC.test.HtmlHelper
         public HtmlDocument Doc = new HtmlDocument();
         public HttpResponseMessage ResponseMsg;
         private readonly formValues _cookies = new formValues();
-        private formValues _allInputs;
         private int _errorNumber = 0;
 
 
@@ -26,25 +25,26 @@ namespace DBC.test.HtmlHelper
         {
             _client = client;
         }
-        public async Task<HttpResponseMessage> Post(string url, int formIndex, formValues values)
+        public async Task<HttpResponseMessage> Post(string url, formValues formValues, formValues defaults)
         {
-            foreach (var value in values)
+            foreach (var value in defaults)
             {
-                _allInputs[value.Key] = value.Value;
+                formValues[value.Key] = value.Value;
             }
             var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Headers.Add("Accept-Language", "en-US");
             foreach (var cookie in _cookies)
             {
                 request.Headers.Add("Cookie", cookie.Key + "=" + cookie.Value);
             }
             //var kv2 = _allInputs.ToList();
-            request.Content = new FormUrlEncodedContent(_allInputs);
+            request.Content = new FormUrlEncodedContent(formValues);
             //var headercontent = await request.Content.ReadAsStringAsync();
 
             ResponseMsg = await _client.SendAsync(request);
             if (ResponseMsg.Headers.Location != null)
             {
-                return await Get(ResponseMsg.Headers.Location.OriginalString, formIndex);
+                return await Get(ResponseMsg.Headers.Location.OriginalString);
             }
             else
             {
@@ -54,34 +54,33 @@ namespace DBC.test.HtmlHelper
                 {
                     File.WriteAllText($"error{++_errorNumber}.html", Html);
                     File.WriteAllText($"error{_errorNumber}.txt", string.Join(
-                        "\n", _allInputs.Select(a => $"'{a.Key}'='{a.Value}'")
+                        "\n", formValues.Select(a => $"'{a.Key}'='{a.Value}'")
                         ));
                 }
 
                 AddCookies(ResponseMsg);
-                _allInputs = GetAllInputFromForm(formIndex: formIndex);
 
                 return await Task.FromResult(ResponseMsg);
             }
         }
-        public static string StripHTML(string HTMLText, bool decode = true)
+        public async Task<HttpResponseMessage> Get(string url)
         {
-            Regex reg = new Regex("<[^>]+>", RegexOptions.IgnoreCase);
-            var stripped = reg.Replace(HTMLText, "");
-            return decode ? WebUtility.HtmlDecode(stripped) : stripped;
-        }
-        public async Task<HttpResponseMessage> Get(string url, int formIndex)
-        {
-            ResponseMsg = await _client.GetAsync(url);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("Accept-Language", "en-US");
+            ResponseMsg = await _client.SendAsync(request);
             Html = await ResponseMsg.Content.ReadAsStringAsync();
             Doc.LoadHtml(Html);
             AddCookies(ResponseMsg);
 
-            _allInputs = GetAllInputFromForm(formIndex: formIndex);
+            //_allInputs = GetAllInputFromForm(formIndex: formIndex);
 
             return await Task.FromResult(ResponseMsg);
         }
-        public formValues GetAllInputFromForm(int formIndex = 1)
+
+        public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
+
+
+        public formValues Form(int formIndex = 1)
         {
             var nodes = Doc.DocumentNode.SelectNodes($"//form[{formIndex}]//input");
             var kv = new formValues();

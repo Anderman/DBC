@@ -40,7 +40,16 @@ namespace DBC
                 .AddInMemoryDatabase()
                 .AddDbContext<ApplicationDbContext>(o=>o.UseInMemoryDatabase());
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonLetterOrDigit = false;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             LocalizationServiceCollectionJsonExtensions.AddLocalization(services);
@@ -60,10 +69,10 @@ namespace DBC
             Services = services;
             return Services.BuildServiceProvider();
         }
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             _startup.Configure(app, env, loggerFactory);
-            await app.EnsureSampleData();
+            app.EnsureSampleData().Wait();
         }
     }
     public class Startup
@@ -178,10 +187,12 @@ namespace DBC
             {
                 SupportedCultures = new List<CultureInfo>
                 {
+                    new CultureInfo("en-US"),
                     new CultureInfo("nl-NL")
                 },
                 SupportedUICultures = new List<CultureInfo>
                 {
+                    new CultureInfo("en-US"),
                     new CultureInfo("nl-NL")
                 },
             }, new RequestCulture(new CultureInfo("nl-NL")));

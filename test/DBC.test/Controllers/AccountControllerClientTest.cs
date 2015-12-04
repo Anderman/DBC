@@ -24,41 +24,83 @@ namespace DBC.test.Controllers
 
             Client = fixture.Client;
         }
+
         [Fact]
-        public async Task Login()
+        public async Task Login_Fail()
         {
-
-
             //Arrange
-            //
+            var client = new ClientWrapper(Client);
+            await client.Get("/Account/Login");
             //ACT
-            //
-            //Assert
-
-            var c = new ClientWrapper(Client);
-            var y = await c.Get("/Account/Login", 2);
-            var z = await c.Post("/Account/Login", 1, new formValues() {
-                { "Email","Bobbie@kuifje.be" },
-                { "Password","@Password!" }
+            await client.Post("/Account/Login", client.Form(2), new formValues()
+            {
+                {"Email", "Bobbie@kuifje.be"},
+                {"Password", "@Password!"}
             });
-
-            
-
-            //var response = await Client.GetAsync("/Account/Login");
-            //var responseBody = await response.Content.ReadAsStringAsync();
-            //Debugger.Launch();
-            //Assert.Contains("Login", await response.Content.ReadAsStringAsync());
-
-            //var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
-            //request.Headers.Add("Cookie", cookieToken.Key + "=" + cookieToken.Value);
-
-            //var nameValueCollection = new List<KeyValuePair<string, string>>
-            //{
-            //    new KeyValuePair<string,string>("__RequestVerificationToken", formToken),
-            //};
+            //Assert
+            Assert.Contains("Invalid login attempt", client.Html);
 
         }
 
+        [Fact]
+        public async Task Login_Success()
+        {
+            //Arrange
+            var client = new ClientWrapper(Client);
+            await client.Get("/Account/Login");
+            //ACT
+            var response = await client.Post("/Account/Login", client.Form(2), new formValues()
+            {
+                {"Email", "Bobbie@kuifje.be"},
+                {"Password", "P@ssw0rd!"}
+            });
+            Assert.Equal("/", client.AbsolutePath);
+        }
+        [Fact]
+        public async Task Login_NotConfirmed()
+        {
+            var client = new ClientWrapper(Client);
+            await client.Get("/Account/Login");
+            //ACT
+
+            var response = await client.Post("/Account/Login", client.Form(2), new formValues()
+            {
+                {"Email", "confirm@test.nl"},
+                {"Password", "P@ssw0rd!"}
+            });
+            Assert.Contains("not confirmed", client.Html);
+        }
+
+        [Fact]
+        public async Task Create_User()
+        {
+            var client = new ClientWrapper(Client);
+            await client.Get("/User/Create");
+            //ACT
+
+            var response = await client.Post("/User/Create", client.Form(1), new formValues()
+            {
+                {"UserName", "new@test.nl"},
+                {"Email", "new@test.nl"},
+                { "AccessFailedCount","0"}
+            });
+            Assert.Contains("success", client.Html); //succesfull send email message
+        }
+
+        //var response = await Client.GetAsync("/Account/Login");
+        //var responseBody = await response.Content.ReadAsStringAsync();
+        //Debugger.Launch();
+        //Assert.Contains("Login", await response.Content.ReadAsStringAsync());
+
+        //var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
+        //request.Headers.Add("Cookie", cookieToken.Key + "=" + cookieToken.Value);
+
+        //var nameValueCollection = new List<KeyValuePair<string, string>>
+        //{
+        //    new KeyValuePair<string,string>("__RequestVerificationToken", formToken),
+        //};
 
     }
+
 }
+

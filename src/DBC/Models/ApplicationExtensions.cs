@@ -37,27 +37,41 @@ namespace DBC.Models.DB
                 }
 
                 string password = "P@ssw0rd!";
-                await CreateUserIfNotExist(userManager, "thom@medella.nl", password, Roles.Admin.ToString(), "Google", "110018662340682049067");
-                await CreateUserIfNotExist(userManager, "Bobbie@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "KapiteinArchibaldHaddock@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "TrifoniusZonnebloem@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "JansenenJanssen@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "BiancaCastofiore@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "Nestor@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "SerafijnLampion@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "Rastapopoulos@kuifje.be", password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, "Sponsz@kuifje.be", password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "thom@medella.nl" }, password, Roles.Admin.ToString(), "Google", "110018662340682049067");
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "Bobbie@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "KapiteinArchibaldHaddock@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "TrifoniusZonnebloem@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "JansenenJanssen@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "BiancaCastofiore@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "Nestor@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "SerafijnLampion@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "Rastapopoulos@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "Sponsz@kuifje.be" }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser
+                {
+                    UserName = "lockout@test.nl",
+                    LockoutEnabled = true,
+                    LockoutEnd = DateTime.Now.AddDays(1)
+
+                }, password, Roles.Admin.ToString());
+                await CreateUserIfNotExist(userManager, new ApplicationUser
+                {
+                    UserName = "confirm@test.nl",
+                    EmailConfirmed = false,
+                    TwoFactorEnabled = true
+                }, password, Roles.Admin.ToString());
             }
             else
                 throw new System.Exception("Not all migration are applied");
         }
 
-        private static async Task CreateUserIfNotExist(UserManager<ApplicationUser> userManager, string email, string password, string role, string loginProvider = null, string providerKey = null)
+        private static async Task<ApplicationUser> CreateUserIfNotExist(UserManager<ApplicationUser> userManager, ApplicationUser user, string password, string role, string loginProvider = null, string providerKey = null)
         {
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null)
+            //Debugger.Launch();
+
+            user.Email = user.Email ?? user.UserName;
+            if (await userManager.FindByEmailAsync(user.Email) == null)
             {
-                user = new ApplicationUser { UserName = email, Email = email };
                 var result = await userManager.CreateAsync(user, password);
                 if (!result.Succeeded)
                 {
@@ -69,6 +83,7 @@ namespace DBC.Models.DB
                     await userManager.AddLoginAsync(user, new UserLoginInfo(loginProvider, providerKey, ""));
                 }
             }
+            return user;
         }
     }
 }

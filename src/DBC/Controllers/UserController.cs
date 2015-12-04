@@ -78,6 +78,7 @@ namespace DBC.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ApplicationUser user)
         {
             if (ModelState.IsValid)
@@ -91,6 +92,7 @@ namespace DBC.Controllers
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, confirmCode = code }, protocol: HttpContext.Request.Scheme);
                         var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                         await _emailSender.SendEmailAsync(user.Email, T["Confirm your account"], body);
+                        return new JsonResult(new {success= "dbc.snackbar", data="An Email is send to user" });
                     }
                     return new EmptyResult();
                 }
