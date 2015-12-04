@@ -21,6 +21,13 @@ namespace DBC.Services
         {
             return SendEmailAsync(email, subject, message, null, null);
         }
+
+        public Task SendSmsAsync(string number, string message)
+        {
+            // Plug in your SMS service here to send a text message.
+            return Task.FromResult(0);
+        }
+
         public Task SendEmailAsync(string email, string subject, string message, string from, string fromName)
         {
             var mailMessage = new MailMessage
@@ -31,7 +38,8 @@ namespace DBC.Services
                 Subject = subject
             };
             mailMessage.To.Add(email);
-            using (var smtpClient = new SmtpClient()) {
+            using (var smtpClient = new SmtpClient())
+            {
                 smtpClient.Host = Setting.host;
                 smtpClient.Port = Setting.port;
                 smtpClient.EnableSsl = Setting.enableSsl;
@@ -43,13 +51,5 @@ namespace DBC.Services
                 return smtpClient.SendMailAsync(mailMessage);
             }
         }
-
-        public Task SendSmsAsync(string number, string message)
-        {
-            // Plug in your SMS service here to send a text message.
-            return Task.FromResult(0);
-        }
-
-
     }
 }
