@@ -61,11 +61,10 @@ namespace DBC
 
             // Add application services.
 
+            services.Configure<MessageServicesOptions>(_startup.Configuration.GetSection("mailSettings"));
             services.AddSingleton<IEmailSender, MessageServices>();
             services.AddSingleton<ISmsSender, MessageServices>();
             services.AddTransient<IEmailTemplate, EmailTemplate>();
-            IConfiguration config = _startup.Configuration.GetSection("mailSettings");
-            services.Configure<MessageServicesOptions>(config);
             Services = services;
             return Services.BuildServiceProvider();
         }
@@ -94,12 +93,6 @@ namespace DBC
         }
 
         public IConfigurationRoot Configuration { get; set; }
-        public class AuthMessageSMSSenderOptions
-        {
-            public string SID { get; set; }
-            public string AuthToken { get; set; }
-            public string SendNumber { get; set; }
-        }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -111,6 +104,7 @@ namespace DBC
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
+                options.Tokens.ChangeEmailTokenProvider = "";
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 4;
                 options.Password.RequireLowercase = false;
@@ -118,6 +112,7 @@ namespace DBC
                 options.Password.RequireNonLetterOrDigit = false;
                 options.SignIn.RequireConfirmedEmail = true;
                 options.User.RequireUniqueEmail = true;
+
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -133,19 +128,11 @@ namespace DBC
                 ;
 
             // Add application services.
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
-                options.Lockout.MaxFailedAccessAttempts = 1;
-            });
 
+            services.Configure<MessageServicesOptions>(Configuration.GetSection("mailSettings"));
             services.AddSingleton<IEmailSender, MessageServices>();
             services.AddSingleton<ISmsSender, MessageServices>();
-            services.Configure<AuthMessageSMSSenderOptions>(Configuration);
             services.AddTransient<IEmailTemplate, EmailTemplate>();
-            IConfiguration config = Configuration.GetSection("mailSettings");
-            services.Configure<MessageServicesOptions>(config);
-            services.Configure<AuthMessageSMSSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

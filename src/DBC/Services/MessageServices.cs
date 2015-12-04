@@ -10,12 +10,12 @@ namespace DBC.Services
 
     public class MessageServices : IEmailSender, ISmsSender
     {
+        private readonly MessageServicesOptions _settings;
+
         public MessageServices(IOptions<MessageServicesOptions> settingsAccessor)
         {
-            Setting = settingsAccessor.Value;
+            _settings = settingsAccessor.Value;
         }
-
-        public MessageServicesOptions Setting { get; }
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
@@ -32,7 +32,7 @@ namespace DBC.Services
         {
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(@from ?? Setting.@from, fromName ?? Setting.fromName),
+                From = new MailAddress(@from ?? _settings.@from, fromName ?? _settings.fromName),
                 Body = message,
                 IsBodyHtml = true,
                 Subject = subject
@@ -40,14 +40,14 @@ namespace DBC.Services
             mailMessage.To.Add(email);
             using (var smtpClient = new SmtpClient())
             {
-                smtpClient.Host = Setting.host;
-                smtpClient.Port = Setting.port;
-                smtpClient.EnableSsl = Setting.enableSsl;
-                smtpClient.DeliveryMethod = Setting.deliveryMethod == "SpecifiedPickupDirectory"
+                smtpClient.Host = _settings.host;
+                smtpClient.Port = _settings.port;
+                smtpClient.EnableSsl = _settings.enableSsl;
+                smtpClient.DeliveryMethod = _settings.deliveryMethod == "SpecifiedPickupDirectory"
                     ? SmtpDeliveryMethod.SpecifiedPickupDirectory
                     : SmtpDeliveryMethod.Network;
-                smtpClient.PickupDirectoryLocation = Setting.pickupDirectoryLocation;
-                smtpClient.Credentials = new NetworkCredential(Setting.userName, Setting.password);
+                smtpClient.PickupDirectoryLocation = _settings.pickupDirectoryLocation;
+                smtpClient.Credentials = new NetworkCredential(_settings.userName, _settings.password);
                 return smtpClient.SendMailAsync(mailMessage);
             }
         }
