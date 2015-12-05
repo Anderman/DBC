@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using DBC.Services;
@@ -13,7 +14,7 @@ namespace DBC.test.TestApplication
 
         public Task SendEmailAsync(string to, string subject, string message)
         {
-
+            File.WriteAllText($"htmlmail.html", message);
             if (TestHtmlEmail.ContainsKey(to))
             {
                 TestHtmlEmail[to] = new TestHtmlEmail

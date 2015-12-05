@@ -42,7 +42,7 @@ namespace DBC.test.Controllers
             var client = new ClientWrapper(Client);
             await client.Get("/Account/Login");
             //ACT
-            await client.Post("/Account/Login", client.Form(2), new formValues()
+            await client.Post(formIndex: 2, defaults: new formValues()
             {
                 {"Email", "Bobbie@kuifje.be"},
                 {"Password", "@Password!"}
@@ -59,7 +59,7 @@ namespace DBC.test.Controllers
             var client = new ClientWrapper(Client);
             await client.Get("/Account/Login");
             //ACT
-            var response = await client.Post("/Account/Login", client.Form(2), new formValues()
+            var response = await client.Post(formIndex:2, defaults: new formValues()
             {
                 {"Email", "Bobbie@kuifje.be"},
                 {"Password", "P@ssw0rd!"}
@@ -73,7 +73,7 @@ namespace DBC.test.Controllers
             await client.Get("/Account/Login");
             //ACT
 
-            var response = await client.Post("/Account/Login", client.Form(2), new formValues()
+            var response = await client.Post(formIndex: 2, defaults: new formValues()
             {
                 {"Email", "confirm@test.nl"},
                 {"Password", "P@ssw0rd!"}
@@ -82,7 +82,7 @@ namespace DBC.test.Controllers
         }
 
         [Fact]
-        public async Task Create_User()
+        public async Task Create_User_and_Login()
         {
             var emailAddress = "new@test.nl";
             //Arrange
@@ -94,37 +94,35 @@ namespace DBC.test.Controllers
             Assert.Contains("Create User", client.Html);
 
             //ACT
-            var response = await client.Post("/User/Create", client.Form(1), new formValues()
+            var response = await client.Post(formIndex: 1, defaults: new formValues()
             {
                 {"UserName", emailAddress},
                 {"Email", emailAddress},
                 {"AccessFailedCount", "0"}
             });
             //Assert
-            Assert.Contains("success", client.Html); //succesfull send email message
+            Assert.Contains("success", client.Html); 
             Assert.True(TestMessageServices.TestHtmlEmail.ContainsKey("new@test.nl"));
 
             //ACT
             await client.Click_on_Link_in_Email(emailAddress);
+            //Assert
             Assert.True(response.IsSuccessStatusCode);
             Assert.Contains("Enter your password to complete", client.Html);
+
+
+            //ACT
+            response = await client.Post(formIndex: 1, defaults: new formValues()
+            {
+                {"Password", "P@ssw0rd!"},
+                {"ConfirmPassword", "P@ssw0rd!"},
+                {"RemomberMe", "0"}
+            });
+            //Assert
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.Equal(null, client.Doc.ErrorMsg());
+            Assert.Equal("/", client.AbsolutePath);
         }
-
-
-        //var response = await Client.GetAsync("/Account/Login");
-        //var responseBody = await response.Content.ReadAsStringAsync();
-        //Debugger.Launch();
-        //Assert.Contains("Login", await response.Content.ReadAsStringAsync());
-
-        //var request = new HttpRequestMessage(HttpMethod.Post, "/Account/Login");
-        //request.Headers.Add("Cookie", cookieToken.Key + "=" + cookieToken.Value);
-
-        //var nameValueCollection = new List<KeyValuePair<string, string>>
-        //{
-        //    new KeyValuePair<string,string>("__RequestVerificationToken", formToken),
-        //};
-
     }
-
 }
 

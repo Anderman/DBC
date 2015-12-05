@@ -33,6 +33,14 @@ namespace DBC.test.HtmlHelper
         {
             _client = client;
         }
+
+        public async Task<HttpResponseMessage> Post(int formIndex, formValues defaults)
+        {
+            var formVal = Doc.FormValues(formIndex);
+            var url = Doc.FormAction(formIndex);
+            return await Post(url, formVal, defaults);
+        }
+
         public async Task<HttpResponseMessage> Post(string url, formValues formValues, formValues defaults)
         {
             foreach (var value in defaults)
@@ -94,30 +102,6 @@ namespace DBC.test.HtmlHelper
         public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
 
 
-        public formValues Form(int formIndex = 1)
-        {
-            var nodes = Doc.DocumentNode.SelectNodes($"//form[{formIndex}]//input");
-            var kv = new formValues();
-            if (nodes != null)
-            {
-                foreach (HtmlNode node in nodes)
-                {
-                    string name = node.Attributes["name"]?.Value;
-                    if (name != null)
-                    {
-                        if (kv.ContainsKey(name))
-                        {
-                            kv[name] = node.Attributes["value"]?.Value;
-                        }
-                        else
-                        {
-                            kv.Add(name, node.Attributes["value"]?.Value);
-                        }
-                    }
-                }
-            }
-            return kv;
-        }
         public void AddCookies(HttpResponseMessage response)
         {
             IEnumerable<string> setCookies;
@@ -138,6 +122,47 @@ namespace DBC.test.HtmlHelper
             }
         }
 
+    }
+
+    public static class HtmlDocumentExtensions
+    {
+        public static formValues FormValues(this HtmlDocument htmlDocument, int formIndex = 1)
+        {
+            var nodes = htmlDocument.DocumentNode.SelectNodes($"//form[{formIndex}]//input");
+            var kv = new formValues();
+            if (nodes != null)
+            {
+                foreach (HtmlNode node in nodes)
+                {
+                    string name = node.Attributes["name"]?.Value;
+                    if (name != null)
+                    {
+                        if (kv.ContainsKey(name))
+                        {
+                            kv[name] = WebUtility.HtmlDecode(node.Attributes["value"]?.Value);
+                        }
+                        else
+                        {
+                            kv.Add(name, WebUtility.HtmlDecode(node.Attributes["value"]?.Value));
+                        }
+                    }
+                }
+            }
+            return kv;
+        }
+        public static string FormAction(this HtmlDocument htmlDocument, int formIndex = 1)
+        {
+            var nodes = htmlDocument.DocumentNode.SelectNodes($"//form[{formIndex}]");
+            return nodes.First().Attributes["action"]?.Value;
+        }
+        public static string ErrorMsg(this HtmlDocument htmlDocument)
+        {
+            var nodes = htmlDocument.DocumentNode.SelectNodes("//div[@data-valmsg-summary='true']");
+            if (nodes?.Count > 0)
+                return nodes.First()?.InnerText;
+            else
+                return null;
+        }
     }
     public class formValues : Dictionary<string, string>
     {
