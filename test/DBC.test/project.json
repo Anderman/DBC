@@ -17,9 +17,7 @@
         "Microsoft.Extensions.Logging.Testing": "1.0.0-rc1-15837",
         "Microsoft.AspNet.Hosting": "1.0.0-rc1-final",
         "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
-        "EntityFramework.InMemory": "7.0.0-rc1-final",
-        "HtmlAP": "2.0.0-rc1-final"
-
+        "EntityFramework.InMemory": "7.0.0-rc1-final"
     },
     "commands": {
         "test": "xunit.runner.aspnet"
