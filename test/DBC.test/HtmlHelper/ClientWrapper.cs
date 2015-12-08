@@ -7,7 +7,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CodeComb.HtmlAgilityPack;
+using System.Xml;
+using System.Xml.Linq;
 using DBC.test.TestApplication;
 using Microsoft.AspNet.Http;
 namespace DBC.test.HtmlHelper
@@ -17,7 +18,7 @@ namespace DBC.test.HtmlHelper
         public string Html;
         private readonly HttpClient _client;
         private readonly TestMessageServices _testMessageServices;
-        public HtmlDocument Doc = new HtmlDocument();
+        public XDocument HtmlDocument = new XDocument();
         public HttpResponseMessage ResponseMsg;
         private readonly formValues _cookies = new formValues();
         private int _errorNumber = 0;
@@ -36,8 +37,8 @@ namespace DBC.test.HtmlHelper
 
         public async Task<HttpResponseMessage> Post(int formIndex, formValues defaults)
         {
-            var formVal = Doc.FormValues(formIndex);
-            var url = Doc.FormAction(formIndex);
+            var formVal = HtmlDocument.FormValues(formIndex);
+            var url = HtmlDocument.FormAction(formIndex);
             return await Post(url, formVal, defaults);
         }
 
@@ -49,15 +50,11 @@ namespace DBC.test.HtmlHelper
             }
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Headers.Add("Accept-Language", "en-US");
-            foreach (var cookie in _cookies)
-            {
-                request.Headers.Add("Cookie", cookie.Key + "=" + cookie.Value);
-            }
-            //var kv2 = _allInputs.ToList();
+            request.Headers.Add("Cookie", _cookies.Select(c => c.Key + "=" + c.Value));
             request.Content = new FormUrlEncodedContent(formValues);
-            //var headercontent = await request.Content.ReadAsStringAsync();
 
             ResponseMsg = await _client.SendAsync(request);
+            AddCookies(ResponseMsg);
             if (ResponseMsg.Headers.Location != null)
             {
                 return await Get(ResponseMsg.Headers.Location.OriginalString);
@@ -65,7 +62,7 @@ namespace DBC.test.HtmlHelper
             else
             {
                 Html = await ResponseMsg.Content.ReadAsStringAsync();
-                Doc.LoadHtml(Html);
+                HtmlDocument = (Html.StartsWith("<!")) ? XDocument.Parse(Html) : Html.StartsWith("{") ? new XDocument() : XDocument.Parse("<root>" + Html + "</root>");
                 if (ResponseMsg.StatusCode != HttpStatusCode.OK)
                 {
                     File.WriteAllText($"error{++_errorNumber}.html", Html);
@@ -73,9 +70,6 @@ namespace DBC.test.HtmlHelper
                         "\n", formValues.Select(a => $"'{a.Key}'='{a.Value}'")
                         ));
                 }
-
-                AddCookies(ResponseMsg);
-
                 return await Task.FromResult(ResponseMsg);
             }
         }
@@ -83,13 +77,18 @@ namespace DBC.test.HtmlHelper
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("Accept-Language", "en-US");
+            request.Headers.Add("Cookie", _cookies.Select(c => c.Key + "=" + c.Value));
             ResponseMsg = await _client.SendAsync(request);
+            if (ResponseMsg.Headers.Location != null)
+            {
+                return await Get(ResponseMsg.Headers.Location.OriginalString);
+            }
             Html = await ResponseMsg.Content.ReadAsStringAsync();
-            Doc.LoadHtml(Html);
+            HtmlDocument = (Html.StartsWith("<!")) ? XDocument.Parse(Html) : Html.StartsWith("{") ? new XDocument() : XDocument.Parse("<root>" + Html + "</root>");
+
+
+            //HtmlDocument.LoadHtml(Html);
             AddCookies(ResponseMsg);
-
-            //_allInputs = GetAllInputFromForm(formIndex: formIndex);
-
             return await Task.FromResult(ResponseMsg);
         }
 
@@ -97,6 +96,10 @@ namespace DBC.test.HtmlHelper
         {
             var url = _testMessageServices.TestHtmlEmail[emailAddress].Url;
             return await Get(url);
+        }
+        public string getSecurityCode(string emailAddress)
+        {
+            return _testMessageServices.TestHtmlEmail[emailAddress].Body.Split(':')?[1];
         }
 
         public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
@@ -126,42 +129,41 @@ namespace DBC.test.HtmlHelper
 
     public static class HtmlDocumentExtensions
     {
-        public static formValues FormValues(this HtmlDocument htmlDocument, int formIndex = 1)
+        public static formValues FormValues(this XDocument htmlDocument, int formIndex = 1)
         {
-            var nodes = htmlDocument.DocumentNode.SelectNodes($"//form[{formIndex}]//input");
+
+            var nodes = htmlDocument.Descendants("form").ElementAt(formIndex-1).Descendants("input");
             var kv = new formValues();
-            if (nodes != null)
+            foreach (var node in nodes)
             {
-                foreach (HtmlNode node in nodes)
+                string name = node.Attribute("name")?.Value;
+                if (name != null)
                 {
-                    string name = node.Attributes["name"]?.Value;
-                    if (name != null)
+                    if (kv.ContainsKey(name))
                     {
-                        if (kv.ContainsKey(name))
-                        {
-                            kv[name] = WebUtility.HtmlDecode(node.Attributes["value"]?.Value);
-                        }
-                        else
-                        {
-                            kv.Add(name, WebUtility.HtmlDecode(node.Attributes["value"]?.Value));
-                        }
+                        kv[name] = WebUtility.HtmlDecode(node.Attribute("value")?.Value ?? "");
+                    }
+                    else
+                    {
+
+                        kv.Add(name, WebUtility.HtmlDecode(node.Attribute("value")?.Value ?? ""));
                     }
                 }
             }
             return kv;
         }
-        public static string FormAction(this HtmlDocument htmlDocument, int formIndex = 1)
+        public static string FormAction(this XDocument htmlDocument, int formIndex = 1)
         {
-            var nodes = htmlDocument.DocumentNode.SelectNodes($"//form[{formIndex}]");
-            return nodes.First().Attributes["action"]?.Value;
+            var nodes = htmlDocument.Descendants("form").ElementAt(formIndex-1);
+            return nodes.Attribute("action").Value;
         }
-        public static string ErrorMsg(this HtmlDocument htmlDocument)
+        public static string ErrorMsg(this XDocument htmlDocument)
         {
-            var nodes = htmlDocument.DocumentNode.SelectNodes("//div[@data-valmsg-summary='true']");
-            if (nodes?.Count > 0)
-                return nodes.First()?.InnerText;
-            else
-                return null;
+            var err = string.Join("", htmlDocument.Descendants("form").Descendants("title").ToString().Contains("Error") == true 
+                ? htmlDocument.Descendants("div").Where(a => a.Attribute("class").Value == "page-container").Descendants().Select(a=>a.Value) 
+                : htmlDocument.Descendants("div").Where(a => a.Attribute("data-valmsg-summary")?.Value == "true").Descendants("ul").Descendants().Select(a => a.Value)
+                );
+            return string.IsNullOrWhiteSpace(err) ? null : err;
         }
     }
     public class formValues : Dictionary<string, string>

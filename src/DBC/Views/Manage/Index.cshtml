@@ -1,6 +1,6 @@
 ﻿@model IndexViewModel
 @{
-    ViewData["Title"] = T["Manage your account"];
+    ViewData["Title"] = T["Profiel: {0}", User.Identity.Name];
     ViewData["PageStyle"] = "form-small";
 }
 
@@ -8,7 +8,7 @@
 <p class="text-success">@ViewData["StatusMessage"]</p>
 <h4>@T["Change your account settings"]</h4>
 <hr />
-<div class="form-horizontal vertical-align">
+<div class="form vertical-align">
     <label class="col-xs-6">@T["Password:"]</label>
     <div class="col-xs-6">
 
@@ -31,7 +31,7 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
         $('.modal-trigger').click(function () {
             var link = $(this).attr("asp-modal-link");
             $('#ajaxForm').ajaxForm({
@@ -52,5 +52,5 @@
         }).ajaxSuccess(function () {
             $(".progress-bar").progress(0);
         });
-</script>
+    </script>
 }

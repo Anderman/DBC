@@ -7,6 +7,7 @@
 /// <reference path="js/mvc.jquery.datatables.js" />
 /// <reference path="js/site.js" />
 /// <reference path="js/snackbar.js" />
+/// <reference path="jsnocat/forempty.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />
 /// <reference path="lib/jquery.are-you-sure/jquery.are-you-sure.js" />
 /// <reference path="lib/jquery/dist/jquery.js" />

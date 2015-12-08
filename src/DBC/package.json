@@ -1,17 +1,18 @@
 {
-    "description": "DBC",
-    "license": "MIT",
-    "name": "DBC",
-    "version": "0.0.0",
-    "repository": {
-        "type": ""
-    },
-    "readme": "DBC",
-    "devDependencies": {
-        "gulp": "3.8.11",
-        "gulp-concat": "2.5.2",
-        "gulp-cssmin": "0.1.7",
-        "gulp-uglify": "1.2.0",
-        "rimraf": "2.2.8"
-    }
+  "description": "DBC",
+  "license": "MIT",
+  "name": "DBC",
+  "version": "0.0.0",
+  "repository": {
+    "type": ""
+  },
+  "readme": "DBC",
+  "devDependencies": {
+    "gulp": "3.8.11",
+    "gulp-concat": "2.5.2",
+    "gulp-cssmin": "0.1.7",
+    "gulp-debug": "^2.1.2",
+    "gulp-uglify": "1.2.0",
+    "rimraf": "2.2.8"
+  }
 }

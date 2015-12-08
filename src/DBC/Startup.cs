@@ -41,8 +41,51 @@ namespace DBC
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            _startup.Configure(app, env, loggerFactory);
+            loggerFactory.AddConsole(LogLevel.None);
+
+            app.UseDatabaseErrorPage();
+            app.UseDeveloperExceptionPage();
+            app.UseRequestLocalization(new RequestLocalizationOptions()
+            {
+                SupportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en-US")
+                },
+                SupportedUICultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en-US")
+                },
+            }, new RequestCulture(new CultureInfo("nl-NL")));
+
+            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
+
+            app.UseStaticFiles();
+
+            app.UseIdentity();
             app.EnsureSampleData().Wait();
+
+            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
+            if (_startup.Configuration["Authentication:Google:ClientId"] != null)
+            {
+                app.UseFacebookAuthentication(options =>
+                {
+                    options.AppId = _startup.Configuration["Authentication:Facebook:AppId"];
+                    options.AppSecret = _startup.Configuration["Authentication:Facebook:AppSecret"];
+                    options.DisplayName = "facebook";
+                });
+                app.UseGoogleAuthentication(options =>
+                {
+                    options.ClientId = _startup.Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = _startup.Configuration["Authentication:Google:ClientSecret"];
+                    options.DisplayName = "google plus";
+                });
+            }
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
     public class Startup
@@ -109,6 +152,7 @@ namespace DBC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -120,14 +164,7 @@ namespace DBC
             }
             else
             {
-                if (env.EnvironmentName == "Testing")
-                {
-                    app.UseDeveloperExceptionPage();
-                }
-                else
-                {
-                    app.UseExceptionHandler("/Home/Error");
-                }
+                app.UseExceptionHandler("/Home/Error");
 
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
                 try
@@ -139,7 +176,7 @@ namespace DBC
                              .Database.Migrate();
                     }
                 }
-                catch (Exception ex) { }
+                catch (Exception) { }
             }
             app.UseRequestLocalization(new RequestLocalizationOptions()
             {

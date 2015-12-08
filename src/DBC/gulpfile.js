@@ -5,12 +5,15 @@ var gulp = require("gulp"),
     rimraf = require("rimraf"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
-    uglify = require("gulp-uglify");
+    uglify = require("gulp-uglify"),
+    debug = require('gulp-debug');
 
 var paths = {
     webroot: "./wwwroot/"
 };
 
+paths.nocatjs = paths.webroot + "jsnocat/**/*.js";
+paths.nocatminJs = paths.webroot + "jsnocat/**/*.min.js";
 paths.js = paths.webroot + "js/**/*.js";
 paths.minJs = paths.webroot + "js/**/*.min.js";
 paths.css = paths.webroot + "css/**/*.css";
@@ -30,6 +33,7 @@ gulp.task("clean", ["clean:js", "clean:css"]);
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        .pipe(debug())
         .pipe(concat(paths.concatJsDest))
         .pipe(uglify())
         .pipe(gulp.dest("."));
@@ -40,6 +44,12 @@ gulp.task("min:css", function () {
         .pipe(concat(paths.concatCssDest))
         .pipe(cssmin())
         .pipe(gulp.dest("."));
+});
+gulp.task("minnocat:js", function () {
+    return gulp.src([paths.nocatjs, "!" + paths.nocatminJs], { base: "." })
+        .pipe(debug())
+        .pipe(uglify())
+        .pipe(gulp.dest("*.min.js"));
 });
 
 gulp.task("min", ["min:js", "min:css"]);

@@ -20,6 +20,7 @@ using Microsoft.Extensions.Localization;
 
 namespace DBC.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -42,14 +43,12 @@ namespace DBC.Controllers
 
         public ApplicationDbContext DbContext { get; }
         [HttpGet]
-        [AllowAnonymous]
         public ViewResult Index()
         {
             //var x = DbContext.Users.Include(u => u.Logins).Select(l => l.Logins).ToArray();
             return View();
         }
         [HttpPost]
-        [AllowAnonymous]
         public JsonResult Index([FromBody]DataTablesRequest dTRequest)
         {
             var userRoleNames = DbContext.UserRoles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { r.Name, ur.UserId });
@@ -71,13 +70,11 @@ namespace DBC.Controllers
                 , dTRequest);
         }
         [HttpGet]
-        [AllowAnonymous]
         public PartialViewResult Create()
         {
             return PartialView();
         }
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ApplicationUser user)
         {
@@ -105,7 +102,6 @@ namespace DBC.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public PartialViewResult Edit(string Id)
         {
             //var dummy = DbContext.Users.Include(u => u.Logins).ToArray();
@@ -113,7 +109,6 @@ namespace DBC.Controllers
             return PartialView(user);
         }
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Edit(ApplicationUser model)
         {
             if (ModelState.IsValid)
@@ -136,7 +131,6 @@ namespace DBC.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> SendEmail(string Id)
         {
 
@@ -153,7 +147,6 @@ namespace DBC.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public PartialViewResult Delete(string Id)
         {
             var user = DbContext.Users.Single(u => u.Id == Id);
@@ -161,7 +154,6 @@ namespace DBC.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Delete(ApplicationUser model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);

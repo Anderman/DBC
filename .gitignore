@@ -35,3 +35,6 @@ nuget.exe
 node_modules
 **/[Cc]ompiler/[Rr]esources/**/*.js
 src/DBC/wwwroot/fallback/css/img/social/Thumbs.db
+**/htmlmail.html
+**/Error*.html
+**/Error*.txt

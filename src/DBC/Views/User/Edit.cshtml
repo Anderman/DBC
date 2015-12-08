@@ -32,7 +32,7 @@
                 <input class="form-control" asp-for="Claims" asp-material-design="true" value="@string.Join(",", Model.Claims.Select(l => l.ClaimType))" disabled />
                 <input class="form-control" asp-for="Roles" asp-material-design="true" value="@string.Join(",", Model.Roles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, Roles) => new { ur, Roles }).Select(ur => ur.Roles.Name))" disabled />
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary waves-effect waves-light modal-trigger disabled" disabled>Save</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light modal-trigger disabled" disabled="disabled">Save</button>
                     <button id="send" asp-action="user/sendEmail" onclick="dbc.serverRequest('User/SendEmail', '@Model.Id', dbc.snackbar)" type="button" class="btn btn-primary waves-effect waves-light modal-trigger data-id=1">@T["Send inventation email"]</button>
                     <button type="button" class="btn btn-primary modal-close waves-effect waves-light">Cancel</button>
                 </div>

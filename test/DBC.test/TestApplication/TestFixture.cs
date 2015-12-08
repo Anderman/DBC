@@ -22,7 +22,8 @@ namespace DBC.test.TestApplication
     public class TestFixture : IDisposable
     {
         private readonly TestServer _server;
-        public readonly object MyApp;
+        public readonly object Server;
+        public HttpClient Client { get; }
 
         public TestFixture(object startupInstance)
         {
@@ -40,20 +41,14 @@ namespace DBC.test.TestApplication
             Action<IApplicationBuilder> configureApplication = application =>
                     configureStartup(application, new TestHostingEnvironment(startupTypeInfo), new LoggerFactory());
 
-
-
-            // RequestLocalizationOptions saves the current culture when constructed, potentially changing response
-            // localization i.e. RequestLocalizationMiddleware behavior. Ensure the saved culture
-            // (DefaultRequestCulture) is consistent regardless of system configuration or personal preferences.
             _server = TestServer.Create(
                 configureApplication,
                 configureServices: InitializeServices(startupTypeInfo.Assembly, buildServices));
-            MyApp = startupInstance;
+            Server = startupInstance;
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri("http://localhost");
         }
 
-        public HttpClient Client { get; }
 
         public void Dispose()
         {
@@ -78,6 +73,7 @@ namespace DBC.test.TestApplication
             // environment value so that components like the view engine work properly in the context of the test.
             return (services) =>
             {
+
 #if DNX451
                 AppDomain.CurrentDomain.SetData("APP_CONTEXT_BASE_DIRECTORY", ApplicationRoot.GetDirectoryName(startupAssembly));
 #endif
@@ -86,7 +82,7 @@ namespace DBC.test.TestApplication
                 services.AddInstance<IHostingEnvironment>(new TestHostingEnvironment(startupAssembly));
 
                 // Inject a custom assembly provider. Overrides AddMvc() because that uses TryAdd().
-                services.AddInstance<IAssemblyProvider>(new TestStaticAssemblyProvider(startupAssembly));
+                //services.AddInstance<IAssemblyProvider>(new TestStaticAssemblyProvider(startupAssembly));
 
                 AddAdditionalServices(services);
 

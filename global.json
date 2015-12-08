@@ -6,9 +6,7 @@
         "../Mvc.JQuery.Datatables/src",
         "wrap",
         "../Localization/src",
-        "../RazorMinify/src",
-        "../HtmlAP",
-        "../Other/HtmlAgilityPack/src"
+        "../RazorMinify/src"
     ],
 
     "sdk": {

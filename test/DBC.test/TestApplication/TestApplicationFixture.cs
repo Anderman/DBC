@@ -14,7 +14,6 @@ namespace DBC.test.TestApplication
     public class TestApplicationFixture<TStartup> : TestFixture
         where TStartup : new()
     {
-        public Mock<MessageServices> MockMessageServices;
 
         public TestApplicationFixture()
             : base(new TStartup())

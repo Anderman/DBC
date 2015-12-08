@@ -235,7 +235,7 @@ namespace DBC.Controllers
         [HttpGet]
         public IActionResult SetPassword()
         {
-            return View();
+            return PartialView();
         }
 
         //
@@ -256,12 +256,12 @@ namespace DBC.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
+                    return new JsonResult(new { Message = ManageMessageId.SetPasswordSuccess });
                 }
                 AddErrors(result);
-                return View(model);
+                return PartialView(model);
             }
-            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+            return new JsonResult( new { Message = ManageMessageId.Error });
         }
 
         //GET: /Manage/ManageLogins
