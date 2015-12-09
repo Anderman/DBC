@@ -36,11 +36,11 @@ namespace DBC.test.HtmlHelper
 
         public static string InnerText(this XDocument htmlDocument)
         {
-            return string.Join("", htmlDocument.Descendants("body").ToString());
+            return string.Join("", htmlDocument.Descendants("body").Select(a => a.Value));
         }
         public static string ErrorMsg(this XDocument htmlDocument)
         {
-            var err = string.Join("", htmlDocument.Descendants("form").Descendants("title").ToString().Contains("Error")
+            var err = string.Join("", htmlDocument.Descendants("form").Descendants("title").Select(a => a.Value).Contains("Error")
                 ? htmlDocument.Descendants("div").Where(a => a.Attribute("class").Value == "page-container").Descendants().Select(a => a.Value)
                 : htmlDocument.Descendants("div").Where(a => a.Attribute("data-valmsg-summary")?.Value == "true").Descendants("ul").Descendants().Select(a => a.Value)
                 );

@@ -18,7 +18,7 @@ namespace DBC.Models.DB
             context.Database.Migrate();
         }
 
-        public async static Task EnsureSampleData(this IApplicationBuilder app)
+        public static async Task EnsureSampleData(this IApplicationBuilder app)
         {
             var context = app.ApplicationServices.GetService<ApplicationDbContext>();
             var userManager = app.ApplicationServices.GetService<UserManager<ApplicationUser>>();
@@ -36,7 +36,7 @@ namespace DBC.Models.DB
 
                 }
 
-                string password = "P@ssw0rd!";
+                const string password = "P@ssw0rd!";
                 await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "thom@medella.nl" }, password, Roles.Admin.ToString(), "Google", "110018662340682049067");
                 await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "Bobbie@kuifje.be" }, password, Roles.Admin.ToString());
                 await CreateUserIfNotExist(userManager, new ApplicationUser { UserName = "KapiteinArchibaldHaddock@kuifje.be" }, password, Roles.Admin.ToString());
@@ -54,12 +54,12 @@ namespace DBC.Models.DB
                     LockoutEnd = DateTime.Now.AddDays(1)
 
                 }, password, Roles.Admin.ToString());
-                await CreateUserIfNotExist(userManager, new ApplicationUser
+                var result = await userManager.CreateAsync(new ApplicationUser
                 {
                     UserName = "confirm@test.nl",
                     EmailConfirmed = false,
                     TwoFactorEnabled = true
-                }, password, Roles.Admin.ToString());
+                }, password);
             }
             else
                 throw new System.Exception("Not all migration are applied");
@@ -68,7 +68,7 @@ namespace DBC.Models.DB
         private static async Task<ApplicationUser> CreateUserIfNotExist(UserManager<ApplicationUser> userManager, ApplicationUser user, string password, string role, string loginProvider = null, string providerKey = null)
         {
             //Debugger.Launch();
-
+            user.EmailConfirmed = true;
             user.Email = user.Email ?? user.UserName;
             if (await userManager.FindByEmailAsync(user.Email) == null)
             {

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using DBC.test.TestApplication;
+using Microsoft.Net.Http.Headers;
 
 namespace DBC.test.HtmlHelper
 {
@@ -78,11 +79,15 @@ namespace DBC.test.HtmlHelper
             return ResponseMsg;
         }
 
-        public string GetResponseErrorMsg(string expectedRequestUrl)
+        public bool HasEmail(string emailAddress)
+        {
+            return _testMessageServices.TestHtmlEmail.ContainsKey(emailAddress);
+        }
+        public string ValidateResponse(string expectedRequestUrl)
         {
             var actualRequestUrl = ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
             var err=HtmlDocument.ErrorMsg();
-            if (actualRequestUrl != expectedRequestUrl || err != null)
+            if (!ResponseMsg.IsSuccessStatusCode || actualRequestUrl != expectedRequestUrl || err != null)
             {
                 var body = HtmlDocument.InnerText();
                 return $"expected url '{expectedRequestUrl}' != '{actualRequestUrl}'\n errmsg='{err}' \n body='{body}'";
@@ -90,9 +95,14 @@ namespace DBC.test.HtmlHelper
             return null;
         }
 
+        public string ValidateForm(int index, object values)
+        {
+            var err= HtmlDocument.FormValues(index).HasCorrectValues(values);
+            return string.IsNullOrWhiteSpace(err) ? null : err;
+        }
         public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
 
-        public async Task<HttpResponseMessage> Click_on_Link_in_Email(string emailAddress)
+        public async Task<HttpResponseMessage> ClickOnLinkInEmail(string emailAddress)
         {
             var url = _testMessageServices.TestHtmlEmail[emailAddress].Url;
             return await Get(url);
@@ -101,6 +111,11 @@ namespace DBC.test.HtmlHelper
         public string GetSecurityCode(string emailAddress)
         {
             return _testMessageServices.TestHtmlEmail[emailAddress].Body.Split(':')?[1];
+        }
+
+        public SetCookieHeaderValue GetCookie(string cookieName)
+        {
+            return _cookies.ContainsKey(cookieName) ? _cookies[cookieName] : new SetCookieHeaderValue(cookieName);
         }
     }
 }

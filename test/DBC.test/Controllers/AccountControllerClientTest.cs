@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Anderman.TagHelpers;
 using DBC.Models.DB;
 using DBC.Services;
-using Microsoft.AspNet.TestHost;
-using Xunit;
-using DBC.test.HtmlHelpers;
 using DBC.test.HtmlHelper;
 using DBC.test.TestApplication;
 using DBC.ViewModels.Account;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.AspNet.Hosting;
+using Xunit;
 
 namespace DBC.test.Controllers
 {
@@ -87,18 +75,22 @@ namespace DBC.test.Controllers
     //    }
     //}
 
-    public class AccountControllerClientTest : IClassFixture<TestApplicationFixture<DBC.StartupTest>>
+    public class AccountControllerClientTest : IClassFixture<TestApplicationFixture<StartupTest>>
     {
+
         public StartupTest Server { get; }
+        public HttpClient Client { get; }
         public TestMessageServices TestMessageServices { get; }
 
-        public HttpClient Client { get; }
         public AccountControllerClientTest(TestApplicationFixture<StartupTest> fixture)
         {
             Server = (StartupTest)fixture.Server;
             Client = fixture.Client;
             TestMessageServices = Server.ServiceProvider.GetRequiredService<IEmailSender>() as TestMessageServices;
         }
+
+
+
 
         [Fact]
         public async Task Login_Fail()
@@ -107,14 +99,14 @@ namespace DBC.test.Controllers
             var client = new ClientWrapper(Client);
             await client.Get("/Account/Login");
             //ACT
-            await client.Post(formIndex: 2, defaults: new FormValues()
-            {
-                {"Email", "Bobbie@kuifje.be"},
-                {"Password", "@Password!"}
-            });
+            await client.Post(2,
+                new LoginViewModel
+                {
+                    Email = "Bobbie@kuifje.be",
+                    Password = "@Pssw0rd!",
+                });
             //Assert
             Assert.Contains("Invalid login attempt", client.Html);
-
         }
 
         [Fact]
@@ -125,13 +117,16 @@ namespace DBC.test.Controllers
             await client.Get("/Account/Login");
             //ACT
 
-            var response = await client.Post(formIndex: 2, defaults: new FormValues()
-            {
-                {"Email", "Bobbie@kuifje.be"},
-                {"Password", "P@ssw0rd!"}
-            });
+            await client.Post(2,
+                new LoginViewModel
+                {
+                    Email = "Bobbie@kuifje.be",
+                    Password = "P@ssw0rd!",
+                });
             Assert.Equal("/", client.AbsolutePath);
+            Assert.Null(client.GetCookie(".AspNet.Microsoft.AspNet.Identity.Application").Expires);
         }
+
         [Fact]
         public async Task Login_Success_with_rememberMe()
         {
@@ -140,15 +135,17 @@ namespace DBC.test.Controllers
             await client.Get("/Account/Login");
             //ACT
 
-            var response = await client.Post(formIndex: 2, defaults:
+            await client.Post(2,
                 new LoginViewModel
                 {
                     Email = "Bobbie@kuifje.be",
                     Password = "P@ssw0rd!",
                     RememberMe = true
                 });
-            Assert.Equal("/", client.AbsolutePath);
+            Assert.Equal(null, client.ValidateResponse("/"));
+            Assert.NotNull(client.GetCookie(".AspNet.Microsoft.AspNet.Identity.Application").Expires);
         }
+
         [Fact]
         public async Task Login_NotConfirmed()
         {
@@ -156,11 +153,12 @@ namespace DBC.test.Controllers
             await client.Get("/Account/Login");
             //ACT
 
-            var response = await client.Post(formIndex: 2, defaults: new FormValues()
-            {
-                {"Email", "confirm@test.nl"},
-                {"Password", "P@ssw0rd!"}
-            });
+            await client.Post(2,
+                new LoginViewModel
+                {
+                    Email = "confirm@test.nl",
+                    Password = "P@ssw0rd!"
+                });
             Assert.Contains("not confirmed", client.Html);
         }
 
@@ -168,88 +166,88 @@ namespace DBC.test.Controllers
         public async Task Create_User_and_Login()
         {
             //Arrange
-            var emailAddress = "new@test.nl";
+            string emailAddress = "new@test.nl";
             var client = new ClientWrapper(Client, TestMessageServices);
             //Act
             await client.Get("/User/Create");
             //Assert
-            Assert.Equal("/Account/Login", client.AbsolutePath);
+            Assert.Equal(null, client.ValidateResponse("/Account/Login"));
 
-            //Account/Login
-            await client.Post(2, new FormValues {
-                {"Email","thom@medella.nl"},
-                { "Password","P@ssw0rd!"}
-            });
-            Assert.Equal("/User/Create", client.AbsolutePath);
+
+            //ACT Account/Login
+            await client.Post(2,
+                new LoginViewModel
+                {
+                    Email = "thom@medella.nl",
+                    Password = "P@ssw0rd!"
+                });
+            //Assert
+            Assert.Equal(null, client.ValidateResponse("/User/Create"));
+
 
             //ACT post /User/Create
-            var response = await client.Post(formIndex: 1, defaults: new FormValues()
-            {
-                {"UserName", emailAddress},
-                {"Email", emailAddress},
-                {"AccessFailedCount", "0"},
-                {"TwoFactorEnabled", "true" }
-            });
+            await client.Post(1,
+                new ApplicationUser
+                {
+                    UserName = emailAddress,
+                    Email = emailAddress,
+                    AccessFailedCount = 0,
+                    EmailConfirmed = false,
+                    TwoFactorEnabled = true
+                });
             //Assert
             Assert.Contains("success", client.Html);
-            Assert.True(TestMessageServices.TestHtmlEmail.ContainsKey(emailAddress));
+            Assert.True(client.HasEmail(emailAddress));
+
 
             //ACT get /Account/ConfirmEmail
-            await client.Click_on_Link_in_Email(emailAddress);
+            await client.ClickOnLinkInEmail(emailAddress);
             //Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.Equal("/Account/ConfirmEmail", client.AbsolutePath);
-            Assert.Contains("Enter your password to complete", client.Html);
+            Assert.Equal(null, client.ValidateResponse("/Account/ConfirmEmail"));
 
 
             //ACT Post /Account/ConfirmEmail
-            response = await client.Post(formIndex: 1, defaults: (
-                new ResetPasswordViewModel()
+            await client.Post(1,
+                new ResetPasswordViewModel
                 {
                     Password = "P@ssw0rd!",
                     ConfirmPassword = "P@ssw0rd!",
-                    RememberMe = true,
-                }).AsFormValues()
-            );
+                    RememberMe = true
+                }.AsFormValues()
+                );
             //Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.Equal("/Account/SendCode", client.AbsolutePath);
-            Assert.Equal(null, client.HtmlDocument.ErrorMsg());
-            Assert.Equal("",client.HtmlDocument.FormValues(1).HasCorrectValues(
-                new SendCodeViewModel()
+            Assert.Equal(null, client.ValidateResponse("/Account/SendCode"));
+            Assert.Equal(null, client.ValidateForm(1,
+                new SendCodeViewModel
                 {
                     RememberMe = true
                 }
-            ));
+                ));
+
 
             //ACT The post will send an securitycode and redirect to verifycode
-            response = await client.Post(formIndex: 1, defaults: new FormValues());
+            await client.Post(1, new FormValues());
             //Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.Equal("/Account/VerifyCode", client.AbsolutePath);
-            Assert.Equal(null, client.HtmlDocument.ErrorMsg());
-            Assert.Equal("",client.HtmlDocument.FormValues(1).HasCorrectValues(
-                new VerifyCodeViewModel()
+            Assert.Equal(null, client.ValidateResponse("/Account/VerifyCode"));
+            Assert.Equal(null, client.ValidateForm(1,
+                new VerifyCodeViewModel
                 {
                     RememberMe = true,
                     RememberBrowser = false
                 }
-            ));
+                ));
+
 
             //ACT  post verify code
             var code = client.GetSecurityCode(emailAddress);
-            response = await client.Post(formIndex: 1, defaults:
-                new VerifyCodeViewModel()
+            await client.Post(1,
+                new VerifyCodeViewModel
                 {
                     Code = code,
-                    RememberBrowser = true,
+                    RememberBrowser = true
                 });
             //Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.Equal(null, client.HtmlDocument.ErrorMsg());
-            Assert.Equal("/", client.AbsolutePath);
+            Assert.Equal(null, client.ValidateResponse("/"));
         }
     }
-
 }
-
