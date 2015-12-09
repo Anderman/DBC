@@ -25,6 +25,5 @@ namespace DBC.ViewModels.Account
         public string Code { get; set; }
 
         public bool RememberMe { get; set; }
-        public bool RememberBrowser { get; set; }
     }
 }

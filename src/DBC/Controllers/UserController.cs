@@ -51,8 +51,8 @@ namespace DBC.Controllers
         [HttpPost]
         public JsonResult Index([FromBody]DataTablesRequest dTRequest)
         {
-            var userRoleNames = DbContext.UserRoles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { r.Name, ur.UserId });
-            var z = (from u in DbContext.Users
+            //var userRoleNames = DbContext.UserRoles.Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { r.Name, ur.UserId });
+            var z = (from u in DbContext.Users.Include(uu=>uu.Roles)
                      select new
                      {
                          u.Id,
@@ -61,10 +61,12 @@ namespace DBC.Controllers
                          u.UserName,
                          u.TwoFactorEnabled,
                          u.LockoutEnd,
-                         Logins = DbContext.UserLogins.Where(ul => ul.UserId == u.Id).Select(ul => new { LoginProvider = ul.LoginProvider }),//u.Logins.Select(l => new { LoginProvider = l.LoginProvider }).ToArray(), // rewrite to workarounf bug
-                         Roles = userRoleNames.Where(ur => ur.UserId == u.Id).Select(ur => new { Name = ur.Name }),
+                         //Logins =  u.Logins.Select(ul => new { LoginProvider = ul.LoginProvider }),
+                         Logins = from ul in u.Logins select new { LoginProvider = ul.LoginProvider },
+                         //Logins = DbContext.UserLogins.Where(ul => ul.UserId == u.Id).Select(ul => new { LoginProvider = ul.LoginProvider }),//u.Logins.Select(l => new { LoginProvider = l.LoginProvider }).ToArray(), // rewrite to workarounf bug
+                         Roles = from ur in u.Roles join r in DbContext.Roles on ur.RoleId equals r.Id select new {Name = r.Name},
+                         //Roles = userRoleNames.Where(ur => ur.UserId == u.Id).Select(ur => new { Name = ur.Name }),
                      });
-            var zz = z.ToArray();
             return new Mvc.JQuery.Datatables.DataTables().GetJSonResult(
                 z
                 , dTRequest);
@@ -89,7 +91,7 @@ namespace DBC.Controllers
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, confirmCode = code }, protocol: HttpContext.Request.Scheme);
                         var body = await _emailTemplate.RenderViewToString(@"/Views/Email/ActivateEmail", new ActivateEmail() { Emailaddress = user.Email, Callback = callbackUrl });
                         await _emailSender.SendEmailAsync(user.Email, T["Confirm your account"], body);
-                        return new JsonResult(new {success= "dbc.snackbar", data="An Email is send to user" });
+                        return new JsonResult(new { success = "dbc.snackbar", data = "An Email is send to user" });
                     }
                     return new EmptyResult();
                 }

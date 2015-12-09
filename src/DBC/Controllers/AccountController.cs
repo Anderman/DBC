@@ -261,7 +261,7 @@ namespace DBC.Controllers
         // GET: /Account/ConfirmEmail
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(ResetPasswordViewModel model)
+        public async Task<IActionResult> ConfirmEmail(ResetPasswordViewModel model, string rememberMe = null, string returnUrl = null)
         {
 
             if (!ModelState.IsValid)
@@ -285,7 +285,7 @@ namespace DBC.Controllers
                 }
                 if (signInResult.RequiresTwoFactor)
                 {
-                    return RedirectToAction(nameof(SendCode));
+                    return RedirectToAction(nameof(SendCode), new { rememberMe, returnUrl });
                 }
                 if (signInResult.IsLockedOut)
                 {
@@ -416,8 +416,7 @@ namespace DBC.Controllers
             }
             var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            //factorOptions.Add(new SelectListItem() { Text = "SMS", Value = "SMS" });
-            return View(new SendCodeViewModel { SelectedProvider = factorOptions.First().Value, Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            return View(new SendCodeViewModel { SelectedProvider = factorOptions.First().Value, Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe});
         }
 
         //
