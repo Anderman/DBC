@@ -237,7 +237,7 @@ namespace DBC.test.Controllers
             ));
 
             //ACT  post verify code
-            var code = client.getSecurityCode(emailAddress);
+            var code = client.GetSecurityCode(emailAddress);
             response = await client.Post(formIndex: 1, defaults:
                 new VerifyCodeViewModel()
                 {
