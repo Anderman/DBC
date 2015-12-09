@@ -34,6 +34,10 @@ namespace DBC.test.HtmlHelper
             return nodes.Attribute("action").Value;
         }
 
+        public static string InnerText(this XDocument htmlDocument)
+        {
+            return string.Join("", htmlDocument.Descendants("body").ToString());
+        }
         public static string ErrorMsg(this XDocument htmlDocument)
         {
             var err = string.Join("", htmlDocument.Descendants("form").Descendants("title").ToString().Contains("Error")
