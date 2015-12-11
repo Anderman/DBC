@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,8 +34,7 @@ namespace DBC.test.HtmlHelper
         }
         public async Task<HttpResponseMessage> Get(string url)
         {
-            ResponseMsg =  await SendRequest(HttpMethod.Get, url, null);
-
+            ResponseMsg = await SendRequest(HttpMethod.Get, url, null);
             return await Task.FromResult(ResponseMsg);
         }
 
@@ -51,7 +51,7 @@ namespace DBC.test.HtmlHelper
             {
                 formValues[value.Key] = value.Value;
             }
-            ResponseMsg  = await SendRequest(HttpMethod.Post, url, formValues);
+            ResponseMsg = await SendRequest(HttpMethod.Post, url, formValues);
             if (ResponseMsg.StatusCode != HttpStatusCode.OK)
             {
                 File.WriteAllText($"error{++_errorNumber}.html", Html);
@@ -68,25 +68,55 @@ namespace DBC.test.HtmlHelper
             request.Headers.Add("Accept-Language", "en-US");
             request.Headers.Add("cookie", _cookies.Select(c => c.Key + "=" + c.Value.Value));
             if (formValues != null) request.Content = new FormUrlEncodedContent(formValues);
-            ResponseMsg = await _client.SendAsync(request);
-            _cookies.Add(ResponseMsg);
+
+            if (url.StartsWith("http") && request.RequestUri.Host != "localhost")
+            {
+                using (var handler = new HttpClientHandler())
+                using (var client = new HttpClient(handler))
+                {
+                        ResponseMsg = await client.GetAsync(request.RequestUri.ToString());
+                }
+            }
+            else
+            {
+                ResponseMsg = await _client.SendAsync(request);
+            }
+            if(!url.StartsWith("https://accounts.google.com/o/oauth2/auth"))
+                _cookies.Add(ResponseMsg);
             if (ResponseMsg.Headers.Location != null)
             {
                 return await Get(ResponseMsg.Headers.Location.OriginalString);
             }
             Html = await ResponseMsg.Content.ReadAsStringAsync();
-            HtmlDocument = Html.StartsWith("<!") ? XDocument.Parse(Html) : Html.StartsWith("{") ? new XDocument() : XDocument.Parse("<root>" + Html + "</root>");
+
+            try
+            {
+                HtmlDocument = Html.StartsWith("<!") ? XDocument.Parse(Html) : Html.StartsWith("{") ? new XDocument() : XDocument.Parse("<root>" + Html + "</root>");
+            }
+            catch (Exception e)
+            {
+                if (url.StartsWith("http://accounts") || url.StartsWith("/"))
+                {
+                    Debugger.Launch();
+                    throw new Exception("Not a Xhtml Document", e);
+                }
+
+            }
             return ResponseMsg;
         }
 
-        public bool HasEmail(string emailAddress)
+
+
+        public string GetLink(string link)
         {
-            return _testMessageServices.TestHtmlEmail.ContainsKey(emailAddress);
+            return HtmlDocument.GetLink(link);
         }
+
+
         public string ValidateResponse(string expectedRequestUrl)
         {
             var actualRequestUrl = ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
-            var err=HtmlDocument.ErrorMsg();
+            var err = HtmlDocument.ErrorMsg();
             if (!ResponseMsg.IsSuccessStatusCode || actualRequestUrl != expectedRequestUrl || err != null)
             {
                 var body = HtmlDocument.InnerText();
@@ -97,11 +127,18 @@ namespace DBC.test.HtmlHelper
 
         public string ValidateForm(int index, object values)
         {
-            var err= HtmlDocument.FormValues(index).HasCorrectValues(values);
+            var err = HtmlDocument.FormValues(index).HasCorrectValues(values);
             return string.IsNullOrWhiteSpace(err) ? null : err;
         }
         public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
 
+
+
+        //mail
+        public bool HasEmail(string emailAddress)
+        {
+            return _testMessageServices.TestHtmlEmail.ContainsKey(emailAddress);
+        }
         public async Task<HttpResponseMessage> ClickOnLinkInEmail(string emailAddress)
         {
             var url = _testMessageServices.TestHtmlEmail[emailAddress].Url;
@@ -113,6 +150,8 @@ namespace DBC.test.HtmlHelper
             return _testMessageServices.TestHtmlEmail[emailAddress].Body.Split(':')?[1];
         }
 
+
+        //cookie
         public SetCookieHeaderValue GetCookie(string cookieName)
         {
             return _cookies.ContainsKey(cookieName) ? _cookies[cookieName] : new SetCookieHeaderValue(cookieName);

@@ -166,14 +166,14 @@ namespace DBC.Controllers
         // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string error = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                if (error != null)
+                if (remoteError != null)
                 {
-                    ModelState.AddModelError("", T["The external login service gives an error: {0}.", error]);
+                    ModelState.AddModelError("", T["The external login service gives an error: {0}.", remoteError]);
                     return View("Login");
                 }
                 return RedirectToAction("Login");

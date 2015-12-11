@@ -33,6 +33,11 @@ namespace DBC.test.HtmlHelper
             var nodes = htmlDocument.Descendants("form").ElementAt(formIndex - 1);
             return nodes.Attribute("action").Value;
         }
+        public static string GetLink(this XDocument htmlDocument, string link, int linkNumber = 1)
+        {
+            var nodes = htmlDocument.Descendants().Where(a=>a.Attribute("href")?.Value==link).ElementAt(linkNumber - 1);
+            return nodes?.Attribute("href").Value;
+        }
 
         public static string InnerText(this XDocument htmlDocument)
         {

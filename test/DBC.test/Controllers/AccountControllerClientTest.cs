@@ -89,8 +89,92 @@ namespace DBC.test.Controllers
             TestMessageServices = Server.ServiceProvider.GetRequiredService<IEmailSender>() as TestMessageServices;
         }
 
+        [Fact]
+        public async Task Reset_password()
+        {
+            string emailAddress = "new@test.nl";
+            //Arrange
+            var client = new ClientWrapper(Client, TestMessageServices);
+            //Act
+            await client.Get("/Account/Login");
+            //Assert
+            Assert.Contains("/Account/ForgotPassword", client.Html);
 
 
+            var link = client.GetLink("/Account/ForgotPassword");
+            //Act
+            await client.Get(link);
+            //Assert
+            Assert.Equal(null, client.ValidateResponse("/Account/ForgotPassword"));
+
+            //Act
+            await client.Post(1,
+                new ForgotPasswordViewModel
+                {
+                    Email= emailAddress
+                });
+            //Assert
+            Assert.Equal(null, client.ValidateResponse("/Account/ForgotPassword"));
+            Assert.True(client.HasEmail(emailAddress));
+
+            //Act
+            await client.ClickOnLinkInEmail(emailAddress);
+            //Assert
+            Assert.Equal(null, client.ValidateResponse("/Account/ResetPassword"));
+
+            //Act
+            await client.Post(1,
+                new ResetPasswordViewModel
+                {
+                    Email=emailAddress,
+                    Password= "P@ssw0rd!",
+                    ConfirmPassword = "P@ssw0rd!"
+                });
+            //Assert
+            Assert.Equal(null, client.ValidateResponse("/Account/ResetPasswordConfirmation"));
+        }
+
+        [Fact]
+        public async Task Login_Google_Login()
+        {
+            //Arrange
+            var client = new ClientWrapper(Client);
+            await client.Get("/Account/Login");
+            //ACT
+            Debugger.Launch();
+
+            await client.Post(1,
+                new FormValues
+                {
+                    { "Provider" , "Google"}
+                });
+            //Assert
+            Assert.Equal(null, client.ValidateResponse("/ServiceLogin"));
+
+            //ACT
+            await client.Get("/signin-google?state=CfDJ8M2LVX5zhUFHrH6ujFtPBp7gwNMcs-H1pLWBN3q1jWLKAkMYZbeVEmNY3Ue38GF1w6qqpB-nNcqnJn12dJBneTbP_wnQJRvSvPg8YXY8E5vpr_Je93Hic8t9syGTe1Gkb3cqQrtfkIxecl2irX8BIh6bsWwAHO1392-URb9BgVgyuyM_lBfuqWy_0j4wNegPt0RfEBPqAbL_J0dH-Wm0ITOG1lB68MRxyHz6KMTwuu0dp7-EVgmC0M55ne7Vg172qu0Gx7zOAAsRAT5x01FeDsXEyvnAFnjApVQI7TNj-xW-&code=4/sBFLmRRjWZHrSGWmc0TimFTN97vwC5pcksQfR8FAjJg&authuser=0&hd=medella.nl&session_state=2bd0e5a96e250a59bd984913cc0aba50851afd5b..4a8a&prompt=none");
+            //await client.Get("signin-google?code=ValidCode&state=ValidStateData");
+            //Assert
+            Assert.Equal("/Account/ExternalLoginCallback", client.AbsolutePath);
+        }
+
+
+        [Fact]
+        public async Task Login_Lockout()
+        {
+            //Arrange
+            var client = new ClientWrapper(Client);
+            await client.Get("/Account/Login");
+            //ACT
+            await client.Post(2,
+                new LoginViewModel
+                {
+                    Email = "lockout@test.nl",
+                    Password = "@Pssw0rd!",
+                });
+            //Assert
+            Assert.Contains("This account has been locked out", client.Html);
+        }
 
         [Fact]
         public async Task Login_Fail()

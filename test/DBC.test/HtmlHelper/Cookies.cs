@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using Microsoft.Net.Http.Headers;
 
@@ -24,6 +26,9 @@ namespace DBC.test.HtmlHelper
                     }
                 }
             }
+            DateTimeOffset x;
+            DateTimeOffset.TryParseExact("", "ddd, d MMM yyyy H:m:s 'GMT'", DateTimeFormatInfo.InvariantInfo,
+                DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out x);
         }
     }
 }

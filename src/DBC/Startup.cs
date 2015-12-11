@@ -18,11 +18,13 @@ using DBC.Models.DB;
 using Microsoft.AspNet.Localization;
 using Anderman.JsonLocalization.Middelware;
 using System.Diagnostics;
+using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Storage.Internal;
+using Microsoft.Extensions.WebEncoders;
 
 namespace DBC
 {
@@ -78,6 +80,15 @@ namespace DBC
                     options.ClientId = _startup.Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = _startup.Configuration["Authentication:Google:ClientSecret"];
                     options.DisplayName = "google plus";
+                    options.Events = new OAuthEvents()
+                    {
+                        OnRemoteError = ctx =>
+                        {
+                            ctx.Response.Redirect("/Account/ExternalLoginCallback?RemoteError=" + UrlEncoder.Default.UrlEncode(ctx.Error.Message));
+                            ctx.HandleResponse();
+                            return Task.FromResult(0);
+                        }
+                    };
                 });
             }
             app.UseMvc(routes =>
