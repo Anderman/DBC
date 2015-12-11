@@ -141,8 +141,6 @@ namespace DBC.test.Controllers
             var client = new ClientWrapper(Client);
             await client.Get("/Account/Login");
             //ACT
-            Debugger.Launch();
-
             await client.Post(1,
                 new FormValues
                 {
