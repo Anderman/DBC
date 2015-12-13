@@ -1,4 +1,4 @@
-﻿jQuery.fn.extend({
+jQuery.fn.extend({
     //todo muti-delete 
     //todo CRUD without tabletools
     MvcDatatable: function (options) {
@@ -237,7 +237,6 @@ jQuery.fn.extend({
                     url: $form.attr('action'),
                     data: $(this).closest('form').serialize(),
                     success: function (data) {
-                        debugger;
                         if (data && typeof data === 'string') {
                             initModalForm(data);
                         } else {

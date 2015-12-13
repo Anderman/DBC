@@ -130,6 +130,16 @@ namespace DBC.test.HtmlHelper
             var err = HtmlDocument.FormValues(index).HasCorrectValues(values);
             return string.IsNullOrWhiteSpace(err) ? null : err;
         }
+        public string HasLink(string link)
+        {
+            if (HtmlDocument.Descendants("button").Where(a => a.Attribute("class").Value.Contains("modal-trigger-ajax-form") && a.Attribute("href").Value.Contains(link)).Any()
+                  || HtmlDocument.Descendants("link").Where(a => a.Attribute("href").Value.Contains(link)).Any())
+                return link;
+            return ($"link {link} not found");
+
+        }
+
+
         public string AbsolutePath => ResponseMsg.RequestMessage.RequestUri.AbsolutePath;
 
 

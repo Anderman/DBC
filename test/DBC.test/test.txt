@@ -1,7 +1,0 @@
-xUnit.net DNX Runner (32-bit DNX 4.5.1)
-  Discovering: DBC.test
-  Discovered:  DBC.test
-  Starting:    DBC.test
-  Finished:    DBC.test
-=== TEST EXECUTION SUMMARY ===
-   DBC.test  Total: 44, Errors: 0, Failed: 0, Skipped: 0, Time: 6,142s

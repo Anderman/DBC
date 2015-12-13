@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
@@ -35,8 +36,17 @@ namespace DBC.test.HtmlHelper
         }
         public static string GetLink(this XDocument htmlDocument, string link, int linkNumber = 1)
         {
-            var nodes = htmlDocument.Descendants().Where(a=>a.Attribute("href")?.Value==link).ElementAt(linkNumber - 1);
+            var nodes = htmlDocument.Descendants().Where(a => a.Attribute("href")?.Value == link).ElementAt(linkNumber - 1);
             return nodes?.Attribute("href").Value;
+        }
+        public static string ShowLinks(this XDocument htmlDocument)
+        {
+            var nodes = htmlDocument.Descendants("body").Descendants().Where(a => a.Attribute("href")?.Value != null);
+            var summary= "\nlink: "+ string.Join("\nlink: ", nodes.Select(a => a.Attribute("href").Value +" ("+ string.Join(",", a.Value) + ")"));
+            
+            nodes = htmlDocument.Descendants("button").Where(a => a.Attribute("action")?.Value != null);
+            nodes = htmlDocument.Descendants("form");//.Where(a => a.Attribute("action")?.Value != null);
+            return summary + "\nform: " +string.Join("\nform: ", nodes.Select(a => " (" + string.Join(",", a.Value) + ")"));
         }
 
         public static string InnerText(this XDocument htmlDocument)

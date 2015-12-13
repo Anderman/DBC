@@ -1,7 +1,7 @@
-﻿/*Body setup*/
+/*Body setup*/
 body {
     padding-bottom: 20px;
-    font-size: 140%;
+    font-size: 140%; 
     padding-top: 70px;
     padding-left: 15px;
     padding-right: 15px;
@@ -109,4 +109,24 @@ textarea {
 .vertical-align {
     display: flex;
     align-items: center;
+}
+
+/*Bootstrap extension*/
+.dropdown-menu li>button.aslink {
+    display: block;
+    clear: both;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+    padding: 13px 16px;
+    color: #333;
+    background-color: transparent;
+    border: initial;
+    width: 100%;
+    text-align: left;
+}
+li>button.aslink:hover {
+    color: #009688;
+    background-color: #eee;
 }

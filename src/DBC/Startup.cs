@@ -25,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Storage.Internal;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.AspNet.Authentication;
 
 namespace DBC
 {
@@ -66,6 +67,16 @@ namespace DBC
             app.UseIdentity();
             app.EnsureSampleData().Wait();
 
+            var onRemoteError = new OAuthEvents()
+            {
+                OnRemoteError = ctx =>
+                {
+                    ctx.Response.Redirect("/Account/ExternalLoginCallback?RemoteError=" + UrlEncoder.Default.UrlEncode(ctx.Error.Message));
+                    ctx.HandleResponse();
+                    return Task.FromResult(0);
+                }
+            };
+
             // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
             if (_startup.Configuration["Authentication:Google:ClientId"] != null)
             {
@@ -74,21 +85,15 @@ namespace DBC
                     options.AppId = _startup.Configuration["Authentication:Facebook:AppId"];
                     options.AppSecret = _startup.Configuration["Authentication:Facebook:AppSecret"];
                     options.DisplayName = "facebook";
+                    options.Events = onRemoteError;
+
                 });
                 app.UseGoogleAuthentication(options =>
                 {
                     options.ClientId = _startup.Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = _startup.Configuration["Authentication:Google:ClientSecret"];
                     options.DisplayName = "google plus";
-                    options.Events = new OAuthEvents()
-                    {
-                        OnRemoteError = ctx =>
-                        {
-                            ctx.Response.Redirect("/Account/ExternalLoginCallback?RemoteError=" + UrlEncoder.Default.UrlEncode(ctx.Error.Message));
-                            ctx.HandleResponse();
-                            return Task.FromResult(0);
-                        }
-                    };
+                    options.Events = onRemoteError;
                 });
             }
             app.UseMvc(routes =>
@@ -208,6 +213,15 @@ namespace DBC
             app.UseStaticFiles();
 
             app.UseIdentity();
+            var onRemoteError = new OAuthEvents()
+            {
+                OnRemoteError = ctx =>
+                {
+                    ctx.Response.Redirect("/Account/ExternalLoginCallback?RemoteError=" + UrlEncoder.Default.UrlEncode(ctx.Error.Message));
+                    ctx.HandleResponse();
+                    return Task.FromResult(0);
+                }
+            };
 
             // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
             if (Configuration["Authentication:Google:ClientId"] != null)
@@ -217,12 +231,14 @@ namespace DBC
                     options.AppId = Configuration["Authentication:Facebook:AppId"];
                     options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                     options.DisplayName = "facebook";
+                    options.Events = onRemoteError;
                 });
                 app.UseGoogleAuthentication(options =>
                 {
                     options.ClientId = Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                     options.DisplayName = "google plus";
+                    options.Events = onRemoteError;
                 });
             }
 

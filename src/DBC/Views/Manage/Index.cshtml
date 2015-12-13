@@ -14,11 +14,11 @@
 
         @if (Model.HasPassword)
             {
-            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/ChangePassword">@T["Change"]</button>
+            <button type="button" class="btn btn-primary modal-trigger-ajax-form waves-effect waves-light" href="Manage/ChangePassword">@T["Change"]</button>
         }
         else
         {
-            <button type="button" class="btn btn-primary modal-trigger waves-effect waves-light" asp-modal-link="Manage/SetPassword">@T["Create"]</button>
+            <button type="button" class="btn btn-primary modal-trigger-ajax-form waves-effect waves-light" href="Manage/SetPassword">@T["Create"]</button>
         }
     </div>
 </div>
@@ -32,25 +32,6 @@
     }
 
     <script type="text/javascript">
-        $('.modal-trigger').click(function () {
-            var link = $(this).attr("asp-modal-link");
-            $('#ajaxForm').ajaxForm({
-                url: (link),
-                leaveMessage: "",
-                error: dbc.error,
-                dataChanged: function (result) {
-                    $.snackbar({
-                        content: result.Message, // text of the snackbar
-                        style: "toast", // add a custom class to your snackbar
-                        timeout: 10000 // time in milliseconds after the snackbar autohides, 0 is disabled
-                    });
-                }
-            });
-        });
-        $(document).ajaxStart(function () {
-            $(".progress-bar").progress(99);
-        }).ajaxSuccess(function () {
-            $(".progress-bar").progress(0);
-        });
+       
     </script>
 }
